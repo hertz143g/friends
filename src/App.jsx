@@ -28,7 +28,6 @@ const SECTIONS = [
 const App = () => {
   const [activeSection, setActiveSection] = useState(0);
   const products = SECTIONS[activeSection].products;
-
   const [cart, setCart] = useState([]);
   const [showCart, setShowCart] = useState(false);
 
@@ -71,13 +70,12 @@ const App = () => {
     document.documentElement.style.margin = "0";
   }, []);
 
-  // Уже карточки + больше gap между ними
+  // Теперь всегда не меньше 2 карточек в ряд, на широком экране — 3
   const getGridTemplate = () => {
-    if (window.innerWidth <= 500) return "1fr";
-    if (window.innerWidth <= 900) return "1fr 1fr";
-    return "1fr 1fr 1fr";
+    if (window.innerWidth <= 650) return "1fr 1fr";
+    if (window.innerWidth <= 1100) return "1fr 1fr 1fr";
+    return "1fr 1fr 1fr 1fr";
   };
-
   const [grid, setGrid] = useState(getGridTemplate());
   React.useEffect(() => {
     const handleResize = () => setGrid(getGridTemplate());
@@ -85,7 +83,6 @@ const App = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Ключевые изменения: width/maxWidth карточек, gap, borderRadius у логотипа
   return (
     <div
       style={{
@@ -98,18 +95,19 @@ const App = () => {
         fontFamily: "system-ui,sans-serif",
       }}
     >
-      <header style={{ textAlign: "center", padding: 16, position: "relative" }}>
+      <header style={{ textAlign: "center", padding: "20px 0 10px 0", position: "relative" }}>
         <img
           src={logoUrl}
           alt="logo"
           style={{
-            width: 84,
-            height: 84,
+            width: 60,
+            height: 60,
             objectFit: "cover",
             borderRadius: "50%",
-            margin: "0 auto",
-            border: `3px solid ${ACCENT}`,
+            border: `2.5px solid ${ACCENT}`,
             background: "#fff",
+            margin: "0 auto 0 auto",
+            display: "block",
             boxShadow: "0 0 12px #0006",
           }}
         />
@@ -149,7 +147,7 @@ const App = () => {
       </header>
 
       <div style={{
-        display: "flex", justifyContent: "center", gap: 10, marginBottom: 18,
+        display: "flex", justifyContent: "center", gap: 12, marginBottom: 14,
       }}>
         {SECTIONS.map((section, idx) => (
           <button
@@ -176,10 +174,10 @@ const App = () => {
         style={{
           display: "grid",
           gridTemplateColumns: grid,
-          gap: 28, // большее расстояние!
-          maxWidth: 900,
+          gap: 24,
+          maxWidth: 750,
           margin: "0 auto",
-          padding: 12,
+          padding: 8,
           width: "100%",
         }}
       >
@@ -188,37 +186,35 @@ const App = () => {
             key={product.id}
             style={{
               background: CARD,
-              borderRadius: 13,
-              boxShadow: "0 2px 10px #0003",
+              borderRadius: 18,
+              boxShadow: "0 4px 16px #0004",
               padding: 10,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              minHeight: 190,
-              minWidth: 0,
-              width: "98px",          // Уже!
-              maxWidth: 112,
+              minHeight: 230,
+              width: "100%",
               boxSizing: "border-box",
               margin: "0 auto",
-              transition: "box-shadow 0.2s",
             }}
           >
             <img
               src={product.img}
               alt={product.name}
               style={{
-                width: 64,
-                height: 64,
+                width: 94,
+                height: 94,
                 objectFit: "cover",
-                borderRadius: 7,
-                marginBottom: 6,
+                borderRadius: 12,
+                marginBottom: 8,
                 background: "#222",
+                boxShadow: "0 2px 10px #0003",
               }}
               onError={e => { e.target.src = TV_PLACEHOLDER; }}
             />
             <div style={{
               fontWeight: 700,
-              fontSize: 13,
+              fontSize: 14,
               marginBottom: 2,
               textAlign: "center",
               width: "100%",
@@ -227,8 +223,8 @@ const App = () => {
               {product.brand}
             </div>
             <div style={{
-              fontSize: 12,
-              marginBottom: 3,
+              fontSize: 13,
+              marginBottom: 4,
               color: "#e5e5e5",
               textAlign: "center",
               width: "100%",
@@ -237,20 +233,21 @@ const App = () => {
             }}>
               {product.name}
             </div>
-            <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 6 }}>{product.price} ₽</div>
+            <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 8 }}>{product.price} ₽</div>
             <button
               onClick={() => addToCart(product.id)}
               style={{
                 marginTop: "auto",
                 background: ACCENT,
                 color: "#fff",
-                padding: "7px 0",
-                borderRadius: 7,
+                padding: "10px 0",
+                borderRadius: 8,
                 border: "none",
                 fontWeight: 600,
-                fontSize: 13,
+                fontSize: 14,
                 cursor: "pointer",
                 width: "100%",
+                boxShadow: "0 1px 4px #0002"
               }}
             >
               В корзину
@@ -258,7 +255,7 @@ const App = () => {
           </div>
         ))}
       </div>
-
+      {/* Корзина — оставляю без изменений */}
       {showCart && (
         <div
           style={{
