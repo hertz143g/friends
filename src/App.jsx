@@ -1,81 +1,28 @@
 import React, { useState } from "react";
 
 const ACCENT = "#339DFF";
-const BG = "#18181b";
-const CARD = "#23272f";
+const BG = "#23272f"; // фон теперь всегда серый
+const CARD = "#18181b";
 const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
+const TV_PLACEHOLDER = "https://i.imgur.com/nHhkF1n.jpg";
+
+// Все телевизоры из твоей таблицы
+const TVS = [
+  { id: 396940, brand: "Xiaomi", name: 'Телевизор ЖК 32" Xiaomi TV A32 2025 RU черный', price: 16000 },
+  { id: 394946, brand: "Xiaomi", name: 'Телевизор ЖК 43" Xiaomi TV A43 FHD 2025 RU черный', price: 23100 },
+  { id: 395792, brand: "Xiaomi", name: 'Телевизор ЖК 43" Xiaomi TV A43 4K 2025 RU черный', price: 23300 },
+  { id: 398100, brand: "Xiaomi", name: 'Телевизор ЖК 43" Xiaomi TV A43 Pro 4K 2025 RU черный', price: 26500 },
+  { id: 394448, brand: "Xiaomi", name: 'Телевизор ЖК 50" Xiaomi TV A50 2025 RU RU черный', price: 27800 },
+  { id: 394966, brand: "Xiaomi", name: 'Телевизор ЖК 55" Xiaomi TV A55 2025 RU черный', price: 32800 }
+];
 
 const SECTIONS = [
   {
     name: "Телевизоры",
-    products: [
-      {
-        id: 1,
-        brand: "Xiaomi",
-        name: 'Телевизор ЖК 32" Xiaomi TV A32 2025 RU черный',
-        price: 16000,
-        img: "https://i.imgur.com/nHhkF1n.jpg",
-      },
-      {
-        id: 2,
-        brand: "Xiaomi",
-        name: 'Телевизор ЖК 43" Xiaomi TV A43 FHD 2025 RU черный',
-        price: 23100,
-        img: "https://i.imgur.com/BfqZmkt.jpg",
-      },
-      {
-        id: 3,
-        brand: "Xiaomi",
-        name: 'Телевизор ЖК 43" Xiaomi TV A43 4K 2025 RU черный',
-        price: 23300,
-        img: "https://i.imgur.com/x9z1nFi.jpg",
-      },
-    ],
-  },
-  {
-    name: "Телефоны",
-    products: [
-      {
-        id: 101,
-        brand: "Apple",
-        name: "iPhone 15 Pro Max 256GB",
-        price: 142000,
-        img: "https://i.imgur.com/31lOYYb.jpg",
-      },
-      {
-        id: 102,
-        brand: "Samsung",
-        name: "Samsung Galaxy S24 Ultra",
-        price: 135000,
-        img: "https://i.imgur.com/F7k1P2d.jpg",
-      },
-      {
-        id: 103,
-        brand: "Xiaomi",
-        name: "Xiaomi 14 Ultra 12/256GB",
-        price: 89900,
-        img: "https://i.imgur.com/6BQ0ObX.jpg",
-      },
-    ],
-  },
-  {
-    name: "Компьютеры",
-    products: [
-      {
-        id: 201,
-        brand: "Apple",
-        name: "MacBook Air 15” M3",
-        price: 145000,
-        img: "https://i.imgur.com/nbpRIJL.jpg",
-      },
-      {
-        id: 202,
-        brand: "MSI",
-        name: "MSI Modern 15 i5/16GB/512GB SSD",
-        price: 75000,
-        img: "https://i.imgur.com/jhy6vUI.jpg",
-      },
-    ],
+    products: TVS.map(tv => ({
+      ...tv,
+      img: TV_PLACEHOLDER // если нужны реальные картинки — скинь мне ссылки
+    })),
   },
 ];
 
@@ -116,22 +63,23 @@ const App = () => {
     0
   );
 
-  // Устанавливаем фон body (в mini app это работает)
+  // Фикс фона на весь экран и скролла (body+html)
   React.useEffect(() => {
     document.body.style.background = BG;
     document.body.style.margin = "0";
     document.body.style.minHeight = "100vh";
+    document.documentElement.style.background = BG;
     document.documentElement.style.height = "100%";
+    document.documentElement.style.margin = "0";
   }, []);
 
-  // Реально адаптивно: на мобиле 1, на планшете 2, на десктопе 3 карточки
+  // Сетка: 1 карточка — мобила, 2 — планшет, 3 — пк
   const getGridTemplate = () => {
-    if (window.innerWidth <= 480) return "1fr";
-    if (window.innerWidth <= 800) return "1fr 1fr";
+    if (window.innerWidth <= 500) return "1fr";
+    if (window.innerWidth <= 850) return "1fr 1fr";
     return "1fr 1fr 1fr";
   };
 
-  // Для динамического рендера сетки на изменение размера
   const [grid, setGrid] = useState(getGridTemplate());
   React.useEffect(() => {
     const handleResize = () => setGrid(getGridTemplate());
@@ -151,27 +99,21 @@ const App = () => {
         fontFamily: "system-ui,sans-serif",
       }}
     >
-      <header style={{ textAlign: "center", padding: 18, position: "relative" }}>
-        <img src={logoUrl} alt="logo" style={{ maxWidth: 110, margin: "0 auto" }} />
+      <header style={{ textAlign: "center", padding: 16, position: "relative" }}>
+        <img src={logoUrl} alt="logo" style={{ maxWidth: 100, margin: "0 auto" }} />
         <button
           onClick={() => setShowCart(true)}
           style={{
             position: "absolute",
-            top: 22,
-            right: 32,
+            top: 18,
+            right: 24,
             background: "transparent",
             border: "none",
             cursor: "pointer",
           }}
         >
           <span style={{ position: "relative" }}>
-            <svg
-              width={30}
-              height={30}
-              viewBox="0 0 24 24"
-              fill={ACCENT}
-              style={{ marginRight: 2 }}
-            >
+            <svg width={27} height={27} viewBox="0 0 24 24" fill={ACCENT}>
               <path d="M7 18c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm10 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm2-3H7.42l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H6.21l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H5.42l-.94-2H2V4h2l3.6 7.59-1.35 2.44C5.16 14.37 5.92 16 7.22 16H19c.553 0 1-.447 1-1s-.447-1-1-1z" />
             </svg>
             {cart.length > 0 && (
@@ -184,7 +126,7 @@ const App = () => {
                   color: "#fff",
                   borderRadius: "50%",
                   padding: "2px 8px",
-                  fontSize: 12,
+                  fontSize: 11,
                 }}
               >
                 {cart.length}
@@ -194,14 +136,9 @@ const App = () => {
         </button>
       </header>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          gap: 12,
-          marginBottom: 18,
-        }}
-      >
+      <div style={{
+        display: "flex", justifyContent: "center", gap: 10, marginBottom: 12,
+      }}>
         {SECTIONS.map((section, idx) => (
           <button
             key={section.name}
@@ -213,7 +150,7 @@ const App = () => {
               borderRadius: 14,
               padding: "7px 16px",
               fontWeight: 600,
-              fontSize: 16,
+              fontSize: 15,
               cursor: "pointer",
               transition: "0.15s",
             }}
@@ -223,15 +160,14 @@ const App = () => {
         ))}
       </div>
 
-      {/* Адаптивная сетка товаров */}
       <div
         style={{
           display: "grid",
           gridTemplateColumns: grid,
-          gap: 16,
-          maxWidth: 950,
+          gap: 10,
+          maxWidth: 750,
           margin: "0 auto",
-          padding: 12,
+          padding: 6,
           width: "100%",
         }}
       >
@@ -240,13 +176,13 @@ const App = () => {
             key={product.id}
             style={{
               background: CARD,
-              borderRadius: 16,
-              boxShadow: "0 4px 16px #0003",
-              padding: 12,
+              borderRadius: 13,
+              boxShadow: "0 2px 10px #0003",
+              padding: 8,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              minHeight: 310,
+              minHeight: 210,
               minWidth: 0,
               width: "100%",
               boxSizing: "border-box",
@@ -257,20 +193,20 @@ const App = () => {
               src={product.img}
               alt={product.name}
               style={{
-                width: "85%",
-                maxWidth: 200,
+                width: "80%",
+                maxWidth: 110,
                 aspectRatio: "1/1",
                 objectFit: "cover",
-                borderRadius: 10,
-                marginBottom: 10,
+                borderRadius: 8,
+                marginBottom: 6,
                 background: "#222",
               }}
-              onError={(e) => { e.target.src = "https://via.placeholder.com/200?text=No+Image"; }}
+              onError={(e) => { e.target.src = "https://via.placeholder.com/110?text=No+Image"; }}
             />
             <div style={{
               fontWeight: 700,
-              fontSize: 15,
-              marginBottom: 4,
+              fontSize: 13,
+              marginBottom: 2,
               textAlign: "center",
               width: "100%",
               overflowWrap: "break-word"
@@ -278,28 +214,28 @@ const App = () => {
               {product.brand}
             </div>
             <div style={{
-              fontSize: 13,
-              marginBottom: 4,
+              fontSize: 12,
+              marginBottom: 3,
               color: "#e5e5e5",
               textAlign: "center",
               width: "100%",
-              minHeight: 36,
+              minHeight: 30,
               overflowWrap: "break-word"
             }}>
               {product.name}
             </div>
-            <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8 }}>{product.price} ₽</div>
+            <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 6 }}>{product.price} ₽</div>
             <button
               onClick={() => addToCart(product.id)}
               style={{
                 marginTop: "auto",
                 background: ACCENT,
                 color: "#fff",
-                padding: "10px 0",
-                borderRadius: 8,
+                padding: "8px 0",
+                borderRadius: 7,
                 border: "none",
                 fontWeight: 600,
-                fontSize: 15,
+                fontSize: 13,
                 cursor: "pointer",
                 width: "100%",
               }}
@@ -310,7 +246,6 @@ const App = () => {
         ))}
       </div>
 
-      {/* Корзина */}
       {showCart && (
         <div
           style={{
@@ -327,17 +262,17 @@ const App = () => {
           <div
             style={{
               background: CARD,
-              borderRadius: 16,
-              padding: 24,
-              width: 330,
+              borderRadius: 13,
+              padding: 18,
+              width: 320,
               maxWidth: "90vw",
               boxShadow: "0 6px 24px #000a",
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 14 }}>Корзина</div>
+            <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 9 }}>Корзина</div>
             {cart.length === 0 ? (
-              <div style={{ color: "#aaa", marginBottom: 14 }}>Корзина пуста</div>
+              <div style={{ color: "#aaa", marginBottom: 10 }}>Корзина пуста</div>
             ) : (
               <>
                 {cart.map((item) => {
@@ -350,26 +285,26 @@ const App = () => {
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center",
-                        marginBottom: 10,
+                        marginBottom: 8,
                         borderBottom: "1px solid #4446",
-                        paddingBottom: 5,
+                        paddingBottom: 4,
                       }}
                     >
                       <div>
                         <span style={{ fontWeight: 700 }}>{product.brand}</span>
-                        <div style={{ fontSize: 14 }}>{product.name}</div>
-                        <div style={{ color: "#aaa", fontSize: 13 }}>x{item.qty}</div>
+                        <div style={{ fontSize: 12 }}>{product.name}</div>
+                        <div style={{ color: "#aaa", fontSize: 12 }}>x{item.qty}</div>
                       </div>
                       <div style={{ textAlign: "right" }}>
                         <span>{product.price * item.qty} ₽</span>
                         <button
                           style={{
                             display: "block",
-                            marginTop: 5,
+                            marginTop: 4,
                             color: ACCENT,
                             background: "none",
                             border: "none",
-                            fontSize: 13,
+                            fontSize: 12,
                             cursor: "pointer",
                           }}
                           onClick={() => removeFromCart(item.id)}
@@ -380,20 +315,20 @@ const App = () => {
                     </div>
                   );
                 })}
-                <div style={{ fontWeight: 700, fontSize: 16, textAlign: "right", marginTop: 14 }}>
+                <div style={{ fontWeight: 700, fontSize: 14, textAlign: "right", marginTop: 8 }}>
                   Итого: {total} ₽
                 </div>
                 <button
                   style={{
                     width: "100%",
-                    marginTop: 14,
+                    marginTop: 10,
                     background: ACCENT,
                     color: "#fff",
-                    padding: "12px 0",
-                    borderRadius: 10,
+                    padding: "10px 0",
+                    borderRadius: 7,
                     border: "none",
                     fontWeight: 700,
-                    fontSize: 16,
+                    fontSize: 14,
                     cursor: "pointer",
                   }}
                   onClick={() => {
@@ -418,7 +353,7 @@ const App = () => {
           </div>
         </div>
       )}
-      <div style={{ height: 30 }} />
+      <div style={{ height: 18 }} />
     </div>
   );
 };
