@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const ACCENT = "#339DFF";
@@ -37,13 +37,19 @@ const SECTIONS = [
   }
 ];
 
-const CARD_HEIGHT = 310;
+const CARD_HEIGHT = 330;
 
 const App = () => {
   const [activeSection, setActiveSection] = useState(0);
   const products = SECTIONS[activeSection].products;
   const [cart, setCart] = useState([]);
   const [showCart, setShowCart] = useState(false);
+  const [cartAnim, setCartAnim] = useState(false);
+  const [addAnimId, setAddAnimId] = useState(null);
+  const cartIconRef = useRef(null);
+
+  // Сумма всех товаров
+  const cartTotalCount = cart.reduce((a, b) => a + b.qty, 0);
 
   const addToCart = (id) => {
     setCart((prev) => {
@@ -56,6 +62,11 @@ const App = () => {
         return [...prev, { id, qty: 1 }];
       }
     });
+    // Анимация корзины
+    setCartAnim(true);
+    setAddAnimId(id);
+    setTimeout(() => setCartAnim(false), 400);
+    setTimeout(() => setAddAnimId(null), 500);
   };
 
   const removeFromCart = (id) => {
@@ -112,7 +123,10 @@ const App = () => {
             boxShadow: "0 0 12px #0006",
           }}
         />
-        <button
+        <motion.button
+          ref={cartIconRef}
+          animate={cartAnim ? { scale: [1, 1.22, 0.9, 1], rotate: [0, -13, 6, 0] } : { scale: 1, rotate: 0 }}
+          transition={{ duration: 0.4, type: "spring" }}
           onClick={() => setShowCart(true)}
           style={{
             position: "absolute",
@@ -121,14 +135,19 @@ const App = () => {
             background: "transparent",
             border: "none",
             cursor: "pointer",
+            outline: "none"
           }}
         >
           <span style={{ position: "relative" }}>
             <svg width={27} height={27} viewBox="0 0 24 24" fill={ACCENT}>
               <path d="M7 18c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm10 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm2-3H7.42l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H6.21l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H5.42l-.94-2H2V4h2l3.6 7.59-1.35 2.44C5.16 14.37 5.92 16 7.22 16H19c.553 0 1-.447 1-1s-.447-1-1-1z" />
             </svg>
-            {cart.length > 0 && (
-              <span
+            {cartTotalCount > 0 && (
+              <motion.span
+                key={cartTotalCount}
+                initial={{ scale: 0.5, opacity: 0, y: -12 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                transition={{ type: "spring", stiffness: 350, damping: 12 }}
                 style={{
                   position: "absolute",
                   top: -10,
@@ -137,15 +156,16 @@ const App = () => {
                   color: "#fff",
                   borderRadius: "50%",
                   padding: "2px 8px",
-                  fontSize: 11,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  boxShadow: "0 2px 8px #1d7ad5c0"
                 }}
               >
-                {cart.length}
-              </span>
+                {cartTotalCount}
+              </motion.span>
             )}
           </span>
-        </button>
-        {/* Разделитель: линия под лого */}
+        </motion.button>
         <div style={{
           width: "100%",
           maxWidth: 380,
@@ -156,7 +176,6 @@ const App = () => {
         }}></div>
       </header>
 
-      {/* БОЛЬШЕ расстояние между линией и разделами */}
       <div style={{
         display: "flex", justifyContent: "center", gap: 12, margin: "34px 0 16px 0"
       }}>
@@ -192,14 +211,14 @@ const App = () => {
           width: "100%",
         }}
       >
-        <AnimatePresence>
+        <AnimatePresence mode="wait">
         {products.map((product, i) => (
           <motion.div
             key={product.id}
-            initial={{ opacity: 0, y: 30, scale: 0.96 }}
+            initial={{ opacity: 0, y: 30, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 40, scale: 0.93 }}
-            transition={{ delay: i * 0.05, duration: 0.36, type: "spring" }}
+            exit={{ opacity: 0, y: 40, scale: 0.95 }}
+            transition={{ delay: i * 0.05, duration: 0.38, type: "spring" }}
             style={{
               background: CARD,
               borderRadius: 17,
@@ -213,21 +232,25 @@ const App = () => {
               width: "100%",
               boxSizing: "border-box",
               margin: "0 auto",
-              justifyContent: "flex-start"
+              justifyContent: "flex-start",
+              position: "relative"
             }}
           >
-            <img
+            <motion.img
               src={product.img}
               alt={product.name}
               style={{
-                width: 100,
-                height: 100,
+                width: 125,
+                height: 125,
                 objectFit: "cover",
-                borderRadius: 14,
+                borderRadius: 16,
                 marginBottom: 18,
                 background: "#222",
                 boxShadow: "0 2px 10px #0003",
               }}
+              initial={false}
+              animate={addAnimId === product.id ? { scale: [1, 1.12, 0.95, 1] } : { scale: 1 }}
+              transition={{ duration: 0.37 }}
               onError={e => { e.target.src = product.img; }}
             />
             <div style={{
@@ -242,7 +265,7 @@ const App = () => {
             </div>
             <div style={{
               fontSize: 13,
-              marginBottom: 28, // ВОТ ОТСТУП!
+              marginBottom: 28,
               color: "#c2c2c2",
               textAlign: "center",
               width: "68%",
@@ -260,7 +283,7 @@ const App = () => {
               {product.price} ₽
             </div>
             <motion.button
-              whileTap={{ scale: 0.94, backgroundColor: "#197ad2" }}
+              whileTap={{ scale: 0.93, backgroundColor: "#197ad2" }}
               onClick={() => addToCart(product.id)}
               style={{
                 background: ACCENT,
@@ -277,6 +300,29 @@ const App = () => {
             >
               В корзину
             </motion.button>
+            {/* Эффект "+1" */}
+            <AnimatePresence>
+              {addAnimId === product.id && (
+                <motion.div
+                  initial={{ opacity: 0, y: 16, scale: 0.7 }}
+                  animate={{ opacity: 1, y: -32, scale: 1.15 }}
+                  exit={{ opacity: 0, y: -70, scale: 1.4 }}
+                  transition={{ duration: 0.55 }}
+                  style={{
+                    position: "absolute",
+                    top: 30,
+                    right: 32,
+                    color: ACCENT,
+                    fontWeight: 900,
+                    fontSize: 22,
+                    textShadow: "0 2px 7px #18181b",
+                    pointerEvents: "none"
+                  }}
+                >
+                  +1
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         ))}
         </AnimatePresence>
