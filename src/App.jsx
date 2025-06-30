@@ -1,11 +1,12 @@
 import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const ACCENT = "#339DFF";
 const BG = "#23272f";
 const CARD = "#18181b";
 const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
 const TV_PLACEHOLDER = "https://tech-iq.ru/upload/iblock/324/ixntoljx6r6lclbh3pfr0ve261z3ocn2.webp";
-const PHONE_PLACEHOLDER = "https://avatars.mds.yandex.net/get-mpic/1865853/img_id3034328595286431407.png/orig";
+const PHONE_PLACEHOLDER = "https://tech-iq.ru/upload/iblock/324/ixntoljx6r6lclbh3pfr0ve261z3ocn2.webp";
 
 const TVS = [
   { id: 396940, brand: "Xiaomi", name: 'Телевизор ЖК 32" Xiaomi TV A32 2025 RU черный', price: 16000 },
@@ -36,7 +37,7 @@ const SECTIONS = [
   }
 ];
 
-const CARD_HEIGHT = 290;
+const CARD_HEIGHT = 310;
 
 const App = () => {
   const [activeSection, setActiveSection] = useState(0);
@@ -191,9 +192,14 @@ const App = () => {
           width: "100%",
         }}
       >
-        {products.map((product) => (
-          <div
+        <AnimatePresence>
+        {products.map((product, i) => (
+          <motion.div
             key={product.id}
+            initial={{ opacity: 0, y: 30, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 40, scale: 0.93 }}
+            transition={{ delay: i * 0.05, duration: 0.36, type: "spring" }}
             style={{
               background: CARD,
               borderRadius: 17,
@@ -236,7 +242,7 @@ const App = () => {
             </div>
             <div style={{
               fontSize: 13,
-              marginBottom: 18,
+              marginBottom: 28, // ВОТ ОТСТУП!
               color: "#c2c2c2",
               textAlign: "center",
               width: "68%",
@@ -253,7 +259,8 @@ const App = () => {
             }}>
               {product.price} ₽
             </div>
-            <button
+            <motion.button
+              whileTap={{ scale: 0.94, backgroundColor: "#197ad2" }}
               onClick={() => addToCart(product.id)}
               style={{
                 background: ACCENT,
@@ -269,9 +276,10 @@ const App = () => {
               }}
             >
               В корзину
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
         ))}
+        </AnimatePresence>
       </div>
       {showCart && (
         <div
