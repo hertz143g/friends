@@ -3,9 +3,10 @@ import React, { useState } from "react";
 const ACCENT = "#339DFF";
 const BG = "#18181b";
 const CARD = "#23272f";
-const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
+const logoUrl = "https://i.ibb.co/5MkhR8D/4friendsstore-logo.png";
 
-// Разделы с товарами
+// Гарантированные картинки (imgur, github или свои)
+// Если хочешь можешь загрузить свои на imgur.com (или другой свободный хостинг)
 const SECTIONS = [
   {
     name: "Телевизоры",
@@ -15,42 +16,21 @@ const SECTIONS = [
         brand: "Xiaomi",
         name: 'Телевизор ЖК 32" Xiaomi TV A32 2025 RU черный',
         price: 16000,
-        img: "https://cdn.ixbt.com/live/topics/preview/00/02/80/80/62d78f91e6.jpg",
+        img: "https://i.imgur.com/nHhkF1n.jpg",
       },
       {
         id: 2,
         brand: "Xiaomi",
         name: 'Телевизор ЖК 43" Xiaomi TV A43 FHD 2025 RU черный',
         price: 23100,
-        img: "https://www.citilink.ru/images/product/large/1931532_v01_b.jpg",
+        img: "https://i.imgur.com/BfqZmkt.jpg",
       },
       {
         id: 3,
         brand: "Xiaomi",
         name: 'Телевизор ЖК 43" Xiaomi TV A43 4K 2025 RU черный',
         price: 23300,
-        img: "https://cdn1.ozone.ru/s3/multimedia-6/6637571326.jpg",
-      },
-      {
-        id: 4,
-        brand: "Xiaomi",
-        name: 'Телевизор ЖК 43" Xiaomi TV A43 Pro 4K 2025 RU черный',
-        price: 26500,
-        img: "https://avatars.mds.yandex.net/get-mpic/5234975/img_id7106843803306287235.jpeg/600x800",
-      },
-      {
-        id: 5,
-        brand: "Xiaomi",
-        name: 'Телевизор ЖК 50" Xiaomi TV A50 2025 RU RU черный',
-        price: 27800,
-        img: "https://television-world.ru/images/television/2821/43/4.jpg",
-      },
-      {
-        id: 6,
-        brand: "Xiaomi",
-        name: 'Телевизор ЖК 55" Xiaomi TV A55 2025 RU черный',
-        price: 32800,
-        img: "https://mi-shop.com/upload/iblock/b64/mi_tv_p1_55_ru_black_1.jpg",
+        img: "https://i.imgur.com/x9z1nFi.jpg",
       },
     ],
   },
@@ -62,21 +42,21 @@ const SECTIONS = [
         brand: "Apple",
         name: "iPhone 15 Pro Max 256GB",
         price: 142000,
-        img: "https://avatars.mds.yandex.net/get-mpic/11051089/img_id7801432397197670056.jpeg/orig",
+        img: "https://i.imgur.com/31lOYYb.jpg",
       },
       {
         id: 102,
         brand: "Samsung",
         name: "Samsung Galaxy S24 Ultra",
         price: 135000,
-        img: "https://cdn1.ozone.ru/s3/multimedia-h/6720637893.jpg",
+        img: "https://i.imgur.com/F7k1P2d.jpg",
       },
       {
         id: 103,
         brand: "Xiaomi",
         name: "Xiaomi 14 Ultra 12/256GB",
         price: 89900,
-        img: "https://avatars.mds.yandex.net/get-mpic/11830545/img_id8740979558294245438.jpeg/orig",
+        img: "https://i.imgur.com/6BQ0ObX.jpg",
       },
     ],
   },
@@ -88,14 +68,14 @@ const SECTIONS = [
         brand: "Apple",
         name: "MacBook Air 15” M3",
         price: 145000,
-        img: "https://cdn1.ozone.ru/s3/multimedia-g/6847798344.jpg",
+        img: "https://i.imgur.com/nbpRIJL.jpg",
       },
       {
         id: 202,
         brand: "MSI",
         name: "MSI Modern 15 i5/16GB/512GB SSD",
         price: 75000,
-        img: "https://avatars.mds.yandex.net/get-mpic/4974537/img_id7810217466822702193.png/orig",
+        img: "https://i.imgur.com/jhy6vUI.jpg",
       },
     ],
   },
@@ -138,7 +118,7 @@ const App = () => {
     0
   );
 
-  // Хак для фона на всю страницу
+  // Фикс для body-стилей в мини-аппе
   React.useEffect(() => {
     document.body.style.background = BG;
     document.body.style.margin = "0";
@@ -150,18 +130,18 @@ const App = () => {
     <div
       style={{
         minHeight: "100vh",
-        height: "100vh",
         background: BG,
         color: "#fff",
         overflow: "auto",
         margin: 0,
         padding: 0,
         boxSizing: "border-box",
+        fontFamily: "system-ui,sans-serif",
       }}
     >
-      {/* Логотип */}
-      <header style={{ textAlign: "center", padding: 24, position: "relative" }}>
-        <img src={logoUrl} alt="logo" style={{ maxWidth: 120, margin: "0 auto" }} />
+      {/* Логотип + корзина */}
+      <header style={{ textAlign: "center", padding: 20, position: "relative" }}>
+        <img src={logoUrl} alt="logo" style={{ maxWidth: 110, margin: "0 auto" }} />
         <button
           onClick={() => setShowCart(true)}
           style={{
@@ -175,8 +155,8 @@ const App = () => {
         >
           <span style={{ position: "relative" }}>
             <svg
-              width={32}
-              height={32}
+              width={30}
+              height={30}
               viewBox="0 0 24 24"
               fill={ACCENT}
               style={{ marginRight: 2 }}
@@ -208,8 +188,8 @@ const App = () => {
         style={{
           display: "flex",
           justifyContent: "center",
-          gap: 18,
-          marginBottom: 24,
+          gap: 10,
+          marginBottom: 14,
         }}
       >
         {SECTIONS.map((section, idx) => (
@@ -220,11 +200,10 @@ const App = () => {
               background: idx === activeSection ? ACCENT : "transparent",
               color: idx === activeSection ? "#fff" : "#aaa",
               border: "none",
-              borderRadius: 16,
-              padding: "8px 20px",
+              borderRadius: 14,
+              padding: "7px 16px",
               fontWeight: 600,
-              fontSize: 17,
-              letterSpacing: 0.5,
+              fontSize: 16,
               cursor: "pointer",
               transition: "0.15s",
             }}
@@ -234,15 +213,15 @@ const App = () => {
         ))}
       </div>
 
-      {/* Каталог — три карточки в ряд */}
+      {/* Каталог товаров — адаптивная сетка */}
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
-          gap: 24,
-          maxWidth: 1080,
+          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+          gap: 12,
+          maxWidth: 750,
           margin: "0 auto",
-          padding: 12,
+          padding: 8,
         }}
       >
         {products.map((product) => (
@@ -250,53 +229,54 @@ const App = () => {
             key={product.id}
             style={{
               background: CARD,
-              borderRadius: 20,
-              boxShadow: "0 4px 20px #0004",
-              padding: 14,
+              borderRadius: 16,
+              boxShadow: "0 4px 16px #0003",
+              padding: 10,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              height: 340,
+              minHeight: 320,
               minWidth: 0,
-              minHeight: 0,
+              width: "100%",
+              boxSizing: "border-box",
             }}
           >
             <img
               src={product.img}
               alt={product.name}
               style={{
-                width: 170,
-                height: 170,
+                width: "100%",
+                maxWidth: 160,
+                aspectRatio: "1/1",
                 objectFit: "cover",
-                borderRadius: 14,
-                marginBottom: 12,
-                background: "#18181b",
+                borderRadius: 10,
+                marginBottom: 8,
+                background: "#222",
               }}
+              onError={(e) => { e.target.src = "https://via.placeholder.com/160?text=No+Image"; }}
             />
             <div style={{
               fontWeight: 700,
-              fontSize: 16,
+              fontSize: 15,
               marginBottom: 4,
               textAlign: "center",
               width: "100%",
-              whiteSpace: "normal",
-              overflowWrap: "break-word",
+              overflowWrap: "break-word"
             }}>
               {product.brand}
             </div>
             <div style={{
-              fontSize: 15,
-              marginBottom: 6,
+              fontSize: 13,
+              marginBottom: 4,
               color: "#e5e5e5",
               textAlign: "center",
               width: "100%",
-              minHeight: 42,
-              whiteSpace: "normal",
-              overflowWrap: "break-word",
+              minHeight: 36,
+              overflowWrap: "break-word"
             }}>
               {product.name}
             </div>
-            <div style={{ fontWeight: 700, fontSize: 18, marginBottom: 6 }}>{product.price} ₽</div>
+            <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8 }}>{product.price} ₽</div>
             <button
               onClick={() => addToCart(product.id)}
               style={{
@@ -304,14 +284,12 @@ const App = () => {
                 background: ACCENT,
                 color: "#fff",
                 padding: "10px 0",
-                borderRadius: 10,
+                borderRadius: 8,
                 border: "none",
                 fontWeight: 600,
-                fontSize: 16,
+                fontSize: 15,
                 cursor: "pointer",
                 width: "100%",
-                boxShadow: "0 2px 8px #339dff30",
-                transition: "0.2s",
               }}
             >
               В корзину
@@ -337,17 +315,17 @@ const App = () => {
           <div
             style={{
               background: CARD,
-              borderRadius: 20,
-              padding: 32,
-              width: 380,
+              borderRadius: 16,
+              padding: 24,
+              width: 330,
               maxWidth: "90vw",
               boxShadow: "0 6px 24px #000a",
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 16 }}>Корзина</div>
+            <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 14 }}>Корзина</div>
             {cart.length === 0 ? (
-              <div style={{ color: "#aaa", marginBottom: 16 }}>Корзина пуста</div>
+              <div style={{ color: "#aaa", marginBottom: 14 }}>Корзина пуста</div>
             ) : (
               <>
                 {cart.map((item) => {
@@ -360,9 +338,9 @@ const App = () => {
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center",
-                        marginBottom: 12,
-                        borderBottom: "1px solid #4448",
-                        paddingBottom: 8,
+                        marginBottom: 10,
+                        borderBottom: "1px solid #4446",
+                        paddingBottom: 5,
                       }}
                     >
                       <div>
@@ -390,20 +368,20 @@ const App = () => {
                     </div>
                   );
                 })}
-                <div style={{ fontWeight: 700, fontSize: 18, textAlign: "right", marginTop: 18 }}>
+                <div style={{ fontWeight: 700, fontSize: 16, textAlign: "right", marginTop: 14 }}>
                   Итого: {total} ₽
                 </div>
                 <button
                   style={{
                     width: "100%",
-                    marginTop: 18,
+                    marginTop: 14,
                     background: ACCENT,
                     color: "#fff",
-                    padding: "13px 0",
-                    borderRadius: 12,
+                    padding: "12px 0",
+                    borderRadius: 10,
                     border: "none",
                     fontWeight: 700,
-                    fontSize: 18,
+                    fontSize: 16,
                     cursor: "pointer",
                   }}
                   onClick={() => {
@@ -428,7 +406,7 @@ const App = () => {
           </div>
         </div>
       )}
-      <div style={{ height: 40 }} />
+      <div style={{ height: 30 }} />
     </div>
   );
 };
