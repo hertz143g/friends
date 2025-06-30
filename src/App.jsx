@@ -70,19 +70,6 @@ const App = () => {
     document.documentElement.style.margin = "0";
   }, []);
 
-  // Теперь всегда не меньше 2 карточек в ряд, на широком экране — 3
-  const getGridTemplate = () => {
-    if (window.innerWidth <= 650) return "1fr 1fr";
-    if (window.innerWidth <= 1100) return "1fr 1fr 1fr";
-    return "1fr 1fr 1fr 1fr";
-  };
-  const [grid, setGrid] = useState(getGridTemplate());
-  React.useEffect(() => {
-    const handleResize = () => setGrid(getGridTemplate());
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   return (
     <div
       style={{
@@ -95,7 +82,7 @@ const App = () => {
         fontFamily: "system-ui,sans-serif",
       }}
     >
-      <header style={{ textAlign: "center", padding: "20px 0 10px 0", position: "relative" }}>
+      <header style={{ textAlign: "center", padding: "18px 0 12px 0", position: "relative" }}>
         <img
           src={logoUrl}
           alt="logo"
@@ -115,7 +102,7 @@ const App = () => {
           onClick={() => setShowCart(true)}
           style={{
             position: "absolute",
-            top: 24,
+            top: 22,
             right: 32,
             background: "transparent",
             border: "none",
@@ -147,7 +134,7 @@ const App = () => {
       </header>
 
       <div style={{
-        display: "flex", justifyContent: "center", gap: 12, marginBottom: 14,
+        display: "flex", justifyContent: "center", gap: 12, marginBottom: 16,
       }}>
         {SECTIONS.map((section, idx) => (
           <button
@@ -172,12 +159,12 @@ const App = () => {
 
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns: grid,
-          gap: 24,
-          maxWidth: 750,
+          display: "flex",
+          flexDirection: "column",
+          gap: 34, // много воздуха!
+          maxWidth: 340,
           margin: "0 auto",
-          padding: 8,
+          padding: 12,
           width: "100%",
         }}
       >
@@ -186,13 +173,13 @@ const App = () => {
             key={product.id}
             style={{
               background: CARD,
-              borderRadius: 18,
-              boxShadow: "0 4px 16px #0004",
-              padding: 10,
+              borderRadius: 17,
+              boxShadow: "0 4px 16px #0005",
+              padding: 14,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              minHeight: 230,
+              minHeight: 170,
               width: "100%",
               boxSizing: "border-box",
               margin: "0 auto",
@@ -202,8 +189,8 @@ const App = () => {
               src={product.img}
               alt={product.name}
               style={{
-                width: 94,
-                height: 94,
+                width: 92,
+                height: 92,
                 objectFit: "cover",
                 borderRadius: 12,
                 marginBottom: 8,
@@ -214,7 +201,7 @@ const App = () => {
             />
             <div style={{
               fontWeight: 700,
-              fontSize: 14,
+              fontSize: 15,
               marginBottom: 2,
               textAlign: "center",
               width: "100%",
@@ -228,7 +215,7 @@ const App = () => {
               color: "#e5e5e5",
               textAlign: "center",
               width: "100%",
-              minHeight: 30,
+              minHeight: 28,
               overflowWrap: "break-word"
             }}>
               {product.name}
@@ -240,7 +227,7 @@ const App = () => {
                 marginTop: "auto",
                 background: ACCENT,
                 color: "#fff",
-                padding: "10px 0",
+                padding: "9px 0",
                 borderRadius: 8,
                 border: "none",
                 fontWeight: 600,
@@ -255,7 +242,6 @@ const App = () => {
           </div>
         ))}
       </div>
-      {/* Корзина — оставляю без изменений */}
       {showCart && (
         <div
           style={{
