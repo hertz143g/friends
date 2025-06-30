@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 
 const ACCENT = "#339DFF";
-const BG = "#23272f"; // фон теперь всегда серый
+const BG = "#23272f";
 const CARD = "#18181b";
 const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
 const TV_PLACEHOLDER = "https://tech-iq.ru/upload/iblock/324/ixntoljx6r6lclbh3pfr0ve261z3ocn2.webp";
 
-// Все телевизоры из твоей таблицы
 const TVS = [
   { id: 396940, brand: "Xiaomi", name: 'Телевизор ЖК 32" Xiaomi TV A32 2025 RU черный', price: 16000 },
   { id: 394946, brand: "Xiaomi", name: 'Телевизор ЖК 43" Xiaomi TV A43 FHD 2025 RU черный', price: 23100 },
@@ -21,7 +20,7 @@ const SECTIONS = [
     name: "Телевизоры",
     products: TVS.map(tv => ({
       ...tv,
-      img: TV_PLACEHOLDER // если нужны реальные картинки — скинь мне ссылки
+      img: TV_PLACEHOLDER
     })),
   },
 ];
@@ -63,7 +62,6 @@ const App = () => {
     0
   );
 
-  // Фикс фона на весь экран и скролла (body+html)
   React.useEffect(() => {
     document.body.style.background = BG;
     document.body.style.margin = "0";
@@ -73,10 +71,10 @@ const App = () => {
     document.documentElement.style.margin = "0";
   }, []);
 
-  // Сетка: 1 карточка — мобила, 2 — планшет, 3 — пк
+  // Уже карточки + больше gap между ними
   const getGridTemplate = () => {
     if (window.innerWidth <= 500) return "1fr";
-    if (window.innerWidth <= 850) return "1fr 1fr";
+    if (window.innerWidth <= 900) return "1fr 1fr";
     return "1fr 1fr 1fr";
   };
 
@@ -87,6 +85,7 @@ const App = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Ключевые изменения: width/maxWidth карточек, gap, borderRadius у логотипа
   return (
     <div
       style={{
@@ -100,13 +99,26 @@ const App = () => {
       }}
     >
       <header style={{ textAlign: "center", padding: 16, position: "relative" }}>
-        <img src={logoUrl} alt="logo" style={{ maxWidth: 100, margin: "0 auto" }} />
+        <img
+          src={logoUrl}
+          alt="logo"
+          style={{
+            width: 84,
+            height: 84,
+            objectFit: "cover",
+            borderRadius: "50%",
+            margin: "0 auto",
+            border: `3px solid ${ACCENT}`,
+            background: "#fff",
+            boxShadow: "0 0 12px #0006",
+          }}
+        />
         <button
           onClick={() => setShowCart(true)}
           style={{
             position: "absolute",
-            top: 18,
-            right: 24,
+            top: 24,
+            right: 32,
             background: "transparent",
             border: "none",
             cursor: "pointer",
@@ -137,7 +149,7 @@ const App = () => {
       </header>
 
       <div style={{
-        display: "flex", justifyContent: "center", gap: 10, marginBottom: 12,
+        display: "flex", justifyContent: "center", gap: 10, marginBottom: 18,
       }}>
         {SECTIONS.map((section, idx) => (
           <button
@@ -164,10 +176,10 @@ const App = () => {
         style={{
           display: "grid",
           gridTemplateColumns: grid,
-          gap: 10,
-          maxWidth: 750,
+          gap: 28, // большее расстояние!
+          maxWidth: 900,
           margin: "0 auto",
-          padding: 6,
+          padding: 12,
           width: "100%",
         }}
       >
@@ -178,30 +190,31 @@ const App = () => {
               background: CARD,
               borderRadius: 13,
               boxShadow: "0 2px 10px #0003",
-              padding: 8,
+              padding: 10,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              minHeight: 210,
+              minHeight: 190,
               minWidth: 0,
-              width: "100%",
+              width: "98px",          // Уже!
+              maxWidth: 112,
               boxSizing: "border-box",
               margin: "0 auto",
+              transition: "box-shadow 0.2s",
             }}
           >
             <img
               src={product.img}
               alt={product.name}
               style={{
-                width: "80%",
-                maxWidth: 110,
-                aspectRatio: "1/1",
+                width: 64,
+                height: 64,
                 objectFit: "cover",
-                borderRadius: 8,
+                borderRadius: 7,
                 marginBottom: 6,
                 background: "#222",
               }}
-              onError={(e) => { e.target.src = "https://via.placeholder.com/110?text=No+Image"; }}
+              onError={e => { e.target.src = TV_PLACEHOLDER; }}
             />
             <div style={{
               fontWeight: 700,
@@ -231,7 +244,7 @@ const App = () => {
                 marginTop: "auto",
                 background: ACCENT,
                 color: "#fff",
-                padding: "8px 0",
+                padding: "7px 0",
                 borderRadius: 7,
                 border: "none",
                 fontWeight: 600,
