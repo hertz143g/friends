@@ -5,6 +5,7 @@ const BG = "#23272f";
 const CARD = "#18181b";
 const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
 const TV_PLACEHOLDER = "https://tech-iq.ru/upload/iblock/324/ixntoljx6r6lclbh3pfr0ve261z3ocn2.webp";
+const PHONE_PLACEHOLDER = "https://avatars.mds.yandex.net/get-mpic/1865853/img_id3034328595286431407.png/orig"; // Просто картинка айфона
 
 const TVS = [
   { id: 396940, brand: "Xiaomi", name: 'Телевизор ЖК 32" Xiaomi TV A32 2025 RU черный', price: 16000 },
@@ -15,6 +16,12 @@ const TVS = [
   { id: 394966, brand: "Xiaomi", name: 'Телевизор ЖК 55" Xiaomi TV A55 2025 RU черный', price: 32800 }
 ];
 
+const PHONES = [
+  { id: 101, brand: "Apple", name: "iPhone 15 Pro 128GB Серый", price: 115000, img: PHONE_PLACEHOLDER },
+  { id: 102, brand: "Samsung", name: "Samsung Galaxy S24 Ultra 256GB Черный", price: 98000, img: PHONE_PLACEHOLDER },
+  { id: 103, brand: "Xiaomi", name: "Xiaomi Redmi Note 13 Pro 512GB Синий", price: 34000, img: PHONE_PLACEHOLDER }
+];
+
 const SECTIONS = [
   {
     name: "Телевизоры",
@@ -23,6 +30,10 @@ const SECTIONS = [
       img: TV_PLACEHOLDER
     })),
   },
+  {
+    name: "Телефоны",
+    products: PHONES
+  }
 ];
 
 const App = () => {
@@ -82,7 +93,7 @@ const App = () => {
         fontFamily: "system-ui,sans-serif",
       }}
     >
-      <header style={{ textAlign: "center", padding: "18px 0 12px 0", position: "relative" }}>
+      <header style={{ textAlign: "center", padding: "18px 0 0 0", position: "relative" }}>
         <img
           src={logoUrl}
           alt="logo"
@@ -102,7 +113,7 @@ const App = () => {
           onClick={() => setShowCart(true)}
           style={{
             position: "absolute",
-            top: 22,
+            top: 18,
             right: 32,
             background: "transparent",
             border: "none",
@@ -131,10 +142,20 @@ const App = () => {
             )}
           </span>
         </button>
+        {/* Разделитель: линия под лого */}
+        <div style={{
+          width: "100%",
+          maxWidth: 380,
+          margin: "24px auto 0 auto",
+          height: 1,
+          background: "rgba(255,255,255,0.15)",
+          borderRadius: 2,
+        }}></div>
       </header>
 
+      {/* БОЛЬШЕ расстояние между линией и разделами */}
       <div style={{
-        display: "flex", justifyContent: "center", gap: 12, marginBottom: 16,
+        display: "flex", justifyContent: "center", gap: 12, margin: "34px 0 16px 0"
       }}>
         {SECTIONS.map((section, idx) => (
           <button
@@ -161,7 +182,7 @@ const App = () => {
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: 34, // много воздуха!
+          gap: 34,
           maxWidth: 340,
           margin: "0 auto",
           padding: 12,
@@ -197,7 +218,7 @@ const App = () => {
                 background: "#222",
                 boxShadow: "0 2px 10px #0003",
               }}
-              onError={e => { e.target.src = TV_PLACEHOLDER; }}
+              onError={e => { e.target.src = product.img; }}
             />
             <div style={{
               fontWeight: 700,
@@ -214,7 +235,8 @@ const App = () => {
               marginBottom: 4,
               color: "#e5e5e5",
               textAlign: "center",
-              width: "100%",
+              width: "70%", // <-- ОПИСАНИЕ УЖЕ ПО ГОРИЗОНТАЛИ
+              margin: "0 auto 8px auto",
               minHeight: 28,
               overflowWrap: "break-word"
             }}>
