@@ -5,7 +5,7 @@ const BG = "#23272f";
 const CARD = "#18181b";
 const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
 const TV_PLACEHOLDER = "https://tech-iq.ru/upload/iblock/324/ixntoljx6r6lclbh3pfr0ve261z3ocn2.webp";
-const PHONE_PLACEHOLDER = "https://tech-iq.ru/upload/iblock/324/ixntoljx6r6lclbh3pfr0ve261z3ocn2.webp"; // Просто картинка айфона
+const PHONE_PLACEHOLDER = "https://tech-iq.ru/upload/iblock/324/ixntoljx6r6lclbh3pfr0ve261z3ocn2.webp";
 
 const TVS = [
   { id: 396940, brand: "Xiaomi", name: 'Телевизор ЖК 32" Xiaomi TV A32 2025 RU черный', price: 16000 },
@@ -35,6 +35,8 @@ const SECTIONS = [
     products: PHONES
   }
 ];
+
+const CARD_HEIGHT = 290; // высота карточки фиксированная
 
 const App = () => {
   const [activeSection, setActiveSection] = useState(0);
@@ -196,25 +198,27 @@ const App = () => {
               background: CARD,
               borderRadius: 17,
               boxShadow: "0 4px 16px #0005",
-              padding: 14,
+              padding: 18,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              minHeight: 170,
+              minHeight: CARD_HEIGHT,
+              height: CARD_HEIGHT,
               width: "100%",
               boxSizing: "border-box",
               margin: "0 auto",
+              justifyContent: "flex-start"
             }}
           >
             <img
               src={product.img}
               alt={product.name}
               style={{
-                width: 92,
-                height: 92,
+                width: 100,
+                height: 100,
                 objectFit: "cover",
-                borderRadius: 12,
-                marginBottom: 8,
+                borderRadius: 14,
+                marginBottom: 18, // больше отступа от фотки до текста!
                 background: "#222",
                 boxShadow: "0 2px 10px #0003",
               }}
@@ -222,8 +226,8 @@ const App = () => {
             />
             <div style={{
               fontWeight: 700,
-              fontSize: 15,
-              marginBottom: 2,
+              fontSize: 16,
+              marginBottom: 8, // больше отступ!
               textAlign: "center",
               width: "100%",
               overflowWrap: "break-word"
@@ -232,28 +236,34 @@ const App = () => {
             </div>
             <div style={{
               fontSize: 13,
-              marginBottom: 4,
-              color: "#e5e5e5",
+              marginBottom: 16, // больше отступ!
+              color: "#c2c2c2", // СЕРЕЕ!
               textAlign: "center",
-              width: "70%", // <-- ОПИСАНИЕ УЖЕ ПО ГОРИЗОНТАЛИ
-              margin: "0 auto 8px auto",
+              width: "68%", // Уже описание!
+              margin: "0 auto",
               minHeight: 28,
               overflowWrap: "break-word"
             }}>
               {product.name}
             </div>
-            <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 8 }}>{product.price} ₽</div>
+            <div style={{
+              fontWeight: 700,
+              fontSize: 16,
+              marginBottom: 18, // отступ между ценой и кнопкой!
+              marginTop: "auto"
+            }}>
+              {product.price} ₽
+            </div>
             <button
               onClick={() => addToCart(product.id)}
               style={{
-                marginTop: "auto",
                 background: ACCENT,
                 color: "#fff",
-                padding: "9px 0",
-                borderRadius: 8,
+                padding: "11px 0",
+                borderRadius: 9,
                 border: "none",
                 fontWeight: 600,
-                fontSize: 14,
+                fontSize: 15,
                 cursor: "pointer",
                 width: "100%",
                 boxShadow: "0 1px 4px #0002"
