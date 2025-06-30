@@ -5,7 +5,7 @@ const BG = "#23272f";
 const CARD = "#18181b";
 const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
 const TV_PLACEHOLDER = "https://tech-iq.ru/upload/iblock/324/ixntoljx6r6lclbh3pfr0ve261z3ocn2.webp";
-const PHONE_PLACEHOLDER = "https://tech-iq.ru/upload/iblock/324/ixntoljx6r6lclbh3pfr0ve261z3ocn2.webp";
+const PHONE_PLACEHOLDER = "https://avatars.mds.yandex.net/get-mpic/1865853/img_id3034328595286431407.png/orig";
 
 const TVS = [
   { id: 396940, brand: "Xiaomi", name: 'Телевизор ЖК 32" Xiaomi TV A32 2025 RU черный', price: 16000 },
@@ -36,7 +36,7 @@ const SECTIONS = [
   }
 ];
 
-const CARD_HEIGHT = 290; // высота карточки фиксированная
+const CARD_HEIGHT = 290;
 
 const App = () => {
   const [activeSection, setActiveSection] = useState(0);
@@ -218,7 +218,7 @@ const App = () => {
                 height: 100,
                 objectFit: "cover",
                 borderRadius: 14,
-                marginBottom: 18, // больше отступа от фотки до текста!
+                marginBottom: 18,
                 background: "#222",
                 boxShadow: "0 2px 10px #0003",
               }}
@@ -227,7 +227,7 @@ const App = () => {
             <div style={{
               fontWeight: 700,
               fontSize: 16,
-              marginBottom: 8, // больше отступ!
+              marginBottom: 8,
               textAlign: "center",
               width: "100%",
               overflowWrap: "break-word"
@@ -236,12 +236,11 @@ const App = () => {
             </div>
             <div style={{
               fontSize: 13,
-              marginBottom: 16, // больше отступ!
-              color: "#c2c2c2", // СЕРЕЕ!
+              marginBottom: 18,
+              color: "#c2c2c2",
               textAlign: "center",
-              width: "68%", // Уже описание!
+              width: "68%",
               margin: "0 auto",
-              minHeight: 28,
               overflowWrap: "break-word"
             }}>
               {product.name}
@@ -249,7 +248,7 @@ const App = () => {
             <div style={{
               fontWeight: 700,
               fontSize: 16,
-              marginBottom: 18, // отступ между ценой и кнопкой!
+              marginBottom: 18,
               marginTop: "auto"
             }}>
               {product.price} ₽
