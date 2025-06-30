@@ -3,10 +3,8 @@ import React, { useState } from "react";
 const ACCENT = "#339DFF";
 const BG = "#18181b";
 const CARD = "#23272f";
-const logoUrl = "https://i.ibb.co/5MkhR8D/4friendsstore-logo.png";
+const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
 
-// Гарантированные картинки (imgur, github или свои)
-// Если хочешь можешь загрузить свои на imgur.com (или другой свободный хостинг)
 const SECTIONS = [
   {
     name: "Телевизоры",
@@ -118,12 +116,27 @@ const App = () => {
     0
   );
 
-  // Фикс для body-стилей в мини-аппе
+  // Устанавливаем фон body (в mini app это работает)
   React.useEffect(() => {
     document.body.style.background = BG;
     document.body.style.margin = "0";
     document.body.style.minHeight = "100vh";
     document.documentElement.style.height = "100%";
+  }, []);
+
+  // Реально адаптивно: на мобиле 1, на планшете 2, на десктопе 3 карточки
+  const getGridTemplate = () => {
+    if (window.innerWidth <= 480) return "1fr";
+    if (window.innerWidth <= 800) return "1fr 1fr";
+    return "1fr 1fr 1fr";
+  };
+
+  // Для динамического рендера сетки на изменение размера
+  const [grid, setGrid] = useState(getGridTemplate());
+  React.useEffect(() => {
+    const handleResize = () => setGrid(getGridTemplate());
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
@@ -132,15 +145,13 @@ const App = () => {
         minHeight: "100vh",
         background: BG,
         color: "#fff",
-        overflow: "auto",
         margin: 0,
         padding: 0,
         boxSizing: "border-box",
         fontFamily: "system-ui,sans-serif",
       }}
     >
-      {/* Логотип + корзина */}
-      <header style={{ textAlign: "center", padding: 20, position: "relative" }}>
+      <header style={{ textAlign: "center", padding: 18, position: "relative" }}>
         <img src={logoUrl} alt="logo" style={{ maxWidth: 110, margin: "0 auto" }} />
         <button
           onClick={() => setShowCart(true)}
@@ -183,13 +194,12 @@ const App = () => {
         </button>
       </header>
 
-      {/* Tabs */}
       <div
         style={{
           display: "flex",
           justifyContent: "center",
-          gap: 10,
-          marginBottom: 14,
+          gap: 12,
+          marginBottom: 18,
         }}
       >
         {SECTIONS.map((section, idx) => (
@@ -213,15 +223,16 @@ const App = () => {
         ))}
       </div>
 
-      {/* Каталог товаров — адаптивная сетка */}
+      {/* Адаптивная сетка товаров */}
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-          gap: 12,
-          maxWidth: 750,
+          gridTemplateColumns: grid,
+          gap: 16,
+          maxWidth: 950,
           margin: "0 auto",
-          padding: 8,
+          padding: 12,
+          width: "100%",
         }}
       >
         {products.map((product) => (
@@ -231,29 +242,30 @@ const App = () => {
               background: CARD,
               borderRadius: 16,
               boxShadow: "0 4px 16px #0003",
-              padding: 10,
+              padding: 12,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              minHeight: 320,
+              minHeight: 310,
               minWidth: 0,
               width: "100%",
               boxSizing: "border-box",
+              margin: "0 auto",
             }}
           >
             <img
               src={product.img}
               alt={product.name}
               style={{
-                width: "100%",
-                maxWidth: 160,
+                width: "85%",
+                maxWidth: 200,
                 aspectRatio: "1/1",
                 objectFit: "cover",
                 borderRadius: 10,
-                marginBottom: 8,
+                marginBottom: 10,
                 background: "#222",
               }}
-              onError={(e) => { e.target.src = "https://via.placeholder.com/160?text=No+Image"; }}
+              onError={(e) => { e.target.src = "https://via.placeholder.com/200?text=No+Image"; }}
             />
             <div style={{
               fontWeight: 700,
