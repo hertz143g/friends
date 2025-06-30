@@ -4,7 +4,7 @@ const ACCENT = "#339DFF";
 const BG = "#23272f"; // фон теперь всегда серый
 const CARD = "#18181b";
 const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
-const TV_PLACEHOLDER = "https://i.imgur.com/nHhkF1n.jpg";
+const TV_PLACEHOLDER = "https://tech-iq.ru/upload/iblock/324/ixntoljx6r6lclbh3pfr0ve261z3ocn2.webp";
 
 // Все телевизоры из твоей таблицы
 const TVS = [
