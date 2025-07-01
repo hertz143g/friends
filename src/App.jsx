@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const ACCENT = "#339DFF";
@@ -6,7 +6,7 @@ const BG = "#23272f";
 const CARD = "#191c20";
 const BORDER = "rgba(255,255,255,0.08)";
 const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
-const TELEGRAM_LINK = "https://t.me/your_channel";
+const TELEGRAM_LINK = "https://t.me/forfriendsstore";
 const PHONE = "+7 (999) 123-45-67";
 const ADDRESS = "г. Москва, ТЦ Сити, пав. 123";
 
@@ -68,7 +68,7 @@ const App = () => {
 
   // ширина экрана (адаптив)
   const [vw, setVw] = useState(typeof window !== "undefined" ? window.innerWidth : 375);
-  React.useEffect(() => {
+  useEffect(() => {
     const onResize = () => {
       setColumns(getColumns());
       setVw(window.innerWidth);
@@ -88,9 +88,18 @@ const App = () => {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
+  // авто-карусель
+  useEffect(() => {
+    if (activeSection !== 0) return;
+    const timer = setInterval(() => {
+      setCarouselIndex(idx => (idx + 1) % CAROUSEL_PRODUCTS.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [activeSection]);
+
   const isMobile = vw < 550;
   const blockWidth = isMobile ? "98vw" : "430px";
-  const gapY = isMobile ? 16 : 24;
+  const gapY = isMobile ? 18 : 28;
 
   const cartTotalCount = cart.reduce((a, b) => a + b.qty, 0);
 
@@ -253,13 +262,21 @@ const App = () => {
 
       {/* Главная страница */}
       {activeSection === 0 && (
-        <div style={{ maxWidth: blockWidth, margin: "0 auto", width: "100%", padding: 0, display: "flex", flexDirection: "column", gap: gapY }}>
+        <div style={{
+          maxWidth: blockWidth,
+          margin: "0 auto",
+          width: "100%",
+          padding: 0,
+          display: "flex",
+          flexDirection: "column",
+          gap: gapY
+        }}>
           {/* Карусель */}
           <div style={{
             width: "100%",
             background: "#15181d",
             borderRadius: 17,
-            padding: isMobile ? "12px 7px" : "18px 20px",
+            padding: isMobile ? "13px 6px" : "19px 19px",
             boxShadow: "0 4px 24px #1c223040",
             maxWidth: blockWidth,
             margin: "0 auto",
@@ -268,8 +285,15 @@ const App = () => {
             alignItems: "center",
             gap: 8
           }}>
-            <div style={{ fontWeight: 700, fontSize: isMobile ? 16 : 18, marginBottom: 5, textAlign: "center", letterSpacing: "0.01em" }}>Топовые товары</div>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 9, width: "100%" }}>
+            <div style={{ fontWeight: 700, fontSize: isMobile ? 16 : 18, marginBottom: 6, textAlign: "center", letterSpacing: "0.01em" }}>Топовые товары</div>
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 10,
+              width: "100%",
+              margin: 0,
+            }}>
               <button onClick={prevCarousel} style={{ background: "none", border: "none", fontSize: 26, color: ACCENT, cursor: "pointer" }}>‹</button>
               <motion.div
                 key={carouselIndex}
@@ -281,23 +305,45 @@ const App = () => {
                   background: CARD,
                   borderRadius: 13,
                   boxShadow: "0 3px 10px #0004",
-                  padding: isMobile ? "13px 7px" : "17px 15px",
+                  padding: isMobile ? "17px 10px" : "20px 22px",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
-                  minWidth: isMobile ? 150 : 180,
-                  maxWidth: isMobile ? 200 : 250,
-                  width: isMobile ? "68vw" : "90vw",
-                  margin: "0 0"
+                  minWidth: isMobile ? 165 : 210,
+                  maxWidth: isMobile ? 215 : 270,
+                  width: "100%",
                 }}
               >
-                <img src={CAROUSEL_PRODUCTS[carouselIndex].img} alt="" style={{ width: isMobile ? 58 : 70, height: isMobile ? 58 : 70, borderRadius: 11, objectFit: "cover", marginBottom: 6, background: "#222" }} />
-                <div style={{ fontWeight: 700, fontSize: isMobile ? 13.5 : 15.5, marginBottom: 5 }}>{CAROUSEL_PRODUCTS[carouselIndex].brand}</div>
-                <div style={{ fontSize: isMobile ? 11.5 : 13, color: "#c2c2c2", marginBottom: 6, textAlign: "center" }}>{CAROUSEL_PRODUCTS[carouselIndex].name}</div>
-                <div style={{ fontWeight: 800, fontSize: isMobile ? 13 : 15, marginBottom: 4 }}>{CAROUSEL_PRODUCTS[carouselIndex].price} ₽</div>
+                <img src={CAROUSEL_PRODUCTS[carouselIndex].img} alt="" style={{
+                  width: isMobile ? 60 : 78,
+                  height: isMobile ? 60 : 78,
+                  borderRadius: 11,
+                  objectFit: "cover",
+                  marginBottom: 8,
+                  background: "#222"
+                }} />
+                <div style={{ fontWeight: 700, fontSize: isMobile ? 14.5 : 16, marginBottom: 4 }}>{CAROUSEL_PRODUCTS[carouselIndex].brand}</div>
+                <div style={{
+                  fontSize: isMobile ? 12 : 14,
+                  color: "#c2c2c2",
+                  marginBottom: 8,
+                  textAlign: "center",
+                  minHeight: isMobile ? 32 : 38,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>{CAROUSEL_PRODUCTS[carouselIndex].name}</div>
+                <div style={{ fontWeight: 800, fontSize: isMobile ? 13 : 15, marginBottom: 6 }}>{CAROUSEL_PRODUCTS[carouselIndex].price} ₽</div>
                 <button onClick={() => addToCart(CAROUSEL_PRODUCTS[carouselIndex].id)}
                   style={{
-                    background: ACCENT, color: "#fff", border: "none", borderRadius: 8, fontWeight: 700, padding: "7px 13px", cursor: "pointer", fontSize: isMobile ? 12 : 14
+                    background: ACCENT,
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: 8,
+                    fontWeight: 700,
+                    padding: isMobile ? "7px 11px" : "9px 17px",
+                    cursor: "pointer",
+                    fontSize: isMobile ? 13 : 14
                   }}>В корзину</button>
               </motion.div>
               <button onClick={nextCarousel} style={{ background: "none", border: "none", fontSize: 26, color: ACCENT, cursor: "pointer" }}>›</button>
@@ -306,64 +352,76 @@ const App = () => {
 
           {/* Приветственный блок */}
           <div style={{
-            background: "#191c22",
-            borderRadius: 15,
-            boxShadow: "0 1.5px 8px #222a",
-            padding: isMobile ? "13px 9px" : "22px 22px",
-            fontSize: isMobile ? 14.5 : 16,
+            background: "#1e2636",
+            borderRadius: 18,
+            boxShadow: "0 2px 12px #1a1f2e55",
+            padding: isMobile ? "23px 9px" : "38px 32px",
+            fontSize: isMobile ? 15.5 : 18,
             textAlign: "center",
             fontWeight: 600,
-            color: "#f8f8f8"
+            color: "#f8f8f8",
+            marginTop: 0,
+            letterSpacing: "0.02em",
+            lineHeight: 1.42,
           }}>
-            Добро пожаловать в <span style={{ color: ACCENT, fontWeight: 800 }}>4Friends Store</span>!  
+            Добро пожаловать в <span style={{ color: ACCENT, fontWeight: 800 }}>4Friends Store</span>!
             <br />
-            <span style={{ fontWeight: 400, color: "#b8d7ff" }}>У нас только новые товары по лучшим ценам. Пролистайте ниже — каталог уже ждёт вас!</span>
+            <span style={{ fontWeight: 400, color: "#b8d7ff" }}>У нас только новые товары по лучшим ценам.<br />Прокрутите вниз и выберите свой!</span>
           </div>
 
           {/* Ссылка на канал */}
           <div style={{
-            background: "#191c22",
-            borderRadius: 15,
-            boxShadow: "0 2px 10px #1c223030",
-            padding: isMobile ? "13px 7px" : "19px 15px",
+            background: "#171d29",
+            borderRadius: 18,
+            boxShadow: "0 2px 12px #222a",
+            padding: isMobile ? "18px 11px" : "30px 26px",
             display: "flex",
             alignItems: "center",
-            gap: isMobile ? 11 : 20,
+            gap: isMobile ? 18 : 32,
             flexWrap: "wrap",
             justifyContent: "center"
           }}>
-            <img src={logoUrl} alt="logo" style={{ width: isMobile ? 32 : 48, height: isMobile ? 32 : 48, borderRadius: "50%", background: "#fff", border: `2px solid ${ACCENT}` }} />
-            <div>
-              <div style={{ fontWeight: 700, fontSize: isMobile ? 12.5 : 14, marginBottom: 4 }}>Наш магазин в Telegram</div>
+            <img src={logoUrl} alt="logo" style={{
+              width: isMobile ? 40 : 60,
+              height: isMobile ? 40 : 60,
+              borderRadius: "50%",
+              background: "#fff",
+              border: `3px solid ${ACCENT}`,
+              boxShadow: "0 2px 9px #19417140"
+            }} />
+            <div style={{ minWidth: isMobile ? 140 : 220, textAlign: "left" }}>
+              <div style={{ fontWeight: 700, fontSize: isMobile ? 14 : 18, marginBottom: 7, color: "#fff" }}>
+                Наш Telegram-канал
+              </div>
               <a href={TELEGRAM_LINK} target="_blank" rel="noopener noreferrer"
                 style={{
                   display: "inline-block",
                   background: ACCENT,
                   color: "#fff",
-                  padding: isMobile ? "6px 12px" : "8px 16px",
-                  borderRadius: 8,
+                  padding: isMobile ? "9px 18px" : "11px 28px",
+                  borderRadius: 10,
                   fontWeight: 700,
-                  fontSize: isMobile ? 12 : 13.2,
+                  fontSize: isMobile ? 13.5 : 15.5,
                   textDecoration: "none",
-                  boxShadow: "0 1px 6px #278aff3a"
-                }}>Перейти в канал</a>
+                  boxShadow: "0 2px 10px #278aff2a"
+                }}>t.me/forfriendsstore</a>
             </div>
           </div>
 
           {/* Контакты + адрес */}
           <div style={{
-            background: "#162030",
-            borderRadius: 14,
-            padding: isMobile ? "14px 7px" : "22px 17px",
+            background: "#18202c",
+            borderRadius: 16,
+            padding: isMobile ? "19px 10px" : "30px 24px",
             boxShadow: "0 2px 12px #1d263760",
             color: "#e9f3ff",
             textAlign: "center",
             display: "flex",
             flexDirection: "column",
-            gap: isMobile ? 6 : 10,
-            fontSize: isMobile ? 13.5 : 15
+            gap: isMobile ? 12 : 19,
+            fontSize: isMobile ? 15 : 17
           }}>
-            <div style={{ fontWeight: 800, fontSize: isMobile ? 14 : 17, letterSpacing: "0.01em", color: ACCENT, marginBottom: 3 }}>
+            <div style={{ fontWeight: 800, fontSize: isMobile ? 15 : 19, letterSpacing: "0.01em", color: ACCENT, marginBottom: 2 }}>
               Контакты магазина
             </div>
             <div>
@@ -374,14 +432,14 @@ const App = () => {
               <span style={{ color: "#b6cafc" }}>Адрес:</span>{" "}
               <span style={{ color: "#fff", fontWeight: 700 }}>{ADDRESS}</span>
             </div>
-            <div style={{ fontSize: isMobile ? 11 : 13, color: "#b5e1ff", marginTop: 5 }}>
+            <div style={{ fontSize: isMobile ? 12 : 14, color: "#b5e1ff", marginTop: 2 }}>
               Пишите и звоните — мы всегда на связи!
             </div>
           </div>
         </div>
       )}
 
-      {/* Каталог */}
+      {/* Каталог (остальное как было) */}
       {activeSection !== 0 && (
         <div
           style={{
