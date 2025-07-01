@@ -6,7 +6,7 @@ const BG = "#23272f";
 const CARD = "#18181b";
 const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
 const TV_PLACEHOLDER = "https://tech-iq.ru/upload/iblock/324/ixntoljx6r6lclbh3pfr0ve261z3ocn2.webp";
-const PHONE_PLACEHOLDER = "https://tech-iq.ru/upload/iblock/324/ixntoljx6r6lclbh3pfr0ve261z3ocn2.webp";
+const PHONE_PLACEHOLDER = "https://avatars.mds.yandex.net/get-mpic/1865853/img_id3034328595286431407.png/orig";
 
 const TVS = [
   { id: 396940, brand: "Xiaomi", name: 'Телевизор ЖК 32" Xiaomi TV A32 2025 RU черный', price: 16000 },
@@ -46,7 +46,6 @@ const App = () => {
   const [showCart, setShowCart] = useState(false);
   const [cartAnim, setCartAnim] = useState(false);
   const [addAnimId, setAddAnimId] = useState(null);
-  const cartIconRef = useRef(null);
 
   // Сумма всех товаров
   const cartTotalCount = cart.reduce((a, b) => a + b.qty, 0);
@@ -73,18 +72,24 @@ const App = () => {
     setCart((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const getProduct = (id) => {
-    for (let section of SECTIONS) {
-      const found = section.products.find((p) => p.id === id);
-      if (found) return found;
-    }
-    return null;
+  // для счетчика:
+  const getQtyInCart = (id) => {
+    const found = cart.find(item => item.id === id);
+    return found ? found.qty : 0;
   };
 
   const total = cart.reduce(
     (sum, item) => sum + (getProduct(item.id)?.price || 0) * item.qty,
     0
   );
+
+  function getProduct(id) {
+    for (let section of SECTIONS) {
+      const found = section.products.find((p) => p.id === id);
+      if (found) return found;
+    }
+    return null;
+  }
 
   React.useEffect(() => {
     document.body.style.background = BG;
@@ -124,7 +129,6 @@ const App = () => {
           }}
         />
         <motion.button
-          ref={cartIconRef}
           animate={cartAnim ? { scale: [1, 1.22, 0.9, 1], rotate: [0, -13, 6, 0] } : { scale: 1, rotate: 0 }}
           transition={{ duration: 0.4, type: "spring" }}
           onClick={() => setShowCart(true)}
@@ -212,119 +216,174 @@ const App = () => {
         }}
       >
         <AnimatePresence mode="wait">
-        {products.map((product, i) => (
-          <motion.div
-            key={product.id}
-            initial={{ opacity: 0, y: 30, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 40, scale: 0.95 }}
-            transition={{ delay: i * 0.05, duration: 0.38, type: "spring" }}
-            style={{
-              background: CARD,
-              borderRadius: 17,
-              boxShadow: "0 4px 16px #0005",
-              padding: 18,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              minHeight: CARD_HEIGHT,
-              height: CARD_HEIGHT,
-              width: "100%",
-              boxSizing: "border-box",
-              margin: "0 auto",
-              justifyContent: "flex-start",
-              position: "relative"
-            }}
-          >
-            <motion.img
-              src={product.img}
-              alt={product.name}
+        {products.map((product, i) => {
+          const qty = getQtyInCart(product.id);
+
+          return (
+            <motion.div
+              key={product.id}
+              initial={{ opacity: 0, y: 30, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 40, scale: 0.95 }}
+              transition={{ delay: i * 0.05, duration: 0.38, type: "spring" }}
               style={{
-                width: 125,
-                height: 125,
-                objectFit: "cover",
-                borderRadius: 16,
-                marginBottom: 18,
-                background: "#222",
-                boxShadow: "0 2px 10px #0003",
-              }}
-              initial={false}
-              animate={addAnimId === product.id ? { scale: [1, 1.12, 0.95, 1] } : { scale: 1 }}
-              transition={{ duration: 0.37 }}
-              onError={e => { e.target.src = product.img; }}
-            />
-            <div style={{
-              fontWeight: 700,
-              fontSize: 16,
-              marginBottom: 8,
-              textAlign: "center",
-              width: "100%",
-              overflowWrap: "break-word"
-            }}>
-              {product.brand}
-            </div>
-            <div style={{
-              fontSize: 13,
-              marginBottom: 28,
-              color: "#c2c2c2",
-              textAlign: "center",
-              width: "68%",
-              margin: "0 auto",
-              overflowWrap: "break-word"
-            }}>
-              {product.name}
-            </div>
-            <div style={{
-              fontWeight: 700,
-              fontSize: 16,
-              marginBottom: 18,
-              marginTop: "auto"
-            }}>
-              {product.price} ₽
-            </div>
-            <motion.button
-              whileTap={{ scale: 0.93, backgroundColor: "#197ad2" }}
-              onClick={() => addToCart(product.id)}
-              style={{
-                background: ACCENT,
-                color: "#fff",
-                padding: "11px 0",
-                borderRadius: 9,
-                border: "none",
-                fontWeight: 600,
-                fontSize: 15,
-                cursor: "pointer",
+                background: CARD,
+                borderRadius: 17,
+                boxShadow: "0 4px 16px #0005",
+                padding: 18,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                minHeight: CARD_HEIGHT,
+                height: CARD_HEIGHT,
                 width: "100%",
-                boxShadow: "0 1px 4px #0002"
+                boxSizing: "border-box",
+                margin: "0 auto",
+                justifyContent: "flex-start",
+                position: "relative"
               }}
             >
-              В корзину
-            </motion.button>
-            {/* Эффект "+1" */}
-            <AnimatePresence>
-              {addAnimId === product.id && (
-                <motion.div
-                  initial={{ opacity: 0, y: 16, scale: 0.7 }}
-                  animate={{ opacity: 1, y: -32, scale: 1.15 }}
-                  exit={{ opacity: 0, y: -70, scale: 1.4 }}
-                  transition={{ duration: 0.55 }}
+              <motion.img
+                src={product.img}
+                alt={product.name}
+                style={{
+                  width: 125,
+                  height: 125,
+                  objectFit: "cover",
+                  borderRadius: 16,
+                  marginBottom: 18,
+                  background: "#222",
+                  boxShadow: "0 2px 10px #0003",
+                }}
+                initial={false}
+                animate={addAnimId === product.id ? { scale: [1, 1.12, 0.95, 1] } : { scale: 1 }}
+                transition={{ duration: 0.37 }}
+                onError={e => { e.target.src = product.img; }}
+              />
+              <div style={{
+                fontWeight: 700,
+                fontSize: 16,
+                marginBottom: 8,
+                textAlign: "center",
+                width: "100%",
+                overflowWrap: "break-word"
+              }}>
+                {product.brand}
+              </div>
+              <div style={{
+                fontSize: 13,
+                marginBottom: 28,
+                color: "#c2c2c2",
+                textAlign: "center",
+                width: "68%",
+                margin: "0 auto",
+                overflowWrap: "break-word"
+              }}>
+                {product.name}
+              </div>
+              <div style={{
+                fontWeight: 700,
+                fontSize: 16,
+                marginBottom: 18,
+                marginTop: "auto"
+              }}>
+                {product.price} ₽
+              </div>
+              {qty === 0 ? (
+                <motion.button
+                  whileTap={{ scale: 0.93, backgroundColor: "#197ad2" }}
+                  onClick={() => addToCart(product.id)}
                   style={{
-                    position: "absolute",
-                    top: 30,
-                    right: 32,
-                    color: ACCENT,
-                    fontWeight: 900,
-                    fontSize: 22,
-                    textShadow: "0 2px 7px #18181b",
-                    pointerEvents: "none"
+                    background: ACCENT,
+                    color: "#fff",
+                    padding: "11px 0",
+                    borderRadius: 9,
+                    border: "none",
+                    fontWeight: 600,
+                    fontSize: 15,
+                    cursor: "pointer",
+                    width: "100%",
+                    boxShadow: "0 1px 4px #0002",
+                    position: "relative"
                   }}
                 >
-                  +1
-                </motion.div>
+                  В корзину
+                </motion.button>
+              ) : (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    width: "100%",
+                    gap: 8,
+                    background: ACCENT,
+                    borderRadius: 9,
+                    padding: "0 7px"
+                  }}
+                >
+                  <motion.button
+                    whileTap={{ scale: 0.89 }}
+                    onClick={() => {
+                      if (qty === 1) removeFromCart(product.id);
+                      else setCart(prev => prev.map(item => item.id === product.id ? { ...item, qty: item.qty - 1 } : item));
+                    }}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      color: "#fff",
+                      fontSize: 22,
+                      fontWeight: 700,
+                      padding: "7px 13px",
+                      cursor: "pointer",
+                      outline: "none"
+                    }}
+                  >–</motion.button>
+                  <div style={{ color: "#fff", minWidth: 24, textAlign: "center", fontWeight: 700, fontSize: 16 }}>
+                    {qty}
+                  </div>
+                  <motion.button
+                    whileTap={{ scale: 0.89 }}
+                    onClick={() => addToCart(product.id)}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      color: "#fff",
+                      fontSize: 22,
+                      fontWeight: 700,
+                      padding: "7px 13px",
+                      cursor: "pointer",
+                      outline: "none"
+                    }}
+                  >+</motion.button>
+                </div>
               )}
-            </AnimatePresence>
-          </motion.div>
-        ))}
+              {/* Эффект "+1" */}
+              <AnimatePresence>
+                {addAnimId === product.id && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 16, scale: 0.7 }}
+                    animate={{ opacity: 1, y: -32, scale: 1.15 }}
+                    exit={{ opacity: 0, y: -70, scale: 1.4 }}
+                    transition={{ duration: 0.55 }}
+                    style={{
+                      position: "absolute",
+                      top: 30,
+                      right: 32,
+                      color: ACCENT,
+                      fontWeight: 900,
+                      fontSize: 22,
+                      textShadow: "0 2px 7px #18181b",
+                      pointerEvents: "none"
+                    }}
+                  >
+                    +1
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          );
+        })}
         </AnimatePresence>
       </div>
       {showCart && (
