@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const ACCENT = "#339DFF";
@@ -47,7 +47,6 @@ const App = () => {
   const [cartAnim, setCartAnim] = useState(false);
   const [addAnimId, setAddAnimId] = useState(null);
 
-  // Сумма всех товаров
   const cartTotalCount = cart.reduce((a, b) => a + b.qty, 0);
 
   const addToCart = (id) => {
@@ -61,7 +60,6 @@ const App = () => {
         return [...prev, { id, qty: 1 }];
       }
     });
-    // Анимация корзины
     setCartAnim(true);
     setAddAnimId(id);
     setTimeout(() => setCartAnim(false), 400);
@@ -72,16 +70,10 @@ const App = () => {
     setCart((prev) => prev.filter((item) => item.id !== id));
   };
 
-  // для счетчика:
   const getQtyInCart = (id) => {
     const found = cart.find(item => item.id === id);
     return found ? found.qty : 0;
   };
-
-  const total = cart.reduce(
-    (sum, item) => sum + (getProduct(item.id)?.price || 0) * item.qty,
-    0
-  );
 
   function getProduct(id) {
     for (let section of SECTIONS) {
@@ -90,6 +82,11 @@ const App = () => {
     }
     return null;
   }
+
+  const total = cart.reduce(
+    (sum, item) => sum + (getProduct(item.id)?.price || 0) * item.qty,
+    0
+  );
 
   React.useEffect(() => {
     document.body.style.background = BG;
@@ -404,13 +401,13 @@ const App = () => {
               background: CARD,
               borderRadius: 13,
               padding: 18,
-              width: 320,
-              maxWidth: "90vw",
+              width: 330,
+              maxWidth: "96vw",
               boxShadow: "0 6px 24px #000a",
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 9 }}>Корзина</div>
+            <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 13 }}>Корзина</div>
             {cart.length === 0 ? (
               <div style={{ color: "#aaa", marginBottom: 10 }}>Корзина пуста</div>
             ) : (
@@ -424,28 +421,31 @@ const App = () => {
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
-                        alignItems: "center",
-                        marginBottom: 8,
+                        alignItems: "flex-start",
+                        marginBottom: 18,
                         borderBottom: "1px solid #4446",
-                        paddingBottom: 4,
+                        paddingBottom: 12,
+                        gap: 12
                       }}
                     >
-                      <div>
-                        <span style={{ fontWeight: 700 }}>{product.brand}</span>
-                        <div style={{ fontSize: 12 }}>{product.name}</div>
-                        <div style={{ color: "#aaa", fontSize: 12 }}>x{item.qty}</div>
+                      <div style={{ flex: 1, textAlign: "left" }}>
+                        <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 2 }}>{product.brand}</div>
+                        <div style={{ fontSize: 13, color: "#c2c2c2", marginBottom: 5 }}>{product.name}</div>
+                        <div style={{ color: "#999", fontSize: 13, marginBottom: 2 }}>Кол-во: <b>{item.qty}</b></div>
                       </div>
-                      <div style={{ textAlign: "right" }}>
-                        <span>{product.price * item.qty} ₽</span>
+                      <div style={{ textAlign: "right", minWidth: 70 }}>
+                        <span style={{ fontWeight: 700, fontSize: 15 }}>{product.price * item.qty} ₽</span>
                         <button
                           style={{
                             display: "block",
-                            marginTop: 4,
+                            margin: "7px auto 0 auto",
                             color: ACCENT,
                             background: "none",
                             border: "none",
-                            fontSize: 12,
+                            fontSize: 13,
                             cursor: "pointer",
+                            padding: 0,
+                            fontWeight: 700,
                           }}
                           onClick={() => removeFromCart(item.id)}
                         >
@@ -455,20 +455,20 @@ const App = () => {
                     </div>
                   );
                 })}
-                <div style={{ fontWeight: 700, fontSize: 14, textAlign: "right", marginTop: 8 }}>
+                <div style={{ fontWeight: 700, fontSize: 16, textAlign: "right", marginTop: 6 }}>
                   Итого: {total} ₽
                 </div>
                 <button
                   style={{
                     width: "100%",
-                    marginTop: 10,
+                    marginTop: 13,
                     background: ACCENT,
                     color: "#fff",
-                    padding: "10px 0",
+                    padding: "12px 0",
                     borderRadius: 7,
                     border: "none",
                     fontWeight: 700,
-                    fontSize: 14,
+                    fontSize: 15,
                     cursor: "pointer",
                   }}
                   onClick={() => {
