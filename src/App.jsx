@@ -279,26 +279,52 @@ const App = () => {
           <div style={{
             width: "100%",
             background: "#15181d",
-            borderRadius: 17,
-            padding: isMobile ? "13px 6px" : "19px 19px",
+            borderRadius: 19,
             boxShadow: "0 4px 24px #1c223040",
             maxWidth: blockWidth,
             margin: "0 auto",
+            position: "relative",
+            minHeight: isMobile ? 175 : 215,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: 8
+            justifyContent: "center",
+            padding: isMobile ? "23px 6px" : "30px 19px",
+            overflow: "hidden"
           }}>
-            <div style={{ fontWeight: 700, fontSize: isMobile ? 16 : 18, marginBottom: 8, textAlign: "center", letterSpacing: "0.01em" }}>Топовые товары</div>
+            <div style={{ fontWeight: 700, fontSize: isMobile ? 16 : 18, marginBottom: 16, textAlign: "center", letterSpacing: "0.01em" }}>Топовые товары</div>
             <div style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 12,
               width: "100%",
-              margin: 0,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
+              minHeight: isMobile ? 110 : 140,
             }}>
-              <button onClick={prevCarousel} style={{ background: "none", border: "none", fontSize: 26, color: ACCENT, cursor: "pointer" }}>‹</button>
+              {/* Стрелка ВЛЕВО */}
+              <button
+                onClick={prevCarousel}
+                style={{
+                  position: "absolute",
+                  left: isMobile ? 4 : 10,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "rgba(44,130,255,0.09)",
+                  border: "none",
+                  borderRadius: "50%",
+                  width: isMobile ? 36 : 44,
+                  height: isMobile ? 36 : 44,
+                  color: ACCENT,
+                  cursor: "pointer",
+                  zIndex: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: isMobile ? 22 : 28,
+                  boxShadow: "0 1px 6px #1935ff22"
+                }}
+              >‹</button>
+              {/* КАРТОЧКА */}
               <motion.div
                 key={carouselIndex}
                 initial={{ opacity: 0, x: 50 }}
@@ -307,22 +333,22 @@ const App = () => {
                 transition={{ type: "spring", duration: 0.32 }}
                 style={{
                   background: CARD,
-                  borderRadius: 13,
+                  borderRadius: 16,
                   boxShadow: "0 3px 10px #0004",
-                  padding: isMobile ? "17px 10px" : "23px 28px",
+                  padding: isMobile ? "19px 12px" : "27px 22px",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
-                  minWidth: isMobile ? 180 : 240,
-                  maxWidth: isMobile ? 230 : 280,
-                  width: isMobile ? "78vw" : "93%",
-                  margin: 0,
+                  minWidth: isMobile ? 175 : 210,
+                  maxWidth: isMobile ? 235 : 280,
+                  width: isMobile ? "83vw" : "88%",
+                  margin: "0 auto"
                 }}
               >
                 <img src={CAROUSEL_PRODUCTS[carouselIndex].img} alt="" style={{
-                  width: isMobile ? 65 : 84,
-                  height: isMobile ? 65 : 84,
-                  borderRadius: 13,
+                  width: isMobile ? 68 : 85,
+                  height: isMobile ? 68 : 85,
+                  borderRadius: 14,
                   objectFit: "cover",
                   marginBottom: 10,
                   background: "#222"
@@ -344,7 +370,7 @@ const App = () => {
                     background: ACCENT,
                     color: "#fff",
                     border: "none",
-                    borderRadius: 8,
+                    borderRadius: 9,
                     fontWeight: 700,
                     padding: isMobile ? "10px 0" : "12px 0",
                     cursor: "pointer",
@@ -353,7 +379,29 @@ const App = () => {
                     marginTop: 2
                   }}>В корзину</button>
               </motion.div>
-              <button onClick={nextCarousel} style={{ background: "none", border: "none", fontSize: 26, color: ACCENT, cursor: "pointer" }}>›</button>
+              {/* Стрелка ВПРАВО */}
+              <button
+                onClick={nextCarousel}
+                style={{
+                  position: "absolute",
+                  right: isMobile ? 4 : 10,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "rgba(44,130,255,0.09)",
+                  border: "none",
+                  borderRadius: "50%",
+                  width: isMobile ? 36 : 44,
+                  height: isMobile ? 36 : 44,
+                  color: ACCENT,
+                  cursor: "pointer",
+                  zIndex: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: isMobile ? 22 : 28,
+                  boxShadow: "0 1px 6px #1935ff22"
+                }}
+              >›</button>
             </div>
           </div>
 
@@ -387,11 +435,11 @@ const App = () => {
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 12,
+                gap: 13,
                 background: ACCENT,
                 color: "#fff",
-                padding: isMobile ? "16px 0" : "22px 0",
-                width: isMobile ? "96vw" : "340px",
+                padding: isMobile ? "17px 0" : "22px 0",
+                width: isMobile ? "96vw" : "350px",
                 maxWidth: "98vw",
                 borderRadius: 13,
                 fontWeight: 800,
@@ -401,8 +449,10 @@ const App = () => {
                 justifyContent: "center",
                 transition: ".17s"
               }}>
-              <svg width={28} height={28} viewBox="0 0 32 32" fill="#fff" style={{ display: "block" }}>
-                <path d="M30.844 5.031a2.065 2.065 0 00-2.063-.38l-26 9.5a2.065 2.065 0 00.094 3.937l5.906 1.719 2.125 7.719a2.068 2.068 0 001.969 1.531h.063a2.06 2.06 0 001.938-1.625l2.469-10.313 8.375 8.094a2.058 2.058 0 001.438.594h.031a2.065 2.065 0 001.625-.844 2.057 2.057 0 00.313-1.75l-3.219-14A2.062 2.062 0 0030.844 5.031zM14.719 24.688l-2.094-7.594 3.563-3.594-1.469 11.188zm11.625-3.219l-8.531-8.188 11.188-8.25zm-25-7.563l26-9.5-19.719 11.5z"></path>
+              {/* ОФИЦИАЛЬНЫЙ Telegram SVG */}
+              <svg width="29" height="29" viewBox="0 0 240 240" fill="none" style={{ display: "block" }}>
+                <circle cx="120" cy="120" r="120" fill="#229ED9"/>
+                <path d="M55 123.6L168.7 78.7C173.5 76.8 178 79.7 176.6 86.2L157.6 171.5C156.4 176.6 153.2 177.9 148.7 175.5L126.6 159.6L115.6 170.1C114.1 171.6 112.8 172.9 110 172.9L111.5 150.2L159.5 104.6C161.5 102.8 159.1 101.7 156.5 103.5L98.5 144.1L76.7 136.6C71.9 135.1 71.8 131.9 77.2 129.7Z" fill="#fff"/>
               </svg>
               Перейти в канал
             </a>
@@ -439,7 +489,7 @@ const App = () => {
         </div>
       )}
 
-      {/* Каталог (карточки всегда одинаковые!) */}
+      {/* Каталог (карточки одинаковые!) */}
       {activeSection !== 0 && (
         <div
           style={{
