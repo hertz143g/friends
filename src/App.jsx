@@ -97,7 +97,7 @@ const App = () => {
   }, [activeSection]);
 
   const isMobile = vw < 550;
-  const blockWidth = isMobile ? "98vw" : "430px";
+  const blockWidth = isMobile ? "calc(100vw - 10px)" : "430px";
   const gapY = isMobile ? 26 : 32;
 
   const cartTotalCount = cart.reduce((a, b) => a + b.qty, 0);
@@ -159,13 +159,16 @@ const App = () => {
     <div
       style={{
         minHeight: "100vh",
+        width: "100vw",
+        maxWidth: "100vw",
         background: BG,
         color: "#fff",
         margin: 0,
         padding: 0,
         boxSizing: "border-box",
         fontFamily: "system-ui,sans-serif",
-        overflowX: "hidden"
+        overflowX: "hidden",
+        position: "relative"
       }}
     >
       <header style={{ textAlign: "center", padding: "18px 0 0 0", position: "relative" }}>
@@ -281,7 +284,7 @@ const App = () => {
           {/* Карусель */}
           <div
             style={{
-              width: isMobile ? "98vw" : "100%",
+              width: isMobile ? "calc(100vw - 10px)" : "100%",
               maxWidth: blockWidth,
               margin: "0 auto",
               position: "relative",
@@ -320,7 +323,7 @@ const App = () => {
                 onClick={prevCarousel}
                 style={{
                   position: "absolute",
-                  left: 6,
+                  left: 3,
                   top: "50%",
                   transform: "translateY(-50%)",
                   background: "rgba(44,130,255,0.14)",
@@ -421,7 +424,7 @@ const App = () => {
                 onClick={nextCarousel}
                 style={{
                   position: "absolute",
-                  right: 6,
+                  right: 3,
                   top: "50%",
                   transform: "translateY(-50%)",
                   background: "rgba(44,130,255,0.14)",
@@ -523,7 +526,7 @@ const App = () => {
         </div>
       )}
 
-      {/* Каталог — карточки одинакового размера */}
+      {/* Каталог (карточки одинакового размера) */}
       {activeSection !== 0 && (
         <div
           style={{
