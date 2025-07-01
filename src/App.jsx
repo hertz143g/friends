@@ -15,15 +15,12 @@ function AnimatedBg() {
       canvas.width = w; canvas.height = h;
     };
     window.addEventListener("resize", resize);
-
-    // Мягкие тёмные “пятна”
     const blobs = [
       { x: w*0.2, y: h*0.32, r: 260, dx: 0.13, dy: 0.09, color: "#212c4388" },
       { x: w*0.7, y: h*0.15, r: 270, dx: -0.09, dy: 0.12, color: "#192035a2" },
       { x: w*0.44, y: h*0.79, r: 230, dx: 0.09, dy: -0.11, color: "#1c243dc4" },
       { x: w*0.87, y: h*0.71, r: 180, dx: -0.12, dy: 0.07, color: "#2a354b82" },
     ];
-
     function draw() {
       ctx.clearRect(0,0,w,h);
       for (const b of blobs) {
@@ -61,7 +58,6 @@ function AnimatedBg() {
 }
 
 // ------------ Данные ------------
-
 const ACCENT = "#3ca4ff";
 const BG = "#181e28";
 const CARD = "rgba(31,38,50,0.70)";
@@ -157,8 +153,9 @@ const App = () => {
   }, [activeSection]);
 
   const isMobile = vw < 550;
-  const blockWidth = isMobile ? "calc(100vw - 12px)" : "430px";
-  const gapY = isMobile ? 28 : 36;
+  // ---------- Все блоки одной ширины ----------
+  const mainBlockWidth = isMobile ? "calc(100vw - 16px)" : "420px";
+  const gapY = isMobile ? 25 : 32;
 
   const cartTotalCount = cart.reduce((a, b) => a + b.qty, 0);
 
@@ -293,7 +290,7 @@ const App = () => {
         </motion.button>
         <div style={{
           width: "100%",
-          maxWidth: blockWidth,
+          maxWidth: mainBlockWidth,
           margin: "22px auto 0 auto",
           height: 1,
           background: "rgba(255,255,255,0.14)",
@@ -331,7 +328,7 @@ const App = () => {
       {/* Главная страница */}
       {activeSection === 0 && (
         <div style={{
-          maxWidth: blockWidth,
+          maxWidth: mainBlockWidth,
           margin: "0 auto",
           width: "100%",
           padding: 0,
@@ -339,7 +336,8 @@ const App = () => {
           flexDirection: "column",
           gap: gapY,
           zIndex: 2,
-          position: "relative"
+          position: "relative",
+          alignItems: "center" // Центрируем всё по центру
         }}>
           {/* Карусель */}
           <motion.div
@@ -354,7 +352,6 @@ const App = () => {
               boxShadow: "0 4px 38px #1c2d471c, 0 1px 10px #13233077",
               backdropFilter: "blur(12px) saturate(1.06)",
               border: `1.7px solid ${BORDER}`,
-              maxWidth: blockWidth,
               margin: "0 auto",
               display: "flex",
               flexDirection: "column",
@@ -457,14 +454,15 @@ const App = () => {
               letterSpacing: "0.02em",
               lineHeight: 1.42,
               border: `1.4px solid ${BORDER}`,
-              backdropFilter: "blur(10px)"
+              backdropFilter: "blur(10px)",
+              width: "100%" // Одинаковая ширина
             }}>
             Добро пожаловать в <span style={{ color: ACCENT, fontWeight: 800 }}>4Friends Store</span>!
             <br />
             <span style={{ fontWeight: 400, color: "#b8d7ff" }}>У нас только новые товары по лучшим ценам.<br />Прокрутите вниз и выберите свой!</span>
           </motion.div>
 
-          {/* Кнопка Telegram */}
+          {/* Кнопка Telegram с лого */}
           <motion.a
             href={TELEGRAM_LINK}
             target="_blank"
@@ -473,7 +471,10 @@ const App = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.24, duration: 0.5, type: "spring" }}
             style={{
-              display: "inline-block",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 10,
               margin: "0 auto",
               background: ACCENT,
               color: "#fff",
@@ -486,9 +487,15 @@ const App = () => {
               border: "none",
               transition: ".18s",
               letterSpacing: "0.05em",
-              outline: "none"
+              outline: "none",
+              width: "100%", // ширина блока!
+              maxWidth: "100%"
             }}
           >
+            <svg xmlns="http://www.w3.org/2000/svg" height={isMobile ? 22 : 26} width={isMobile ? 22 : 26} viewBox="0 0 24 24" style={{ marginRight: 8, flexShrink: 0 }}>
+              <circle cx="12" cy="12" r="12" fill="#229ed9"/>
+              <path fill="#fff" d="M18.84 7.3a.79.79 0 0 0-.85-.08l-10.44 4.6a.82.82 0 0 0 .05 1.5l2.45.95 1.07 3.17a.8.8 0 0 0 .74.54h.03a.8.8 0 0 0 .74-.57l1.03-3.25 4.06-4.12a.81.81 0 0 0-.13-1.19z"/>
+            </svg>
             Перейти в Telegram
           </motion.a>
 
@@ -509,7 +516,8 @@ const App = () => {
               gap: isMobile ? 12 : 17,
               fontSize: isMobile ? 15.2 : 16.7,
               border: `1.3px solid ${BORDER}`,
-              backdropFilter: "blur(7px)"
+              backdropFilter: "blur(7px)",
+              width: "100%" // одинаковая ширина
             }}>
             <div style={{ fontWeight: 800, fontSize: isMobile ? 15.7 : 18, letterSpacing: "0.01em", color: ACCENT, marginBottom: 2 }}>
               Контакты магазина
@@ -529,7 +537,7 @@ const App = () => {
         </div>
       )}
 
-      {/* Каталог */}
+      {/* Каталог (остальное не меняется) */}
       {activeSection !== 0 && (
         <div
           style={{
@@ -815,14 +823,14 @@ const App = () => {
                         <button
                           style={{
                             display: "block",
-                            margin: "9px auto 0 auto",
+                            margin: "7px auto 0 auto",
                             color: ACCENT,
                             background: "none",
                             border: "none",
                             fontSize: 13,
                             cursor: "pointer",
                             padding: 0,
-                            fontWeight: 800,
+                            fontWeight: 700,
                           }}
                           onClick={() => removeFromCart(item.id)}
                         >
@@ -832,22 +840,21 @@ const App = () => {
                     </div>
                   );
                 })}
-                <div style={{ fontWeight: 900, fontSize: 18, textAlign: "right", marginTop: 9, marginBottom: 5, color: ACCENT }}>
+                <div style={{ fontWeight: 700, fontSize: 17, textAlign: "right", marginTop: 9, marginBottom: 5 }}>
                   Итого: {total} ₽
                 </div>
                 <button
                   style={{
                     width: "100%",
-                    marginTop: 18,
+                    marginTop: 15,
                     background: ACCENT,
-                    color: "#181B23",
-                    padding: "14px 0",
-                    borderRadius: 12,
+                    color: "#fff",
+                    padding: "13px 0",
+                    borderRadius: 10,
                     border: "none",
-                    fontWeight: 900,
-                    fontSize: 16.2,
+                    fontWeight: 800,
+                    fontSize: 15.5,
                     cursor: "pointer",
-                    boxShadow: "0 2px 10px #3ca4ff33"
                   }}
                   onClick={() => {
                     alert(
@@ -871,7 +878,7 @@ const App = () => {
           </div>
         </div>
       )}
-      <div style={{ height: 32 }} />
+      <div style={{ height: 28 }} />
     </div>
   );
 };
