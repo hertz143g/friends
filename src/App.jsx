@@ -6,7 +6,7 @@ const BG = "#23272f";
 const CARD = "#191c20";
 const BORDER = "rgba(255,255,255,0.08)";
 const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
-const TELEGRAM_LINK = "https://t.me/your_channel"; // <-- Вставь свою ссылку!
+const TELEGRAM_LINK = "https://t.me/your_channel";
 const PHONE = "+7 (999) 123-45-67";
 const ADDRESS = "г. Москва, ТЦ Сити, пав. 123";
 
@@ -66,8 +66,13 @@ const App = () => {
   const [columns, setColumns] = useState(getColumns());
   const [carouselIndex, setCarouselIndex] = useState(0);
 
+  // ширина экрана (адаптив)
+  const [vw, setVw] = useState(typeof window !== "undefined" ? window.innerWidth : 375);
   React.useEffect(() => {
-    const onResize = () => setColumns(getColumns());
+    const onResize = () => {
+      setColumns(getColumns());
+      setVw(window.innerWidth);
+    };
     window.addEventListener("resize", onResize);
     onResize();
     document.body.style.background = BG;
@@ -82,6 +87,10 @@ const App = () => {
     document.documentElement.style.overflowX = "hidden";
     return () => window.removeEventListener("resize", onResize);
   }, []);
+
+  const isMobile = vw < 550;
+  const blockWidth = isMobile ? "98vw" : "430px";
+  const gapY = isMobile ? 16 : 24;
 
   const cartTotalCount = cart.reduce((a, b) => a + b.qty, 0);
 
@@ -134,11 +143,6 @@ const App = () => {
     );
   }
 
-  // Адаптивные размеры блоков (для мобилки и десктопа)
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 540;
-  const mainBlockWidth = isMobile ? "98vw" : 430;
-  const blockPad = isMobile ? 13 : 26;
-
   return (
     <div
       style={{
@@ -157,11 +161,11 @@ const App = () => {
           src={logoUrl}
           alt="logo"
           style={{
-            width: 66,
-            height: 66,
+            width: 62,
+            height: 62,
             objectFit: "cover",
             borderRadius: "50%",
-            border: `3px solid ${ACCENT}`,
+            border: `2.5px solid ${ACCENT}`,
             background: "#fff",
             margin: "0 auto 0 auto",
             display: "block",
@@ -174,8 +178,8 @@ const App = () => {
           onClick={() => setShowCart(true)}
           style={{
             position: "absolute",
-            top: 20,
-            right: 35,
+            top: 18,
+            right: 20,
             background: "transparent",
             border: "none",
             cursor: "pointer",
@@ -183,7 +187,7 @@ const App = () => {
           }}
         >
           <span style={{ position: "relative" }}>
-            <svg width={30} height={30} viewBox="0 0 24 24" fill={ACCENT}>
+            <svg width={28} height={28} viewBox="0 0 24 24" fill={ACCENT}>
               <path d="M7 18c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm10 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm2-3H7.42l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H6.21l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H5.42l-.94-2H2V4h2l3.6 7.59-1.35 2.44C5.16 14.37 5.92 16 7.22 16H19c.553 0 1-.447 1-1s-.447-1-1-1z" />
             </svg>
             {cartTotalCount > 0 && (
@@ -194,13 +198,13 @@ const App = () => {
                 transition={{ type: "spring", stiffness: 350, damping: 12 }}
                 style={{
                   position: "absolute",
-                  top: -11,
+                  top: -9,
                   right: -13,
                   background: ACCENT,
                   color: "#fff",
                   borderRadius: "50%",
-                  padding: "3px 9px",
-                  fontSize: 13,
+                  padding: "2.5px 8px",
+                  fontSize: 12,
                   fontWeight: 700,
                   boxShadow: "0 2px 8px #1d7ad5c0"
                 }}
@@ -212,8 +216,8 @@ const App = () => {
         </motion.button>
         <div style={{
           width: "100%",
-          maxWidth: mainBlockWidth,
-          margin: "28px auto 0 auto",
+          maxWidth: blockWidth,
+          margin: "22px auto 0 auto",
           height: 1,
           background: "rgba(255,255,255,0.14)",
           borderRadius: 2,
@@ -222,7 +226,7 @@ const App = () => {
 
       {/* Категории */}
       <div style={{
-        display: "flex", justifyContent: "center", gap: 14, margin: "38px 0 24px 0", flexWrap: "wrap"
+        display: "flex", justifyContent: "center", gap: 11, margin: "30px 0 16px 0", flexWrap: "wrap"
       }}>
         {SECTIONS.map((section, idx) => (
           <button
@@ -232,10 +236,10 @@ const App = () => {
               background: idx === activeSection ? ACCENT : "transparent",
               color: idx === activeSection ? "#fff" : "#aaa",
               border: "none",
-              borderRadius: 14,
-              padding: "9px 18px",
+              borderRadius: 12,
+              padding: "8px 15px",
               fontWeight: 600,
-              fontSize: 16,
+              fontSize: 15,
               cursor: "pointer",
               boxShadow: idx === activeSection ? "0 2px 10px #2d70ff66" : "none",
               transition: "0.15s",
@@ -249,22 +253,24 @@ const App = () => {
 
       {/* Главная страница */}
       {activeSection === 0 && (
-        <div style={{ maxWidth: mainBlockWidth, margin: "0 auto", width: "100vw", padding: "0 2vw" }}>
+        <div style={{ maxWidth: blockWidth, margin: "0 auto", width: "100%", padding: 0, display: "flex", flexDirection: "column", gap: gapY }}>
           {/* Карусель */}
           <div style={{
             width: "100%",
             background: "#15181d",
-            borderRadius: 19,
-            padding: blockPad,
+            borderRadius: 17,
+            padding: isMobile ? "12px 7px" : "18px 20px",
             boxShadow: "0 4px 24px #1c223040",
-            marginBottom: 18,
-            maxWidth: mainBlockWidth,
-            marginLeft: "auto",
-            marginRight: "auto"
+            maxWidth: blockWidth,
+            margin: "0 auto",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 8
           }}>
-            <div style={{ fontWeight: 700, fontSize: 18, marginBottom: 15, textAlign: "center", letterSpacing: "0.01em" }}>Топовые товары</div>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 11 }}>
-              <button onClick={prevCarousel} style={{ background: "none", border: "none", fontSize: 27, color: ACCENT, cursor: "pointer" }}>‹</button>
+            <div style={{ fontWeight: 700, fontSize: isMobile ? 16 : 18, marginBottom: 5, textAlign: "center", letterSpacing: "0.01em" }}>Топовые товары</div>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 9, width: "100%" }}>
+              <button onClick={prevCarousel} style={{ background: "none", border: "none", fontSize: 26, color: ACCENT, cursor: "pointer" }}>‹</button>
               <motion.div
                 key={carouselIndex}
                 initial={{ opacity: 0, x: 50 }}
@@ -273,27 +279,28 @@ const App = () => {
                 transition={{ type: "spring", duration: 0.32 }}
                 style={{
                   background: CARD,
-                  borderRadius: 14,
+                  borderRadius: 13,
                   boxShadow: "0 3px 10px #0004",
-                  padding: isMobile ? 12 : 17,
+                  padding: isMobile ? "13px 7px" : "17px 15px",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
-                  minWidth: isMobile ? 148 : 180,
-                  maxWidth: isMobile ? 230 : 250,
-                  width: isMobile ? "68vw" : "90vw"
+                  minWidth: isMobile ? 150 : 180,
+                  maxWidth: isMobile ? 200 : 250,
+                  width: isMobile ? "68vw" : "90vw",
+                  margin: "0 0"
                 }}
               >
-                <img src={CAROUSEL_PRODUCTS[carouselIndex].img} alt="" style={{ width: isMobile ? 62 : 70, height: isMobile ? 62 : 70, borderRadius: 12, objectFit: "cover", marginBottom: 8, background: "#222" }} />
-                <div style={{ fontWeight: 700, fontSize: isMobile ? 15 : 16, marginBottom: 6 }}>{CAROUSEL_PRODUCTS[carouselIndex].brand}</div>
-                <div style={{ fontSize: isMobile ? 12.2 : 13.5, color: "#c2c2c2", marginBottom: 8, textAlign: "center" }}>{CAROUSEL_PRODUCTS[carouselIndex].name}</div>
-                <div style={{ fontWeight: 800, fontSize: isMobile ? 14 : 15, marginBottom: 6 }}>{CAROUSEL_PRODUCTS[carouselIndex].price} ₽</div>
+                <img src={CAROUSEL_PRODUCTS[carouselIndex].img} alt="" style={{ width: isMobile ? 58 : 70, height: isMobile ? 58 : 70, borderRadius: 11, objectFit: "cover", marginBottom: 6, background: "#222" }} />
+                <div style={{ fontWeight: 700, fontSize: isMobile ? 13.5 : 15.5, marginBottom: 5 }}>{CAROUSEL_PRODUCTS[carouselIndex].brand}</div>
+                <div style={{ fontSize: isMobile ? 11.5 : 13, color: "#c2c2c2", marginBottom: 6, textAlign: "center" }}>{CAROUSEL_PRODUCTS[carouselIndex].name}</div>
+                <div style={{ fontWeight: 800, fontSize: isMobile ? 13 : 15, marginBottom: 4 }}>{CAROUSEL_PRODUCTS[carouselIndex].price} ₽</div>
                 <button onClick={() => addToCart(CAROUSEL_PRODUCTS[carouselIndex].id)}
                   style={{
-                    background: ACCENT, color: "#fff", border: "none", borderRadius: 8, fontWeight: 700, padding: "8px 13px", cursor: "pointer", fontSize: isMobile ? 13 : 14
+                    background: ACCENT, color: "#fff", border: "none", borderRadius: 8, fontWeight: 700, padding: "7px 13px", cursor: "pointer", fontSize: isMobile ? 12 : 14
                   }}>В корзину</button>
               </motion.div>
-              <button onClick={nextCarousel} style={{ background: "none", border: "none", fontSize: 27, color: ACCENT, cursor: "pointer" }}>›</button>
+              <button onClick={nextCarousel} style={{ background: "none", border: "none", fontSize: 26, color: ACCENT, cursor: "pointer" }}>›</button>
             </div>
           </div>
 
@@ -302,20 +309,15 @@ const App = () => {
             background: "#191c22",
             borderRadius: 15,
             boxShadow: "0 1.5px 8px #222a",
-            padding: isMobile ? 14 : 22,
-            marginBottom: 18,
-            maxWidth: mainBlockWidth,
-            width: "100%",
-            margin: "0 auto",
-            fontSize: isMobile ? 15 : 16.5,
+            padding: isMobile ? "13px 9px" : "22px 22px",
+            fontSize: isMobile ? 14.5 : 16,
             textAlign: "center",
             fontWeight: 600,
-            letterSpacing: "0.01em",
             color: "#f8f8f8"
           }}>
             Добро пожаловать в <span style={{ color: ACCENT, fontWeight: 800 }}>4Friends Store</span>!  
-            Мы рады видеть вас — у нас только новые, честные товары по отличным ценам.<br />
-            <span style={{ fontWeight: 400, color: "#b8d7ff" }}>Прокрутите вниз, чтобы увидеть каталог и лучшие предложения.</span>
+            <br />
+            <span style={{ fontWeight: 400, color: "#b8d7ff" }}>У нас только новые товары по лучшим ценам. Пролистайте ниже — каталог уже ждёт вас!</span>
           </div>
 
           {/* Ссылка на канал */}
@@ -323,53 +325,45 @@ const App = () => {
             background: "#191c22",
             borderRadius: 15,
             boxShadow: "0 2px 10px #1c223030",
-            padding: isMobile ? 13 : 22,
-            marginBottom: 18,
+            padding: isMobile ? "13px 7px" : "19px 15px",
             display: "flex",
             alignItems: "center",
-            gap: isMobile ? 13 : 22,
+            gap: isMobile ? 11 : 20,
             flexWrap: "wrap",
-            justifyContent: "center",
-            maxWidth: mainBlockWidth,
-            width: "100%",
-            margin: "0 auto"
+            justifyContent: "center"
           }}>
-            <img src={logoUrl} alt="logo" style={{ width: isMobile ? 38 : 55, height: isMobile ? 38 : 55, borderRadius: "50%", background: "#fff", border: `2.5px solid ${ACCENT}` }} />
+            <img src={logoUrl} alt="logo" style={{ width: isMobile ? 32 : 48, height: isMobile ? 32 : 48, borderRadius: "50%", background: "#fff", border: `2px solid ${ACCENT}` }} />
             <div>
-              <div style={{ fontWeight: 700, fontSize: isMobile ? 13.5 : 15.5, marginBottom: 6 }}>Наш магазин в Telegram</div>
+              <div style={{ fontWeight: 700, fontSize: isMobile ? 12.5 : 14, marginBottom: 4 }}>Наш магазин в Telegram</div>
               <a href={TELEGRAM_LINK} target="_blank" rel="noopener noreferrer"
                 style={{
                   display: "inline-block",
                   background: ACCENT,
                   color: "#fff",
-                  padding: isMobile ? "7px 12px" : "8px 18px",
+                  padding: isMobile ? "6px 12px" : "8px 16px",
                   borderRadius: 8,
                   fontWeight: 700,
-                  fontSize: isMobile ? 12.5 : 14,
+                  fontSize: isMobile ? 12 : 13.2,
                   textDecoration: "none",
                   boxShadow: "0 1px 6px #278aff3a"
                 }}>Перейти в канал</a>
             </div>
           </div>
 
-          {/* Контакты + адрес — теперь как единый блок, красиво, крупно */}
+          {/* Контакты + адрес */}
           <div style={{
             background: "#162030",
-            borderRadius: 15,
-            padding: isMobile ? 14 : 24,
+            borderRadius: 14,
+            padding: isMobile ? "14px 7px" : "22px 17px",
             boxShadow: "0 2px 12px #1d263760",
-            marginBottom: 22,
-            maxWidth: mainBlockWidth,
-            width: "100%",
-            margin: "0 auto",
             color: "#e9f3ff",
             textAlign: "center",
             display: "flex",
             flexDirection: "column",
-            gap: 11,
-            fontSize: isMobile ? 14.5 : 16.5
+            gap: isMobile ? 6 : 10,
+            fontSize: isMobile ? 13.5 : 15
           }}>
-            <div style={{ fontWeight: 800, fontSize: isMobile ? 15.5 : 17.5, marginBottom: 4, letterSpacing: "0.02em", color: ACCENT }}>
+            <div style={{ fontWeight: 800, fontSize: isMobile ? 14 : 17, letterSpacing: "0.01em", color: ACCENT, marginBottom: 3 }}>
               Контакты магазина
             </div>
             <div>
@@ -380,14 +374,14 @@ const App = () => {
               <span style={{ color: "#b6cafc" }}>Адрес:</span>{" "}
               <span style={{ color: "#fff", fontWeight: 700 }}>{ADDRESS}</span>
             </div>
-            <div style={{ fontSize: isMobile ? 12.2 : 13.5, color: "#b5e1ff", marginTop: 6 }}>
+            <div style={{ fontSize: isMobile ? 11 : 13, color: "#b5e1ff", marginTop: 5 }}>
               Пишите и звоните — мы всегда на связи!
             </div>
           </div>
         </div>
       )}
 
-      {/* Каталог — как было */}
+      {/* Каталог */}
       {activeSection !== 0 && (
         <div
           style={{
@@ -567,7 +561,6 @@ const App = () => {
                       >+</motion.button>
                     </div>
                   )}
-                  {/* Эффект "+1" */}
                   <AnimatePresence>
                     {addAnimId === product.id && (
                       <motion.div
@@ -597,7 +590,7 @@ const App = () => {
         </div>
       )}
 
-      {/* Корзина — как было */}
+      {/* Корзина */}
       {showCart && (
         <div
           style={{
@@ -711,7 +704,7 @@ const App = () => {
           </div>
         </div>
       )}
-      <div style={{ height: 28 }} />
+      <div style={{ height: 26 }} />
     </div>
   );
 };
