@@ -7,8 +7,8 @@ const CARD = "#191c20";
 const BORDER = "rgba(255,255,255,0.08)";
 const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
 const TELEGRAM_LINK = "https://t.me/forfriendsstore";
-const PHONE = "+7 (999) 123-45-67";
-const ADDRESS = "г. Москва, ТЦ Сити, пав. 123";
+const PHONE = "+7(926)591-21-65";
+const ADDRESS = "Клин, ул. Победы, д. 9, «Ок’ей»";
 
 const TV_PLACEHOLDER = "https://tech-iq.ru/upload/iblock/324/ixntoljx6r6lclbh3pfr0ve261z3ocn2.webp";
 const PHONE_PLACEHOLDER = "https://avatars.mds.yandex.net/get-mpic/1865853/img_id3034328595286431407.png/orig";
@@ -404,7 +404,7 @@ const App = () => {
                   fontSize: isMobile ? 13.5 : 15.5,
                   textDecoration: "none",
                   boxShadow: "0 2px 10px #278aff2a"
-                }}>t.me/forfriendsstore</a>
+                }}>перейти</a>
             </div>
           </div>
 
