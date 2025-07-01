@@ -276,134 +276,139 @@ const App = () => {
           gap: gapY
         }}>
           {/* Карусель */}
-          <div style={{
-            width: "100%",
-            background: "#15181d",
-            borderRadius: 19,
-            boxShadow: "0 4px 24px #1c223040",
-            maxWidth: blockWidth,
-            margin: "0 auto",
-            position: "relative",
-            minHeight: isMobile ? 175 : 215,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: isMobile ? "23px 6px" : "30px 19px",
-            overflow: "hidden"
-          }}>
-            <div style={{ fontWeight: 700, fontSize: isMobile ? 16 : 18, marginBottom: 16, textAlign: "center", letterSpacing: "0.01em" }}>Топовые товары</div>
-            <div style={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              position: "relative",
-              minHeight: isMobile ? 110 : 140,
-            }}>
-              {/* Стрелка ВЛЕВО */}
-              <button
-                onClick={prevCarousel}
-                style={{
-                  position: "absolute",
-                  left: isMobile ? 4 : 10,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  background: "rgba(44,130,255,0.09)",
-                  border: "none",
-                  borderRadius: "50%",
-                  width: isMobile ? 36 : 44,
-                  height: isMobile ? 36 : 44,
-                  color: ACCENT,
-                  cursor: "pointer",
-                  zIndex: 2,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: isMobile ? 22 : 28,
-                  boxShadow: "0 1px 6px #1935ff22"
-                }}
-              >‹</button>
-              {/* КАРТОЧКА */}
-              <motion.div
-                key={carouselIndex}
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -50 }}
-                transition={{ type: "spring", duration: 0.32 }}
-                style={{
-                  background: CARD,
-                  borderRadius: 16,
-                  boxShadow: "0 3px 10px #0004",
-                  padding: isMobile ? "19px 12px" : "27px 22px",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  minWidth: isMobile ? 175 : 210,
-                  maxWidth: isMobile ? 235 : 280,
-                  width: isMobile ? "83vw" : "88%",
-                  margin: "0 auto"
-                }}
-              >
-                <img src={CAROUSEL_PRODUCTS[carouselIndex].img} alt="" style={{
-                  width: isMobile ? 68 : 85,
-                  height: isMobile ? 68 : 85,
-                  borderRadius: 14,
-                  objectFit: "cover",
-                  marginBottom: 10,
-                  background: "#222"
-                }} />
-                <div style={{ fontWeight: 700, fontSize: isMobile ? 15 : 16.5, marginBottom: 5 }}>{CAROUSEL_PRODUCTS[carouselIndex].brand}</div>
-                <div style={{
-                  fontSize: isMobile ? 13 : 15,
-                  color: "#c2c2c2",
-                  marginBottom: 10,
-                  textAlign: "center",
-                  minHeight: isMobile ? 32 : 40,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center"
-                }}>{CAROUSEL_PRODUCTS[carouselIndex].name}</div>
-                <div style={{ fontWeight: 800, fontSize: isMobile ? 14 : 16, marginBottom: 8 }}>{CAROUSEL_PRODUCTS[carouselIndex].price} ₽</div>
-                <button onClick={() => addToCart(CAROUSEL_PRODUCTS[carouselIndex].id)}
-                  style={{
-                    background: ACCENT,
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: 9,
-                    fontWeight: 700,
-                    padding: isMobile ? "10px 0" : "12px 0",
-                    cursor: "pointer",
-                    fontSize: isMobile ? 14 : 15,
-                    width: "100%",
-                    marginTop: 2
-                  }}>В корзину</button>
-              </motion.div>
-              {/* Стрелка ВПРАВО */}
-              <button
-                onClick={nextCarousel}
-                style={{
-                  position: "absolute",
-                  right: isMobile ? 4 : 10,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  background: "rgba(44,130,255,0.09)",
-                  border: "none",
-                  borderRadius: "50%",
-                  width: isMobile ? 36 : 44,
-                  height: isMobile ? 36 : 44,
-                  color: ACCENT,
-                  cursor: "pointer",
-                  zIndex: 2,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: isMobile ? 22 : 28,
-                  boxShadow: "0 1px 6px #1935ff22"
-                }}
-              >›</button>
-            </div>
-          </div>
+          <div
+  style={{
+    width: "100%",
+    background: "#15181d",
+    borderRadius: 19,
+    boxShadow: "0 4px 24px #1c223040",
+    maxWidth: blockWidth,
+    margin: "0 auto",
+    position: "relative",
+    padding: isMobile ? "27px 10px" : "36px 36px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    overflow: "hidden",
+  }}
+>
+  <div style={{
+    fontWeight: 700,
+    fontSize: isMobile ? 16 : 20,
+    marginBottom: 18,
+    textAlign: "center",
+    letterSpacing: "0.01em"
+  }}>
+    Топовые товары
+  </div>
+  <div style={{
+    width: "100%",
+    position: "relative",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: isMobile ? 210 : 240,
+  }}>
+    {/* Стрелка влево */}
+    <button
+      onClick={prevCarousel}
+      style={{
+        position: "absolute",
+        left: 0,
+        top: "50%",
+        transform: "translateY(-50%)",
+        background: "rgba(44,130,255,0.12)",
+        border: "none",
+        borderRadius: "50%",
+        width: 42,
+        height: 42,
+        color: ACCENT,
+        cursor: "pointer",
+        zIndex: 3,
+        fontSize: 24,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        boxShadow: "0 1px 6px #1935ff13"
+      }}
+    >‹</button>
+    {/* Содержимое (БЕЗ ВНУТРЕННЕГО CARD!) */}
+    <motion.div
+      key={carouselIndex}
+      initial={{ opacity: 0, x: 45 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -45 }}
+      transition={{ type: "spring", duration: 0.28 }}
+      style={{
+        flex: "1 0 0",
+        maxWidth: 340,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 13,
+        minHeight: isMobile ? 140 : 170,
+        zIndex: 2,
+        margin: "0 42px", // место под стрелки
+      }}
+    >
+      <img src={CAROUSEL_PRODUCTS[carouselIndex].img} alt="" style={{
+        width: isMobile ? 68 : 88,
+        height: isMobile ? 68 : 88,
+        borderRadius: 15,
+        objectFit: "cover",
+        background: "#222",
+        marginBottom: 7,
+      }} />
+      <div style={{ fontWeight: 800, fontSize: isMobile ? 15 : 18 }}>{CAROUSEL_PRODUCTS[carouselIndex].brand}</div>
+      <div style={{
+        fontSize: isMobile ? 13 : 15,
+        color: "#c2c2c2",
+        textAlign: "center",
+        minHeight: isMobile ? 32 : 40,
+        marginBottom: 2,
+      }}>{CAROUSEL_PRODUCTS[carouselIndex].name}</div>
+      <div style={{ fontWeight: 700, fontSize: isMobile ? 15 : 18 }}>
+        {CAROUSEL_PRODUCTS[carouselIndex].price} ₽
+      </div>
+      <button onClick={() => addToCart(CAROUSEL_PRODUCTS[carouselIndex].id)}
+        style={{
+          background: ACCENT,
+          color: "#fff",
+          border: "none",
+          borderRadius: 9,
+          fontWeight: 700,
+          padding: isMobile ? "11px 0" : "13px 0",
+          cursor: "pointer",
+          fontSize: isMobile ? 14 : 16,
+          width: "100%",
+        }}>В корзину</button>
+    </motion.div>
+    {/* Стрелка вправо */}
+    <button
+      onClick={nextCarousel}
+      style={{
+        position: "absolute",
+        right: 0,
+        top: "50%",
+        transform: "translateY(-50%)",
+        background: "rgba(44,130,255,0.12)",
+        border: "none",
+        borderRadius: "50%",
+        width: 42,
+        height: 42,
+        color: ACCENT,
+        cursor: "pointer",
+        zIndex: 3,
+        fontSize: 24,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        boxShadow: "0 1px 6px #1935ff13"
+      }}
+    >›</button>
+  </div>
+</div>
+
 
           {/* Приветственный блок */}
           <div style={{
