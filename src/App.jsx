@@ -6,6 +6,10 @@ const BG = "#23272f";
 const CARD = "#191c20";
 const BORDER = "rgba(255,255,255,0.08)";
 const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
+const TELEGRAM_LINK = "https://t.me/your_channel"; // <-- Вставь свою ссылку!
+const PHONE = "+7 (999) 123-45-67";
+const ADDRESS = "г. Москва, ТЦ Сити, пав. 123";
+
 const TV_PLACEHOLDER = "https://tech-iq.ru/upload/iblock/324/ixntoljx6r6lclbh3pfr0ve261z3ocn2.webp";
 const PHONE_PLACEHOLDER = "https://avatars.mds.yandex.net/get-mpic/1865853/img_id3034328595286431407.png/orig";
 
@@ -24,7 +28,15 @@ const PHONES = [
   { id: 103, brand: "Xiaomi", name: "Xiaomi Redmi Note 13 Pro 512GB Синий", price: 34000, img: PHONE_PLACEHOLDER }
 ];
 
+const CAROUSEL_PRODUCTS = [
+  { ...TVS[0], img: TV_PLACEHOLDER },
+  { ...PHONES[0] },
+  { ...TVS[3], img: TV_PLACEHOLDER },
+  { ...PHONES[2] },
+];
+
 const SECTIONS = [
+  { name: "Главная" },
   {
     name: "Телевизоры",
     products: TVS.map(tv => ({
@@ -38,7 +50,7 @@ const SECTIONS = [
   }
 ];
 
-// Utility for columns based on screen size (without breaking layout)
+// Грид — возвращаем крупнее карточки, компактность убираем!
 function getColumns() {
   if (window.innerWidth > 950) return "repeat(3, 1fr)";
   if (window.innerWidth > 650) return "repeat(2, 1fr)";
@@ -47,14 +59,14 @@ function getColumns() {
 
 const App = () => {
   const [activeSection, setActiveSection] = useState(0);
-  const products = SECTIONS[activeSection].products;
+  const products = SECTIONS[activeSection]?.products || [];
   const [cart, setCart] = useState([]);
   const [showCart, setShowCart] = useState(false);
   const [cartAnim, setCartAnim] = useState(false);
   const [addAnimId, setAddAnimId] = useState(null);
   const [columns, setColumns] = useState(getColumns());
+  const [carouselIndex, setCarouselIndex] = useState(0);
 
-  // Фиксируем все отступы, запрещаем горизонтальный скролл
   React.useEffect(() => {
     const onResize = () => setColumns(getColumns());
     window.addEventListener("resize", onResize);
@@ -87,7 +99,7 @@ const App = () => {
     });
     setCartAnim(true);
     setAddAnimId(id);
-    setTimeout(() => setCartAnim(false), 380);
+    setTimeout(() => setCartAnim(false), 400);
     setTimeout(() => setAddAnimId(null), 500);
   };
 
@@ -102,6 +114,7 @@ const App = () => {
 
   function getProduct(id) {
     for (let section of SECTIONS) {
+      if (!section.products) continue;
       const found = section.products.find((p) => p.id === id);
       if (found) return found;
     }
@@ -112,6 +125,17 @@ const App = () => {
     (sum, item) => sum + (getProduct(item.id)?.price || 0) * item.qty,
     0
   );
+
+  // ----------- Карусель ------------
+  function nextCarousel() {
+    setCarouselIndex((carouselIndex + 1) % CAROUSEL_PRODUCTS.length);
+  }
+  function prevCarousel() {
+    setCarouselIndex(
+      (carouselIndex - 1 + CAROUSEL_PRODUCTS.length) % CAROUSEL_PRODUCTS.length
+    );
+  }
+  // ----------- /Карусель ------------
 
   return (
     <div
@@ -126,30 +150,30 @@ const App = () => {
         overflowX: "hidden"
       }}
     >
-      <header style={{ textAlign: "center", padding: "15px 0 0 0", position: "relative" }}>
+      <header style={{ textAlign: "center", padding: "18px 0 0 0", position: "relative" }}>
         <img
           src={logoUrl}
           alt="logo"
           style={{
-            width: 53,
-            height: 53,
+            width: 66,
+            height: 66,
             objectFit: "cover",
             borderRadius: "50%",
-            border: `2.5px solid ${ACCENT}`,
+            border: `3px solid ${ACCENT}`,
             background: "#fff",
             margin: "0 auto 0 auto",
             display: "block",
-            boxShadow: "0 0 12px #0006",
+            boxShadow: "0 0 18px #0007",
           }}
         />
         <motion.button
-          animate={cartAnim ? { scale: [1, 1.19, 0.93, 1] } : { scale: 1 }}
-          transition={{ duration: 0.34, type: "spring" }}
+          animate={cartAnim ? { scale: [1, 1.22, 0.9, 1], rotate: [0, -13, 6, 0] } : { scale: 1, rotate: 0 }}
+          transition={{ duration: 0.4, type: "spring" }}
           onClick={() => setShowCart(true)}
           style={{
             position: "absolute",
-            top: 12,
-            right: 15,
+            top: 20,
+            right: 35,
             background: "transparent",
             border: "none",
             cursor: "pointer",
@@ -157,7 +181,7 @@ const App = () => {
           }}
         >
           <span style={{ position: "relative" }}>
-            <svg width={25} height={25} viewBox="0 0 24 24" fill={ACCENT}>
+            <svg width={30} height={30} viewBox="0 0 24 24" fill={ACCENT}>
               <path d="M7 18c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm10 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm2-3H7.42l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H6.21l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H5.42l-.94-2H2V4h2l3.6 7.59-1.35 2.44C5.16 14.37 5.92 16 7.22 16H19c.553 0 1-.447 1-1s-.447-1-1-1z" />
             </svg>
             {cartTotalCount > 0 && (
@@ -165,16 +189,16 @@ const App = () => {
                 key={cartTotalCount}
                 initial={{ scale: 0.5, opacity: 0, y: -12 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
-                transition={{ type: "spring", stiffness: 320, damping: 10 }}
+                transition={{ type: "spring", stiffness: 350, damping: 12 }}
                 style={{
                   position: "absolute",
-                  top: -10,
-                  right: -11,
+                  top: -11,
+                  right: -13,
                   background: ACCENT,
                   color: "#fff",
                   borderRadius: "50%",
-                  padding: "2px 8px",
-                  fontSize: 11.5,
+                  padding: "3px 9px",
+                  fontSize: 13,
                   fontWeight: 700,
                   boxShadow: "0 2px 8px #1d7ad5c0"
                 }}
@@ -186,16 +210,17 @@ const App = () => {
         </motion.button>
         <div style={{
           width: "100%",
-          maxWidth: 320,
-          margin: "15px auto 0 auto",
+          maxWidth: 430,
+          margin: "28px auto 0 auto",
           height: 1,
-          background: "rgba(255,255,255,0.12)",
+          background: "rgba(255,255,255,0.14)",
           borderRadius: 2,
         }}></div>
       </header>
 
+      {/* Категории */}
       <div style={{
-        display: "flex", justifyContent: "center", gap: 9, margin: "19px 0 12px 0"
+        display: "flex", justifyContent: "center", gap: 14, margin: "38px 0 24px 0", flexWrap: "wrap"
       }}>
         {SECTIONS.map((section, idx) => (
           <button
@@ -205,13 +230,13 @@ const App = () => {
               background: idx === activeSection ? ACCENT : "transparent",
               color: idx === activeSection ? "#fff" : "#aaa",
               border: "none",
-              borderRadius: 10,
-              padding: "5px 12px",
+              borderRadius: 14,
+              padding: "9px 18px",
               fontWeight: 600,
-              fontSize: 13,
+              fontSize: 16,
               cursor: "pointer",
-              boxShadow: idx === activeSection ? "0 2px 8px #2d70ff33" : "none",
-              transition: "0.11s",
+              boxShadow: idx === activeSection ? "0 2px 10px #2d70ff66" : "none",
+              transition: "0.15s",
               letterSpacing: "0.01em"
             }}
           >
@@ -220,334 +245,398 @@ const App = () => {
         ))}
       </div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: columns,
-          gap: 13,
-          maxWidth: 900,
-          margin: "0 auto",
-          boxSizing: "border-box",
-          width: "100vw",
-          alignItems: "stretch",
-          padding: "0 2vw"
-        }}
-      >
-        <AnimatePresence mode="wait">
-        {products.map((product, i) => {
-          const qty = getQtyInCart(product.id);
-
-          return (
-            <motion.div
-              key={product.id}
-              initial={{ opacity: 0, y: 22, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 32, scale: 0.95 }}
-              transition={{ delay: i * 0.13, duration: 0.5, type: "spring", stiffness: 180, damping: 15 }}
-              style={{
-                background: CARD,
-                border: `1px solid ${BORDER}`,
-                borderRadius: 14,
-                boxShadow: "0 4px 16px #08172b16, 0 1.5px 5px #10192815",
-                padding: 10,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                minHeight: 235,
-                height: "100%",
-                width: "100%",
-                boxSizing: "border-box",
-                justifyContent: "flex-start",
-                position: "relative",
-                overflow: "hidden"
-              }}
-              whileHover={{
-                boxShadow: "0 8px 22px #278aff20, 0 2px 7px #091d3c14",
-                scale: window.innerWidth > 700 ? 1.014 : 1
-              }}
-            >
-              <motion.img
-                src={product.img}
-                alt={product.name}
+      {/* Главная страница */}
+      {activeSection === 0 && (
+        <div style={{ maxWidth: 600, margin: "0 auto", width: "98vw", padding: "0 2vw" }}>
+          {/* Карусель */}
+          <div style={{ width: "100%", margin: "0 auto", background: "#15181d", borderRadius: 19, padding: 22, boxShadow: "0 4px 24px #1c223040", marginBottom: 26 }}>
+            <div style={{ fontWeight: 700, fontSize: 18, marginBottom: 15, textAlign: "center", letterSpacing: "0.01em" }}>Топовые товары</div>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 19 }}>
+              <button onClick={prevCarousel} style={{ background: "none", border: "none", fontSize: 27, color: ACCENT, cursor: "pointer" }}>‹</button>
+              <motion.div
+                key={carouselIndex}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ type: "spring", duration: 0.32 }}
                 style={{
-                  width: 70,
-                  height: 70,
-                  objectFit: "cover",
-                  borderRadius: 11,
-                  marginBottom: 6,
-                  background: "#23272f",
-                  boxShadow: "0 2px 7px #18408015",
-                  border: `1px solid ${BORDER}`,
-                  transition: ".14s"
+                  background: CARD,
+                  borderRadius: 14,
+                  boxShadow: "0 3px 10px #0004",
+                  padding: 17,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  minWidth: 180,
+                  maxWidth: 250,
+                  width: "90vw"
                 }}
-                initial={false}
-                animate={addAnimId === product.id ? { scale: [1, 1.09, 0.97, 1] } : { scale: 1 }}
-                transition={{ duration: 0.22 }}
-                onError={e => { e.target.src = product.img; }}
-              />
-              <div style={{
-                fontWeight: 700,
-                fontSize: 13.5,
-                marginBottom: 4,
-                textAlign: "center",
-                width: "100%",
-                color: "#fff"
-              }}>
-                {product.brand}
-              </div>
-              <div style={{
-                fontSize: 10.7,
-                marginBottom: 9,
-                color: "#c2c2c2",
-                textAlign: "center",
-                width: "95%",
-                margin: "0 auto",
-                lineHeight: 1.33,
-                overflowWrap: "break-word"
-              }}>
-                {product.name}
-              </div>
-              <div style={{
-                fontWeight: 700,
-                fontSize: 12.5,
-                marginBottom: 7,
-                marginTop: "auto"
-              }}>
-                {product.price} ₽
-              </div>
-              {qty === 0 ? (
-                <motion.button
-                  whileTap={{ scale: 0.93, backgroundColor: "#197ad2" }}
-                  onClick={() => addToCart(product.id)}
+              >
+                <img src={CAROUSEL_PRODUCTS[carouselIndex].img} alt="" style={{ width: 70, height: 70, borderRadius: 12, objectFit: "cover", marginBottom: 8, background: "#222" }} />
+                <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 6 }}>{CAROUSEL_PRODUCTS[carouselIndex].brand}</div>
+                <div style={{ fontSize: 13.5, color: "#c2c2c2", marginBottom: 8, textAlign: "center" }}>{CAROUSEL_PRODUCTS[carouselIndex].name}</div>
+                <div style={{ fontWeight: 800, fontSize: 15, marginBottom: 6 }}>{CAROUSEL_PRODUCTS[carouselIndex].price} ₽</div>
+                <button onClick={() => addToCart(CAROUSEL_PRODUCTS[carouselIndex].id)}
                   style={{
-                    background: ACCENT,
-                    color: "#fff",
-                    padding: "7px 0",
-                    borderRadius: 7,
-                    border: "none",
-                    fontWeight: 700,
-                    fontSize: 11.8,
-                    cursor: "pointer",
-                    width: "100%",
-                    boxShadow: "0 2px 7px #2680d71e",
-                    position: "relative",
-                    letterSpacing: "0.025em",
-                    transition: "background .12s"
-                  }}
-                >
-                  В корзину
-                </motion.button>
-              ) : (
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "100%",
-                    gap: 6,
-                    background: ACCENT,
-                    borderRadius: 7,
-                    padding: "0 4px"
-                  }}
-                >
-                  <motion.button
-                    whileTap={{ scale: 0.89 }}
-                    onClick={() => {
-                      if (qty === 1) removeFromCart(product.id);
-                      else setCart(prev => prev.map(item => item.id === product.id ? { ...item, qty: item.qty - 1 } : item));
-                    }}
-                    style={{
-                      background: "none",
-                      border: "none",
-                      color: "#fff",
-                      fontSize: 15.5,
-                      fontWeight: 700,
-                      padding: "4px 9px 5px 9px",
-                      cursor: "pointer",
-                      outline: "none",
-                      borderRadius: 5
-                    }}
-                  >–</motion.button>
-                  <div style={{
-                    color: "#fff",
-                    minWidth: 16,
-                    textAlign: "center",
-                    fontWeight: 800,
-                    fontSize: 12
-                  }}>
-                    {qty}
-                  </div>
-                  <motion.button
-                    whileTap={{ scale: 0.89 }}
-                    onClick={() => addToCart(product.id)}
-                    style={{
-                      background: "none",
-                      border: "none",
-                      color: "#fff",
-                      fontSize: 15.5,
-                      fontWeight: 700,
-                      padding: "4px 9px 5px 9px",
-                      cursor: "pointer",
-                      outline: "none",
-                      borderRadius: 5
-                    }}
-                  >+</motion.button>
-                </div>
-              )}
-              {/* Эффект "+1" */}
-              <AnimatePresence>
-                {addAnimId === product.id && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8, scale: 0.7 }}
-                    animate={{ opacity: 1, y: -14, scale: 1.09 }}
-                    exit={{ opacity: 0, y: -33, scale: 1.14 }}
-                    transition={{ duration: 0.29 }}
-                    style={{
-                      position: "absolute",
-                      top: 22,
-                      right: 15,
-                      color: ACCENT,
-                      fontWeight: 900,
-                      fontSize: 13,
-                      textShadow: "0 2px 7px #18181b",
-                      pointerEvents: "none"
-                    }}
-                  >
-                    +1
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          );
-        })}
-        </AnimatePresence>
-      </div>
+                    background: ACCENT, color: "#fff", border: "none", borderRadius: 8, fontWeight: 700, padding: "9px 17px", cursor: "pointer", fontSize: 14
+                  }}>В корзину</button>
+              </motion.div>
+              <button onClick={nextCarousel} style={{ background: "none", border: "none", fontSize: 27, color: ACCENT, cursor: "pointer" }}>›</button>
+            </div>
+          </div>
+          {/* Ссылка на канал */}
+          <div style={{ background: "#191c22", borderRadius: 14, boxShadow: "0 2px 10px #1c223030", padding: 22, marginBottom: 20, display: "flex", alignItems: "center", gap: 22, flexWrap: "wrap", justifyContent: "center" }}>
+            <img src={logoUrl} alt="logo" style={{ width: 55, height: 55, borderRadius: "50%", background: "#fff", border: `2.5px solid ${ACCENT}` }} />
+            <div>
+              <div style={{ fontWeight: 700, fontSize: 15.5, marginBottom: 6 }}>Наш магазин в Telegram</div>
+              <a href={TELEGRAM_LINK} target="_blank" rel="noopener noreferrer"
+                style={{
+                  display: "inline-block",
+                  background: ACCENT,
+                  color: "#fff",
+                  padding: "8px 18px",
+                  borderRadius: 8,
+                  fontWeight: 700,
+                  fontSize: 14,
+                  textDecoration: "none",
+                  boxShadow: "0 1px 6px #278aff3a"
+                }}>Перейти в канал</a>
+            </div>
+          </div>
+          {/* Контакты */}
+          <div style={{ background: "#16191e", borderRadius: 14, padding: 18, boxShadow: "0 1px 6px #222a  ", marginBottom: 30 }}>
+            <div style={{ fontWeight: 700, fontSize: 15.5, marginBottom: 8 }}>Контакты</div>
+            <div style={{ fontSize: 14, color: "#c2c2c2", marginBottom: 4 }}>Телефон: <a href={`tel:${PHONE}`} style={{ color: ACCENT, textDecoration: "none" }}>{PHONE}</a></div>
+            <div style={{ fontSize: 14, color: "#c2c2c2" }}>Адрес: <span style={{ color: "#fff" }}>{ADDRESS}</span></div>
+          </div>
+        </div>
+      )}
 
-      {/* Корзина */}
-      {showCart && (
-        <AnimatePresence>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.85 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.7 }}
-            transition={{ duration: 0.26, type: "spring" }}
-            style={{
-              position: "fixed",
-              inset: 0,
-              background: "#000a",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              zIndex: 99,
-            }}
-            onClick={() => setShowCart(false)}
-          >
-            <motion.div
-              initial={{ y: 40, opacity: 0.7 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 30, opacity: 0.8 }}
-              transition={{ duration: 0.22, type: "spring" }}
-              style={{
-                background: CARD,
-                borderRadius: 10,
-                padding: 10,
-                width: 96 < window.innerWidth ? 285 : "97vw",
-                maxWidth: 320,
-                boxShadow: "0 8px 24px #0c2340b8",
-                border: `1px solid ${BORDER}`,
-                maxHeight: "97vh",
-                overflowY: "auto"
-              }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 9, letterSpacing: "0.02em" }}>Корзина</div>
-              {cart.length === 0 ? (
-                <div style={{ color: "#aaa", marginBottom: 7 }}>Корзина пуста</div>
-              ) : (
-                <>
-                  {cart.map((item) => {
-                    const product = getProduct(item.id);
-                    if (!product) return null;
-                    return (
-                      <div
-                        key={item.id}
+      {/* Каталог */}
+      {activeSection !== 0 && (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: columns,
+            gap: 30,
+            maxWidth: 1200,
+            margin: "0 auto",
+            padding: 16,
+            width: "100%",
+            alignItems: "stretch",
+            boxSizing: "border-box",
+            overflowX: "hidden"
+          }}
+        >
+          <AnimatePresence mode="wait">
+            {products.map((product, i) => {
+              const qty = getQtyInCart(product.id);
+
+              return (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 24, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 40, scale: 0.95 }}
+                  transition={{ delay: i * 0.05, duration: 0.35, type: "spring" }}
+                  style={{
+                    background: CARD,
+                    border: `1.5px solid ${BORDER}`,
+                    borderRadius: 23,
+                    boxShadow: "0 8px 32px #08172b22, 0 1.5px 8px #10192855",
+                    padding: 22,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    minHeight: 375,
+                    height: 375,
+                    width: "100%",
+                    boxSizing: "border-box",
+                    margin: "0 auto",
+                    justifyContent: "flex-start",
+                    position: "relative",
+                    overflow: "hidden",
+                    transition: "box-shadow .15s"
+                  }}
+                  whileHover={{
+                    boxShadow: "0 16px 42px #278aff2b, 0 2px 10px #091d3c55",
+                    scale: 1.025
+                  }}
+                >
+                  <motion.img
+                    src={product.img}
+                    alt={product.name}
+                    style={{
+                      width: 128,
+                      height: 128,
+                      objectFit: "cover",
+                      borderRadius: 18,
+                      marginBottom: 16,
+                      background: "#23272f",
+                      boxShadow: "0 2px 12px #18408042",
+                      border: `1.5px solid ${BORDER}`,
+                      transition: ".17s"
+                    }}
+                    initial={false}
+                    animate={addAnimId === product.id ? { scale: [1, 1.12, 0.97, 1] } : { scale: 1 }}
+                    transition={{ duration: 0.37 }}
+                    onError={e => { e.target.src = product.img; }}
+                  />
+                  <div style={{
+                    fontWeight: 800,
+                    fontSize: 16.5,
+                    marginBottom: 8,
+                    textAlign: "center",
+                    width: "100%",
+                    letterSpacing: "0.015em",
+                    color: "#fff"
+                  }}>
+                    {product.brand}
+                  </div>
+                  <div style={{
+                    fontSize: 13.2,
+                    marginBottom: 22,
+                    color: "#c2c2c2",
+                    textAlign: "center",
+                    width: "75%",
+                    margin: "0 auto",
+                    lineHeight: 1.4,
+                    overflowWrap: "break-word"
+                  }}>
+                    {product.name}
+                  </div>
+                  <div style={{
+                    fontWeight: 700,
+                    fontSize: 18,
+                    marginBottom: 19,
+                    marginTop: "auto"
+                  }}>
+                    {product.price} ₽
+                  </div>
+                  {qty === 0 ? (
+                    <motion.button
+                      whileTap={{ scale: 0.93, backgroundColor: "#197ad2" }}
+                      onClick={() => addToCart(product.id)}
+                      style={{
+                        background: ACCENT,
+                        color: "#fff",
+                        padding: "13px 0",
+                        borderRadius: 10,
+                        border: "none",
+                        fontWeight: 700,
+                        fontSize: 15.5,
+                        cursor: "pointer",
+                        width: "100%",
+                        boxShadow: "0 2px 10px #2680d733",
+                        position: "relative",
+                        letterSpacing: "0.04em",
+                        transition: "background .17s"
+                      }}
+                    >
+                      В корзину
+                    </motion.button>
+                  ) : (
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "100%",
+                        gap: 9,
+                        background: ACCENT,
+                        borderRadius: 10,
+                        padding: "0 7px"
+                      }}
+                    >
+                      <motion.button
+                        whileTap={{ scale: 0.89 }}
+                        onClick={() => {
+                          if (qty === 1) removeFromCart(product.id);
+                          else setCart(prev => prev.map(item => item.id === product.id ? { ...item, qty: item.qty - 1 } : item));
+                        }}
                         style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "flex-start",
-                          marginBottom: 11,
-                          borderBottom: "1px solid #4445",
-                          paddingBottom: 5,
-                          gap: 8
+                          background: "none",
+                          border: "none",
+                          color: "#fff",
+                          fontSize: 25,
+                          fontWeight: 700,
+                          padding: "9px 13px 10px 13px",
+                          cursor: "pointer",
+                          outline: "none",
+                          borderRadius: 6
+                        }}
+                      >–</motion.button>
+                      <div style={{
+                        color: "#fff",
+                        minWidth: 28,
+                        textAlign: "center",
+                        fontWeight: 800,
+                        fontSize: 17.5
+                      }}>
+                        {qty}
+                      </div>
+                      <motion.button
+                        whileTap={{ scale: 0.89 }}
+                        onClick={() => addToCart(product.id)}
+                        style={{
+                          background: "none",
+                          border: "none",
+                          color: "#fff",
+                          fontSize: 25,
+                          fontWeight: 700,
+                          padding: "9px 13px 10px 13px",
+                          cursor: "pointer",
+                          outline: "none",
+                          borderRadius: 6
+                        }}
+                      >+</motion.button>
+                    </div>
+                  )}
+                  {/* Эффект "+1" */}
+                  <AnimatePresence>
+                    {addAnimId === product.id && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 16, scale: 0.7 }}
+                        animate={{ opacity: 1, y: -32, scale: 1.15 }}
+                        exit={{ opacity: 0, y: -70, scale: 1.4 }}
+                        transition={{ duration: 0.55 }}
+                        style={{
+                          position: "absolute",
+                          top: 32,
+                          right: 34,
+                          color: ACCENT,
+                          fontWeight: 900,
+                          fontSize: 24,
+                          textShadow: "0 2px 7px #18181b",
+                          pointerEvents: "none"
                         }}
                       >
-                        <div style={{ flex: 1, textAlign: "left" }}>
-                          <div style={{ fontWeight: 700, fontSize: 12.5, marginBottom: 2, letterSpacing: "0.01em" }}>{product.brand}</div>
-                          <div style={{ fontSize: 10, color: "#c2c2c2", marginBottom: 4, lineHeight: 1.32 }}>{product.name}</div>
-                          <div style={{ color: "#999", fontSize: 10, marginBottom: 1 }}>Кол-во: <b>{item.qty}</b></div>
-                        </div>
-                        <div style={{ textAlign: "right", minWidth: 41 }}>
-                          <span style={{ fontWeight: 700, fontSize: 11.5 }}>{product.price * item.qty} ₽</span>
-                          <button
-                            style={{
-                              display: "block",
-                              margin: "5px auto 0 auto",
-                              color: ACCENT,
-                              background: "none",
-                              border: "none",
-                              fontSize: 10,
-                              cursor: "pointer",
-                              padding: 0,
-                              fontWeight: 700,
-                            }}
-                            onClick={() => removeFromCart(item.id)}
-                          >
-                            Удалить
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                  <div style={{ fontWeight: 700, fontSize: 11.5, textAlign: "right", marginTop: 5, marginBottom: 2 }}>
-                    Итого: {total} ₽
-                  </div>
-                  <button
-                    style={{
-                      width: "100%",
-                      marginTop: 10,
-                      background: ACCENT,
-                      color: "#fff",
-                      padding: "8px 0",
-                      borderRadius: 7,
-                      border: "none",
-                      fontWeight: 800,
-                      fontSize: 11.5,
-                      cursor: "pointer",
-                    }}
-                    onClick={() => {
-                      alert(
-                        "Ваш заказ:\n" +
-                          cart
-                            .map((item) => {
-                              const p = getProduct(item.id);
-                              return p
-                                ? `${p.brand} ${p.name} x${item.qty} — ${p.price * item.qty}₽`
-                                : "";
-                            })
-                            .join("\n") +
-                          `\n\nИтого: ${total} ₽`
-                      );
-                    }}
-                  >
-                    Оформить заказ
-                  </button>
-                </>
-              )}
-            </motion.div>
-          </motion.div>
-        </AnimatePresence>
+                        +1
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </div>
       )}
-      <div style={{ height: 8 }} />
+
+      {/* Корзина (оставляю без изменений, как у тебя было в старом варианте) */}
+      {showCart && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "#000a",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 99,
+          }}
+          onClick={() => setShowCart(false)}
+        >
+          <div
+            style={{
+              background: CARD,
+              borderRadius: 18,
+              padding: 22,
+              width: 340,
+              maxWidth: "98vw",
+              boxShadow: "0 8px 24px #0c2340b8",
+              border: `1.5px solid ${BORDER}`,
+              maxHeight: "96vh",
+              overflowY: "auto"
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ fontSize: 19, fontWeight: 800, marginBottom: 15, letterSpacing: "0.02em" }}>Корзина</div>
+            {cart.length === 0 ? (
+              <div style={{ color: "#aaa", marginBottom: 10 }}>Корзина пуста</div>
+            ) : (
+              <>
+                {cart.map((item) => {
+                  const product = getProduct(item.id);
+                  if (!product) return null;
+                  return (
+                    <div
+                      key={item.id}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "flex-start",
+                        marginBottom: 20,
+                        borderBottom: "1px solid #4446",
+                        paddingBottom: 12,
+                        gap: 12
+                      }}
+                    >
+                      <div style={{ flex: 1, textAlign: "left" }}>
+                        <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 2, letterSpacing: "0.015em" }}>{product.brand}</div>
+                        <div style={{ fontSize: 13, color: "#c2c2c2", marginBottom: 5, lineHeight: 1.4 }}>{product.name}</div>
+                        <div style={{ color: "#999", fontSize: 13, marginBottom: 2 }}>Кол-во: <b>{item.qty}</b></div>
+                      </div>
+                      <div style={{ textAlign: "right", minWidth: 70 }}>
+                        <span style={{ fontWeight: 700, fontSize: 16 }}>{product.price * item.qty} ₽</span>
+                        <button
+                          style={{
+                            display: "block",
+                            margin: "7px auto 0 auto",
+                            color: ACCENT,
+                            background: "none",
+                            border: "none",
+                            fontSize: 13,
+                            cursor: "pointer",
+                            padding: 0,
+                            fontWeight: 700,
+                          }}
+                          onClick={() => removeFromCart(item.id)}
+                        >
+                          Удалить
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+                <div style={{ fontWeight: 700, fontSize: 17, textAlign: "right", marginTop: 9, marginBottom: 5 }}>
+                  Итого: {total} ₽
+                </div>
+                <button
+                  style={{
+                    width: "100%",
+                    marginTop: 15,
+                    background: ACCENT,
+                    color: "#fff",
+                    padding: "13px 0",
+                    borderRadius: 10,
+                    border: "none",
+                    fontWeight: 800,
+                    fontSize: 15.5,
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    alert(
+                      "Ваш заказ:\n" +
+                        cart
+                          .map((item) => {
+                            const p = getProduct(item.id);
+                            return p
+                              ? `${p.brand} ${p.name} x${item.qty} — ${p.price * item.qty}₽`
+                              : "";
+                          })
+                          .join("\n") +
+                        `\n\nИтого: ${total} ₽`
+                    );
+                  }}
+                >
+                  Оформить заказ
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+      <div style={{ height: 28 }} />
     </div>
   );
 };
