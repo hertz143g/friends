@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const ACCENT = "#339DFF";
 const BG = "#23272f";
-const CARD = "#18181b";
+const CARD = "#191c20";
+const BORDER = "rgba(255,255,255,0.08)";
 const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
 const TV_PLACEHOLDER = "https://tech-iq.ru/upload/iblock/324/ixntoljx6r6lclbh3pfr0ve261z3ocn2.webp";
 const PHONE_PLACEHOLDER = "https://avatars.mds.yandex.net/get-mpic/1865853/img_id3034328595286431407.png/orig";
@@ -37,7 +38,13 @@ const SECTIONS = [
   }
 ];
 
-const CARD_HEIGHT = 330;
+const CARD_HEIGHT = 375;
+
+const gridTemplate = () => {
+  if (window.innerWidth >= 1100) return "repeat(3, 1fr)";
+  if (window.innerWidth >= 700) return "repeat(2, 1fr)";
+  return "repeat(1, 1fr)";
+};
 
 const App = () => {
   const [activeSection, setActiveSection] = useState(0);
@@ -46,6 +53,20 @@ const App = () => {
   const [showCart, setShowCart] = useState(false);
   const [cartAnim, setCartAnim] = useState(false);
   const [addAnimId, setAddAnimId] = useState(null);
+  const [columns, setColumns] = useState(gridTemplate());
+
+  React.useEffect(() => {
+    const onResize = () => setColumns(gridTemplate());
+    window.addEventListener("resize", onResize);
+    onResize();
+    document.body.style.background = BG;
+    document.body.style.margin = "0";
+    document.body.style.minHeight = "100vh";
+    document.documentElement.style.background = BG;
+    document.documentElement.style.height = "100%";
+    document.documentElement.style.margin = "0";
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   const cartTotalCount = cart.reduce((a, b) => a + b.qty, 0);
 
@@ -88,15 +109,6 @@ const App = () => {
     0
   );
 
-  React.useEffect(() => {
-    document.body.style.background = BG;
-    document.body.style.margin = "0";
-    document.body.style.minHeight = "100vh";
-    document.documentElement.style.background = BG;
-    document.documentElement.style.height = "100%";
-    document.documentElement.style.margin = "0";
-  }, []);
-
   return (
     <div
       style={{
@@ -114,15 +126,15 @@ const App = () => {
           src={logoUrl}
           alt="logo"
           style={{
-            width: 60,
-            height: 60,
+            width: 66,
+            height: 66,
             objectFit: "cover",
             borderRadius: "50%",
-            border: `2.5px solid ${ACCENT}`,
+            border: `3px solid ${ACCENT}`,
             background: "#fff",
             margin: "0 auto 0 auto",
             display: "block",
-            boxShadow: "0 0 12px #0006",
+            boxShadow: "0 0 18px #0007",
           }}
         />
         <motion.button
@@ -131,8 +143,8 @@ const App = () => {
           onClick={() => setShowCart(true)}
           style={{
             position: "absolute",
-            top: 18,
-            right: 32,
+            top: 20,
+            right: 35,
             background: "transparent",
             border: "none",
             cursor: "pointer",
@@ -140,7 +152,7 @@ const App = () => {
           }}
         >
           <span style={{ position: "relative" }}>
-            <svg width={27} height={27} viewBox="0 0 24 24" fill={ACCENT}>
+            <svg width={30} height={30} viewBox="0 0 24 24" fill={ACCENT}>
               <path d="M7 18c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm10 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm2-3H7.42l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H6.21l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H5.42l-.94-2H2V4h2l3.6 7.59-1.35 2.44C5.16 14.37 5.92 16 7.22 16H19c.553 0 1-.447 1-1s-.447-1-1-1z" />
             </svg>
             {cartTotalCount > 0 && (
@@ -151,13 +163,13 @@ const App = () => {
                 transition={{ type: "spring", stiffness: 350, damping: 12 }}
                 style={{
                   position: "absolute",
-                  top: -10,
-                  right: -10,
+                  top: -11,
+                  right: -13,
                   background: ACCENT,
                   color: "#fff",
                   borderRadius: "50%",
-                  padding: "2px 8px",
-                  fontSize: 12,
+                  padding: "3px 9px",
+                  fontSize: 13,
                   fontWeight: 700,
                   boxShadow: "0 2px 8px #1d7ad5c0"
                 }}
@@ -169,16 +181,16 @@ const App = () => {
         </motion.button>
         <div style={{
           width: "100%",
-          maxWidth: 380,
-          margin: "24px auto 0 auto",
+          maxWidth: 430,
+          margin: "28px auto 0 auto",
           height: 1,
-          background: "rgba(255,255,255,0.15)",
+          background: "rgba(255,255,255,0.14)",
           borderRadius: 2,
         }}></div>
       </header>
 
       <div style={{
-        display: "flex", justifyContent: "center", gap: 12, margin: "34px 0 16px 0"
+        display: "flex", justifyContent: "center", gap: 14, margin: "38px 0 24px 0"
       }}>
         {SECTIONS.map((section, idx) => (
           <button
@@ -189,11 +201,13 @@ const App = () => {
               color: idx === activeSection ? "#fff" : "#aaa",
               border: "none",
               borderRadius: 14,
-              padding: "7px 16px",
+              padding: "9px 18px",
               fontWeight: 600,
-              fontSize: 15,
+              fontSize: 16,
               cursor: "pointer",
+              boxShadow: idx === activeSection ? "0 2px 10px #2d70ff66" : "none",
               transition: "0.15s",
+              letterSpacing: "0.01em"
             }}
           >
             {section.name}
@@ -203,13 +217,14 @@ const App = () => {
 
       <div
         style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 34,
-          maxWidth: 340,
+          display: "grid",
+          gridTemplateColumns: columns,
+          gap: 30,
+          maxWidth: 1200,
           margin: "0 auto",
-          padding: 12,
+          padding: 16,
           width: "100%",
+          alignItems: "stretch"
         }}
       >
         <AnimatePresence mode="wait">
@@ -219,15 +234,16 @@ const App = () => {
           return (
             <motion.div
               key={product.id}
-              initial={{ opacity: 0, y: 30, scale: 0.97 }}
+              initial={{ opacity: 0, y: 24, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 40, scale: 0.95 }}
-              transition={{ delay: i * 0.05, duration: 0.38, type: "spring" }}
+              transition={{ delay: i * 0.05, duration: 0.35, type: "spring" }}
               style={{
                 background: CARD,
-                borderRadius: 17,
-                boxShadow: "0 4px 16px #0005",
-                padding: 18,
+                border: `1.5px solid ${BORDER}`,
+                borderRadius: 23,
+                boxShadow: "0 8px 32px #08172b22, 0 1.5px 8px #10192855",
+                padding: 22,
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
@@ -237,51 +253,61 @@ const App = () => {
                 boxSizing: "border-box",
                 margin: "0 auto",
                 justifyContent: "flex-start",
-                position: "relative"
+                position: "relative",
+                overflow: "hidden",
+                transition: "box-shadow .15s"
+              }}
+              whileHover={{
+                boxShadow: "0 16px 42px #278aff2b, 0 2px 10px #091d3c55",
+                scale: 1.025
               }}
             >
               <motion.img
                 src={product.img}
                 alt={product.name}
                 style={{
-                  width: 125,
-                  height: 125,
+                  width: 128,
+                  height: 128,
                   objectFit: "cover",
-                  borderRadius: 16,
-                  marginBottom: 18,
-                  background: "#222",
-                  boxShadow: "0 2px 10px #0003",
+                  borderRadius: 18,
+                  marginBottom: 16,
+                  background: "#23272f",
+                  boxShadow: "0 2px 12px #18408042",
+                  border: `1.5px solid ${BORDER}`,
+                  transition: ".17s"
                 }}
                 initial={false}
-                animate={addAnimId === product.id ? { scale: [1, 1.12, 0.95, 1] } : { scale: 1 }}
+                animate={addAnimId === product.id ? { scale: [1, 1.12, 0.97, 1] } : { scale: 1 }}
                 transition={{ duration: 0.37 }}
                 onError={e => { e.target.src = product.img; }}
               />
               <div style={{
-                fontWeight: 700,
-                fontSize: 16,
+                fontWeight: 800,
+                fontSize: 16.5,
                 marginBottom: 8,
                 textAlign: "center",
                 width: "100%",
-                overflowWrap: "break-word"
+                letterSpacing: "0.015em",
+                color: "#fff"
               }}>
                 {product.brand}
               </div>
               <div style={{
-                fontSize: 13,
-                marginBottom: 28,
+                fontSize: 13.2,
+                marginBottom: 22,
                 color: "#c2c2c2",
                 textAlign: "center",
-                width: "68%",
+                width: "75%",
                 margin: "0 auto",
+                lineHeight: 1.4,
                 overflowWrap: "break-word"
               }}>
                 {product.name}
               </div>
               <div style={{
                 fontWeight: 700,
-                fontSize: 16,
-                marginBottom: 18,
+                fontSize: 18,
+                marginBottom: 19,
                 marginTop: "auto"
               }}>
                 {product.price} ₽
@@ -293,15 +319,17 @@ const App = () => {
                   style={{
                     background: ACCENT,
                     color: "#fff",
-                    padding: "11px 0",
-                    borderRadius: 9,
+                    padding: "13px 0",
+                    borderRadius: 10,
                     border: "none",
-                    fontWeight: 600,
-                    fontSize: 15,
+                    fontWeight: 700,
+                    fontSize: 15.5,
                     cursor: "pointer",
                     width: "100%",
-                    boxShadow: "0 1px 4px #0002",
-                    position: "relative"
+                    boxShadow: "0 2px 10px #2680d733",
+                    position: "relative",
+                    letterSpacing: "0.04em",
+                    transition: "background .17s"
                   }}
                 >
                   В корзину
@@ -311,11 +339,11 @@ const App = () => {
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "space-between",
+                    justifyContent: "center",
                     width: "100%",
-                    gap: 8,
+                    gap: 9,
                     background: ACCENT,
-                    borderRadius: 9,
+                    borderRadius: 10,
                     padding: "0 7px"
                   }}
                 >
@@ -329,14 +357,21 @@ const App = () => {
                       background: "none",
                       border: "none",
                       color: "#fff",
-                      fontSize: 22,
+                      fontSize: 25,
                       fontWeight: 700,
-                      padding: "7px 13px",
+                      padding: "9px 13px 10px 13px",
                       cursor: "pointer",
-                      outline: "none"
+                      outline: "none",
+                      borderRadius: 6
                     }}
                   >–</motion.button>
-                  <div style={{ color: "#fff", minWidth: 24, textAlign: "center", fontWeight: 700, fontSize: 16 }}>
+                  <div style={{
+                    color: "#fff",
+                    minWidth: 28,
+                    textAlign: "center",
+                    fontWeight: 800,
+                    fontSize: 17.5
+                  }}>
                     {qty}
                   </div>
                   <motion.button
@@ -346,11 +381,12 @@ const App = () => {
                       background: "none",
                       border: "none",
                       color: "#fff",
-                      fontSize: 22,
+                      fontSize: 25,
                       fontWeight: 700,
-                      padding: "7px 13px",
+                      padding: "9px 13px 10px 13px",
                       cursor: "pointer",
-                      outline: "none"
+                      outline: "none",
+                      borderRadius: 6
                     }}
                   >+</motion.button>
                 </div>
@@ -365,11 +401,11 @@ const App = () => {
                     transition={{ duration: 0.55 }}
                     style={{
                       position: "absolute",
-                      top: 30,
-                      right: 32,
+                      top: 32,
+                      right: 34,
                       color: ACCENT,
                       fontWeight: 900,
-                      fontSize: 22,
+                      fontSize: 24,
                       textShadow: "0 2px 7px #18181b",
                       pointerEvents: "none"
                     }}
@@ -383,6 +419,8 @@ const App = () => {
         })}
         </AnimatePresence>
       </div>
+
+      {/* Корзина */}
       {showCart && (
         <div
           style={{
@@ -399,15 +437,18 @@ const App = () => {
           <div
             style={{
               background: CARD,
-              borderRadius: 13,
-              padding: 18,
-              width: 330,
-              maxWidth: "96vw",
-              boxShadow: "0 6px 24px #000a",
+              borderRadius: 18,
+              padding: 22,
+              width: 340,
+              maxWidth: "98vw",
+              boxShadow: "0 8px 24px #0c2340b8",
+              border: `1.5px solid ${BORDER}`,
+              maxHeight: "96vh",
+              overflowY: "auto"
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 13 }}>Корзина</div>
+            <div style={{ fontSize: 19, fontWeight: 800, marginBottom: 15, letterSpacing: "0.02em" }}>Корзина</div>
             {cart.length === 0 ? (
               <div style={{ color: "#aaa", marginBottom: 10 }}>Корзина пуста</div>
             ) : (
@@ -422,19 +463,19 @@ const App = () => {
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "flex-start",
-                        marginBottom: 18,
+                        marginBottom: 20,
                         borderBottom: "1px solid #4446",
                         paddingBottom: 12,
                         gap: 12
                       }}
                     >
                       <div style={{ flex: 1, textAlign: "left" }}>
-                        <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 2 }}>{product.brand}</div>
-                        <div style={{ fontSize: 13, color: "#c2c2c2", marginBottom: 5 }}>{product.name}</div>
+                        <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 2, letterSpacing: "0.015em" }}>{product.brand}</div>
+                        <div style={{ fontSize: 13, color: "#c2c2c2", marginBottom: 5, lineHeight: 1.4 }}>{product.name}</div>
                         <div style={{ color: "#999", fontSize: 13, marginBottom: 2 }}>Кол-во: <b>{item.qty}</b></div>
                       </div>
                       <div style={{ textAlign: "right", minWidth: 70 }}>
-                        <span style={{ fontWeight: 700, fontSize: 15 }}>{product.price * item.qty} ₽</span>
+                        <span style={{ fontWeight: 700, fontSize: 16 }}>{product.price * item.qty} ₽</span>
                         <button
                           style={{
                             display: "block",
@@ -455,20 +496,20 @@ const App = () => {
                     </div>
                   );
                 })}
-                <div style={{ fontWeight: 700, fontSize: 16, textAlign: "right", marginTop: 6 }}>
+                <div style={{ fontWeight: 700, fontSize: 17, textAlign: "right", marginTop: 9, marginBottom: 5 }}>
                   Итого: {total} ₽
                 </div>
                 <button
                   style={{
                     width: "100%",
-                    marginTop: 13,
+                    marginTop: 15,
                     background: ACCENT,
                     color: "#fff",
-                    padding: "12px 0",
-                    borderRadius: 7,
+                    padding: "13px 0",
+                    borderRadius: 10,
                     border: "none",
-                    fontWeight: 700,
-                    fontSize: 15,
+                    fontWeight: 800,
+                    fontSize: 15.5,
                     cursor: "pointer",
                   }}
                   onClick={() => {
@@ -493,7 +534,7 @@ const App = () => {
           </div>
         </div>
       )}
-      <div style={{ height: 18 }} />
+      <div style={{ height: 28 }} />
     </div>
   );
 };
