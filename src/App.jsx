@@ -99,7 +99,7 @@ const App = () => {
 
   const isMobile = vw < 550;
   const blockWidth = isMobile ? "98vw" : "430px";
-  const gapY = isMobile ? 18 : 28;
+  const gapY = isMobile ? 26 : 32;
 
   const cartTotalCount = cart.reduce((a, b) => a + b.qty, 0);
 
@@ -235,7 +235,11 @@ const App = () => {
 
       {/* Категории */}
       <div style={{
-        display: "flex", justifyContent: "center", gap: 11, margin: "30px 0 16px 0", flexWrap: "wrap"
+        display: "flex",
+        justifyContent: "center",
+        gap: 11,
+        margin: "38px 0 30px 0",
+        flexWrap: "wrap"
       }}>
         {SECTIONS.map((section, idx) => (
           <button
@@ -285,12 +289,12 @@ const App = () => {
             alignItems: "center",
             gap: 8
           }}>
-            <div style={{ fontWeight: 700, fontSize: isMobile ? 16 : 18, marginBottom: 6, textAlign: "center", letterSpacing: "0.01em" }}>Топовые товары</div>
+            <div style={{ fontWeight: 700, fontSize: isMobile ? 16 : 18, marginBottom: 8, textAlign: "center", letterSpacing: "0.01em" }}>Топовые товары</div>
             <div style={{
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              gap: 10,
+              gap: 12,
               width: "100%",
               margin: 0,
             }}>
@@ -305,35 +309,36 @@ const App = () => {
                   background: CARD,
                   borderRadius: 13,
                   boxShadow: "0 3px 10px #0004",
-                  padding: isMobile ? "17px 10px" : "20px 22px",
+                  padding: isMobile ? "17px 10px" : "23px 28px",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
-                  minWidth: isMobile ? 165 : 210,
-                  maxWidth: isMobile ? 215 : 270,
-                  width: "100%",
+                  minWidth: isMobile ? 180 : 240,
+                  maxWidth: isMobile ? 230 : 280,
+                  width: isMobile ? "78vw" : "93%",
+                  margin: 0,
                 }}
               >
                 <img src={CAROUSEL_PRODUCTS[carouselIndex].img} alt="" style={{
-                  width: isMobile ? 60 : 78,
-                  height: isMobile ? 60 : 78,
-                  borderRadius: 11,
+                  width: isMobile ? 65 : 84,
+                  height: isMobile ? 65 : 84,
+                  borderRadius: 13,
                   objectFit: "cover",
-                  marginBottom: 8,
+                  marginBottom: 10,
                   background: "#222"
                 }} />
-                <div style={{ fontWeight: 700, fontSize: isMobile ? 14.5 : 16, marginBottom: 4 }}>{CAROUSEL_PRODUCTS[carouselIndex].brand}</div>
+                <div style={{ fontWeight: 700, fontSize: isMobile ? 15 : 16.5, marginBottom: 5 }}>{CAROUSEL_PRODUCTS[carouselIndex].brand}</div>
                 <div style={{
-                  fontSize: isMobile ? 12 : 14,
+                  fontSize: isMobile ? 13 : 15,
                   color: "#c2c2c2",
-                  marginBottom: 8,
+                  marginBottom: 10,
                   textAlign: "center",
-                  minHeight: isMobile ? 32 : 38,
+                  minHeight: isMobile ? 32 : 40,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center"
                 }}>{CAROUSEL_PRODUCTS[carouselIndex].name}</div>
-                <div style={{ fontWeight: 800, fontSize: isMobile ? 13 : 15, marginBottom: 6 }}>{CAROUSEL_PRODUCTS[carouselIndex].price} ₽</div>
+                <div style={{ fontWeight: 800, fontSize: isMobile ? 14 : 16, marginBottom: 8 }}>{CAROUSEL_PRODUCTS[carouselIndex].price} ₽</div>
                 <button onClick={() => addToCart(CAROUSEL_PRODUCTS[carouselIndex].id)}
                   style={{
                     background: ACCENT,
@@ -341,9 +346,11 @@ const App = () => {
                     border: "none",
                     borderRadius: 8,
                     fontWeight: 700,
-                    padding: isMobile ? "7px 11px" : "9px 17px",
+                    padding: isMobile ? "10px 0" : "12px 0",
                     cursor: "pointer",
-                    fontSize: isMobile ? 13 : 14
+                    fontSize: isMobile ? 14 : 15,
+                    width: "100%",
+                    marginTop: 2
                   }}>В корзину</button>
               </motion.div>
               <button onClick={nextCarousel} style={{ background: "none", border: "none", fontSize: 26, color: ACCENT, cursor: "pointer" }}>›</button>
@@ -369,56 +376,49 @@ const App = () => {
             <span style={{ fontWeight: 400, color: "#b8d7ff" }}>У нас только новые товары по лучшим ценам.<br />Прокрутите вниз и выберите свой!</span>
           </div>
 
-          {/* Ссылка на канал */}
+          {/* Кнопка Telegram */}
           <div style={{
-            background: "#171d29",
-            borderRadius: 18,
-            boxShadow: "0 2px 12px #222a",
-            padding: isMobile ? "18px 11px" : "30px 26px",
-            display: "flex",
-            alignItems: "center",
-            gap: isMobile ? 18 : 32,
-            flexWrap: "wrap",
-            justifyContent: "center"
+            display: "flex", justifyContent: "center", alignItems: "center"
           }}>
-            <img src={logoUrl} alt="logo" style={{
-              width: isMobile ? 40 : 60,
-              height: isMobile ? 40 : 60,
-              borderRadius: "50%",
-              background: "#fff",
-              border: `3px solid ${ACCENT}`,
-              boxShadow: "0 2px 9px #19417140"
-            }} />
-            <div style={{ minWidth: isMobile ? 140 : 220, textAlign: "left" }}>
-              <div style={{ fontWeight: 700, fontSize: isMobile ? 14 : 18, marginBottom: 7, color: "#fff" }}>
-                Наш Telegram-канал
-              </div>
-              <a href={TELEGRAM_LINK} target="_blank" rel="noopener noreferrer"
-                style={{
-                  display: "inline-block",
-                  background: ACCENT,
-                  color: "#fff",
-                  padding: isMobile ? "9px 18px" : "11px 28px",
-                  borderRadius: 10,
-                  fontWeight: 700,
-                  fontSize: isMobile ? 13.5 : 15.5,
-                  textDecoration: "none",
-                  boxShadow: "0 2px 10px #278aff2a"
-                }}>перейти</a>
-            </div>
+            <a
+              href={TELEGRAM_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                background: ACCENT,
+                color: "#fff",
+                padding: isMobile ? "16px 0" : "22px 0",
+                width: isMobile ? "96vw" : "340px",
+                maxWidth: "98vw",
+                borderRadius: 13,
+                fontWeight: 800,
+                fontSize: isMobile ? 17 : 20,
+                textDecoration: "none",
+                boxShadow: "0 2px 18px #278aff22",
+                justifyContent: "center",
+                transition: ".17s"
+              }}>
+              <svg width={28} height={28} viewBox="0 0 32 32" fill="#fff" style={{ display: "block" }}>
+                <path d="M30.844 5.031a2.065 2.065 0 00-2.063-.38l-26 9.5a2.065 2.065 0 00.094 3.937l5.906 1.719 2.125 7.719a2.068 2.068 0 001.969 1.531h.063a2.06 2.06 0 001.938-1.625l2.469-10.313 8.375 8.094a2.058 2.058 0 001.438.594h.031a2.065 2.065 0 001.625-.844 2.057 2.057 0 00.313-1.75l-3.219-14A2.062 2.062 0 0030.844 5.031zM14.719 24.688l-2.094-7.594 3.563-3.594-1.469 11.188zm11.625-3.219l-8.531-8.188 11.188-8.25zm-25-7.563l26-9.5-19.719 11.5z"></path>
+              </svg>
+              Перейти в канал
+            </a>
           </div>
 
           {/* Контакты + адрес */}
           <div style={{
             background: "#18202c",
             borderRadius: 16,
-            padding: isMobile ? "19px 10px" : "30px 24px",
+            padding: isMobile ? "21px 10px" : "32px 24px",
             boxShadow: "0 2px 12px #1d263760",
             color: "#e9f3ff",
             textAlign: "center",
             display: "flex",
             flexDirection: "column",
-            gap: isMobile ? 12 : 19,
+            gap: isMobile ? 14 : 22,
             fontSize: isMobile ? 15 : 17
           }}>
             <div style={{ fontWeight: 800, fontSize: isMobile ? 15 : 19, letterSpacing: "0.01em", color: ACCENT, marginBottom: 2 }}>
@@ -439,7 +439,7 @@ const App = () => {
         </div>
       )}
 
-      {/* Каталог (остальное как было) */}
+      {/* Каталог (карточки всегда одинаковые!) */}
       {activeSection !== 0 && (
         <div
           style={{
@@ -475,8 +475,8 @@ const App = () => {
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    minHeight: 375,
-                    height: 375,
+                    minHeight: 355,
+                    height: 355,
                     width: "100%",
                     boxSizing: "border-box",
                     margin: "0 auto",
@@ -494,11 +494,11 @@ const App = () => {
                     src={product.img}
                     alt={product.name}
                     style={{
-                      width: 128,
-                      height: 128,
+                      width: 112,
+                      height: 112,
                       objectFit: "cover",
-                      borderRadius: 18,
-                      marginBottom: 16,
+                      borderRadius: 15,
+                      marginBottom: 15,
                       background: "#23272f",
                       boxShadow: "0 2px 12px #18408042",
                       border: `1.5px solid ${BORDER}`,
@@ -511,8 +511,8 @@ const App = () => {
                   />
                   <div style={{
                     fontWeight: 800,
-                    fontSize: 16.5,
-                    marginBottom: 8,
+                    fontSize: 15.5,
+                    marginBottom: 7,
                     textAlign: "center",
                     width: "100%",
                     letterSpacing: "0.015em",
@@ -522,10 +522,10 @@ const App = () => {
                   </div>
                   <div style={{
                     fontSize: 13.2,
-                    marginBottom: 22,
+                    marginBottom: 18,
                     color: "#c2c2c2",
                     textAlign: "center",
-                    width: "75%",
+                    width: "78%",
                     margin: "0 auto",
                     lineHeight: 1.4,
                     overflowWrap: "break-word"
@@ -534,8 +534,8 @@ const App = () => {
                   </div>
                   <div style={{
                     fontWeight: 700,
-                    fontSize: 18,
-                    marginBottom: 19,
+                    fontSize: 17,
+                    marginBottom: 16,
                     marginTop: "auto"
                   }}>
                     {product.price} ₽
@@ -547,11 +547,11 @@ const App = () => {
                       style={{
                         background: ACCENT,
                         color: "#fff",
-                        padding: "13px 0",
+                        padding: "11px 0",
                         borderRadius: 10,
                         border: "none",
                         fontWeight: 700,
-                        fontSize: 15.5,
+                        fontSize: 15,
                         cursor: "pointer",
                         width: "100%",
                         boxShadow: "0 2px 10px #2680d733",
