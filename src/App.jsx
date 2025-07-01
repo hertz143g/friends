@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// ---- Константы ----
 const ACCENT = "#339DFF";
 const BG = "#23272f";
 const CARD = "#191c20";
@@ -12,7 +11,6 @@ const PHONE = "+7(926)591-21-65";
 const ADDRESS = "Клин, ул. Победы, д. 9, «Ок’ей»";
 
 const TV_PLACEHOLDER = "https://tech-iq.ru/upload/iblock/324/ixntoljx6r6lclbh3pfr0ve261z3ocn2.webp";
-// дефолтная svg если img не загрузилась
 const FALLBACK_IMG = "data:image/svg+xml,%3Csvg width='90' height='90' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='90' height='90' rx='16' fill='%2323292f'/%3E%3Cpath d='M45 29c-6.627 0-12 5.373-12 12 0 4.418 2.99 8.166 7.092 10.338C40.613 51.736 41 52.859 41 54v2a2 2 0 1 0 4 0v-2c0-1.141.387-2.264 1.908-2.662C54.01 49.166 57 45.418 57 41c0-6.627-5.373-12-12-12zm0 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8z' fill='%23668899'/%3E%3C/svg%3E";
 const PHONE_PLACEHOLDER = FALLBACK_IMG;
 
@@ -53,7 +51,6 @@ const SECTIONS = [
   }
 ];
 
-// ---- App ----
 function getColumns() {
   if (window.innerWidth > 950) return "repeat(3, 1fr)";
   if (window.innerWidth > 650) return "repeat(2, 1fr)";
@@ -154,7 +151,6 @@ const App = () => {
     );
   }
 
-  // --- ФУНКЦИЯ для fallback картинки ---
   function onImgError(e) {
     e.target.src = FALLBACK_IMG;
   }
@@ -282,27 +278,30 @@ const App = () => {
           flexDirection: "column",
           gap: gapY
         }}>
-          {/* Карусель - без вложенного card! */}
+          {/* Карусель */}
           <div
             style={{
-              width: "100%",
-              background: "#15181d",
-              borderRadius: 19,
-              boxShadow: "0 4px 24px #1c223040",
+              width: isMobile ? "98vw" : "100%",
               maxWidth: blockWidth,
               margin: "0 auto",
               position: "relative",
-              padding: isMobile ? "27px 10px" : "36px 36px",
+              borderRadius: 19,
+              background: "#15181d",
+              boxShadow: "0 4px 24px #1c223040",
+              padding: isMobile ? "19px 0 22px 0" : "34px 0 36px 0",
+              boxSizing: "border-box",
+              overflow: "hidden",
+              minHeight: isMobile ? 270 : 320,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              overflow: "hidden",
+              justifyContent: "center"
             }}
           >
             <div style={{
               fontWeight: 700,
-              fontSize: isMobile ? 16 : 20,
-              marginBottom: 18,
+              fontSize: isMobile ? 16.5 : 21,
+              marginBottom: 16,
               textAlign: "center",
               letterSpacing: "0.01em"
             }}>
@@ -314,17 +313,17 @@ const App = () => {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              minHeight: isMobile ? 210 : 240,
+              minHeight: isMobile ? 178 : 198,
             }}>
               {/* Стрелка влево */}
               <button
                 onClick={prevCarousel}
                 style={{
                   position: "absolute",
-                  left: 0,
+                  left: 6,
                   top: "50%",
                   transform: "translateY(-50%)",
-                  background: "rgba(44,130,255,0.12)",
+                  background: "rgba(44,130,255,0.14)",
                   border: "none",
                   borderRadius: "50%",
                   width: 42,
@@ -332,14 +331,14 @@ const App = () => {
                   color: ACCENT,
                   cursor: "pointer",
                   zIndex: 3,
-                  fontSize: 24,
+                  fontSize: 26,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   boxShadow: "0 1px 6px #1935ff13"
                 }}
               >‹</button>
-              {/* Блок содержимого */}
+              {/* Сам товар */}
               <motion.div
                 key={carouselIndex}
                 initial={{ opacity: 0, x: 45 }}
@@ -347,41 +346,60 @@ const App = () => {
                 exit={{ opacity: 0, x: -45 }}
                 transition={{ type: "spring", duration: 0.28 }}
                 style={{
-                  flex: "1 0 0",
-                  maxWidth: 340,
+                  width: isMobile ? "86vw" : "350px",
+                  maxWidth: isMobile ? "86vw" : "350px",
+                  minHeight: isMobile ? 160 : 190,
+                  background: "none",
+                  borderRadius: 17,
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
                   gap: 13,
-                  minHeight: isMobile ? 140 : 170,
+                  boxSizing: "border-box",
                   zIndex: 2,
-                  margin: "0 42px",
+                  margin: "0 auto",
+                  padding: isMobile ? "0 0 0 0" : "0"
                 }}
               >
                 <img
                   src={CAROUSEL_PRODUCTS[carouselIndex].img}
                   alt=""
                   style={{
-                    width: isMobile ? 88 : 100,
-                    height: isMobile ? 88 : 100,
-                    borderRadius: 15,
+                    width: isMobile ? 80 : 98,
+                    height: isMobile ? 80 : 98,
+                    borderRadius: "12px",
                     objectFit: "cover",
-                    background: "#222",
-                    marginBottom: 7,
+                    background: "#23272f",
+                    marginBottom: 10,
+                    display: "block"
                   }}
                   onError={onImgError}
                 />
-                <div style={{ fontWeight: 800, fontSize: isMobile ? 15 : 18 }}>
+                <div style={{
+                  fontWeight: 800,
+                  fontSize: isMobile ? 17 : 20,
+                  marginBottom: 1,
+                  color: "#fff"
+                }}>
                   {CAROUSEL_PRODUCTS[carouselIndex].brand}
                 </div>
                 <div style={{
-                  fontSize: isMobile ? 13 : 15,
+                  fontSize: isMobile ? 13.5 : 15.5,
                   color: "#c2c2c2",
                   textAlign: "center",
-                  minHeight: isMobile ? 32 : 40,
-                  marginBottom: 2,
-                }}>{CAROUSEL_PRODUCTS[carouselIndex].name}</div>
-                <div style={{ fontWeight: 700, fontSize: isMobile ? 15 : 18 }}>
+                  minHeight: isMobile ? 28 : 36,
+                  marginBottom: 3,
+                  maxWidth: isMobile ? 170 : 250,
+                  width: "100%",
+                  wordBreak: "break-word"
+                }}>
+                  {CAROUSEL_PRODUCTS[carouselIndex].name}
+                </div>
+                <div style={{
+                  fontWeight: 700,
+                  fontSize: isMobile ? 17 : 19,
+                  marginBottom: 7
+                }}>
                   {CAROUSEL_PRODUCTS[carouselIndex].price} ₽
                 </div>
                 <button onClick={() => addToCart(CAROUSEL_PRODUCTS[carouselIndex].id)}
@@ -389,12 +407,13 @@ const App = () => {
                     background: ACCENT,
                     color: "#fff",
                     border: "none",
-                    borderRadius: 9,
+                    borderRadius: 10,
                     fontWeight: 700,
                     padding: isMobile ? "11px 0" : "13px 0",
                     cursor: "pointer",
-                    fontSize: isMobile ? 14 : 16,
+                    fontSize: isMobile ? 15 : 17,
                     width: "100%",
+                    maxWidth: isMobile ? 180 : 240,
                   }}>В корзину</button>
               </motion.div>
               {/* Стрелка вправо */}
@@ -402,10 +421,10 @@ const App = () => {
                 onClick={nextCarousel}
                 style={{
                   position: "absolute",
-                  right: 0,
+                  right: 6,
                   top: "50%",
                   transform: "translateY(-50%)",
-                  background: "rgba(44,130,255,0.12)",
+                  background: "rgba(44,130,255,0.14)",
                   border: "none",
                   borderRadius: "50%",
                   width: 42,
@@ -413,7 +432,7 @@ const App = () => {
                   color: ACCENT,
                   cursor: "pointer",
                   zIndex: 3,
-                  fontSize: 24,
+                  fontSize: 26,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -504,7 +523,7 @@ const App = () => {
         </div>
       )}
 
-      {/* Каталог — все карточки одинакового размера! */}
+      {/* Каталог — карточки одинакового размера */}
       {activeSection !== 0 && (
         <div
           style={{
