@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+// ---- Константы ----
 const ACCENT = "#339DFF";
 const BG = "#23272f";
 const CARD = "#191c20";
@@ -11,7 +12,9 @@ const PHONE = "+7(926)591-21-65";
 const ADDRESS = "Клин, ул. Победы, д. 9, «Ок’ей»";
 
 const TV_PLACEHOLDER = "https://tech-iq.ru/upload/iblock/324/ixntoljx6r6lclbh3pfr0ve261z3ocn2.webp";
-const PHONE_PLACEHOLDER = "https://avatars.mds.yandex.net/get-mpic/1865853/img_id3034328595286431407.png/orig";
+// дефолтная svg если img не загрузилась
+const FALLBACK_IMG = "data:image/svg+xml,%3Csvg width='90' height='90' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='90' height='90' rx='16' fill='%2323292f'/%3E%3Cpath d='M45 29c-6.627 0-12 5.373-12 12 0 4.418 2.99 8.166 7.092 10.338C40.613 51.736 41 52.859 41 54v2a2 2 0 1 0 4 0v-2c0-1.141.387-2.264 1.908-2.662C54.01 49.166 57 45.418 57 41c0-6.627-5.373-12-12-12zm0 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8z' fill='%23668899'/%3E%3C/svg%3E";
+const PHONE_PLACEHOLDER = FALLBACK_IMG;
 
 const TVS = [
   { id: 396940, brand: "Xiaomi", name: 'Телевизор ЖК 32" Xiaomi TV A32 2025 RU черный', price: 16000 },
@@ -50,6 +53,7 @@ const SECTIONS = [
   }
 ];
 
+// ---- App ----
 function getColumns() {
   if (window.innerWidth > 950) return "repeat(3, 1fr)";
   if (window.innerWidth > 650) return "repeat(2, 1fr)";
@@ -65,9 +69,8 @@ const App = () => {
   const [addAnimId, setAddAnimId] = useState(null);
   const [columns, setColumns] = useState(getColumns());
   const [carouselIndex, setCarouselIndex] = useState(0);
-
-  // ширина экрана (адаптив)
   const [vw, setVw] = useState(typeof window !== "undefined" ? window.innerWidth : 375);
+
   useEffect(() => {
     const onResize = () => {
       setColumns(getColumns());
@@ -88,7 +91,6 @@ const App = () => {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  // авто-карусель
   useEffect(() => {
     if (activeSection !== 0) return;
     const timer = setInterval(() => {
@@ -150,6 +152,11 @@ const App = () => {
     setCarouselIndex(
       (carouselIndex - 1 + CAROUSEL_PRODUCTS.length) % CAROUSEL_PRODUCTS.length
     );
+  }
+
+  // --- ФУНКЦИЯ для fallback картинки ---
+  function onImgError(e) {
+    e.target.src = FALLBACK_IMG;
   }
 
   return (
@@ -275,140 +282,146 @@ const App = () => {
           flexDirection: "column",
           gap: gapY
         }}>
-          {/* Карусель */}
+          {/* Карусель - без вложенного card! */}
           <div
-  style={{
-    width: "100%",
-    background: "#15181d",
-    borderRadius: 19,
-    boxShadow: "0 4px 24px #1c223040",
-    maxWidth: blockWidth,
-    margin: "0 auto",
-    position: "relative",
-    padding: isMobile ? "27px 10px" : "36px 36px",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    overflow: "hidden",
-  }}
->
-  <div style={{
-    fontWeight: 700,
-    fontSize: isMobile ? 16 : 20,
-    marginBottom: 18,
-    textAlign: "center",
-    letterSpacing: "0.01em"
-  }}>
-    Топовые товары
-  </div>
-  <div style={{
-    width: "100%",
-    position: "relative",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    minHeight: isMobile ? 210 : 240,
-  }}>
-    {/* Стрелка влево */}
-    <button
-      onClick={prevCarousel}
-      style={{
-        position: "absolute",
-        left: 0,
-        top: "50%",
-        transform: "translateY(-50%)",
-        background: "rgba(44,130,255,0.12)",
-        border: "none",
-        borderRadius: "50%",
-        width: 42,
-        height: 42,
-        color: ACCENT,
-        cursor: "pointer",
-        zIndex: 3,
-        fontSize: 24,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        boxShadow: "0 1px 6px #1935ff13"
-      }}
-    >‹</button>
-    {/* Содержимое (БЕЗ ВНУТРЕННЕГО CARD!) */}
-    <motion.div
-      key={carouselIndex}
-      initial={{ opacity: 0, x: 45 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -45 }}
-      transition={{ type: "spring", duration: 0.28 }}
-      style={{
-        flex: "1 0 0",
-        maxWidth: 340,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: 13,
-        minHeight: isMobile ? 140 : 170,
-        zIndex: 2,
-        margin: "0 42px", // место под стрелки
-      }}
-    >
-      <img src={CAROUSEL_PRODUCTS[carouselIndex].img} alt="" style={{
-        width: isMobile ? 68 : 88,
-        height: isMobile ? 68 : 88,
-        borderRadius: 15,
-        objectFit: "cover",
-        background: "#222",
-        marginBottom: 7,
-      }} />
-      <div style={{ fontWeight: 800, fontSize: isMobile ? 15 : 18 }}>{CAROUSEL_PRODUCTS[carouselIndex].brand}</div>
-      <div style={{
-        fontSize: isMobile ? 13 : 15,
-        color: "#c2c2c2",
-        textAlign: "center",
-        minHeight: isMobile ? 32 : 40,
-        marginBottom: 2,
-      }}>{CAROUSEL_PRODUCTS[carouselIndex].name}</div>
-      <div style={{ fontWeight: 700, fontSize: isMobile ? 15 : 18 }}>
-        {CAROUSEL_PRODUCTS[carouselIndex].price} ₽
-      </div>
-      <button onClick={() => addToCart(CAROUSEL_PRODUCTS[carouselIndex].id)}
-        style={{
-          background: ACCENT,
-          color: "#fff",
-          border: "none",
-          borderRadius: 9,
-          fontWeight: 700,
-          padding: isMobile ? "11px 0" : "13px 0",
-          cursor: "pointer",
-          fontSize: isMobile ? 14 : 16,
-          width: "100%",
-        }}>В корзину</button>
-    </motion.div>
-    {/* Стрелка вправо */}
-    <button
-      onClick={nextCarousel}
-      style={{
-        position: "absolute",
-        right: 0,
-        top: "50%",
-        transform: "translateY(-50%)",
-        background: "rgba(44,130,255,0.12)",
-        border: "none",
-        borderRadius: "50%",
-        width: 42,
-        height: 42,
-        color: ACCENT,
-        cursor: "pointer",
-        zIndex: 3,
-        fontSize: 24,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        boxShadow: "0 1px 6px #1935ff13"
-      }}
-    >›</button>
-  </div>
-</div>
-
+            style={{
+              width: "100%",
+              background: "#15181d",
+              borderRadius: 19,
+              boxShadow: "0 4px 24px #1c223040",
+              maxWidth: blockWidth,
+              margin: "0 auto",
+              position: "relative",
+              padding: isMobile ? "27px 10px" : "36px 36px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              overflow: "hidden",
+            }}
+          >
+            <div style={{
+              fontWeight: 700,
+              fontSize: isMobile ? 16 : 20,
+              marginBottom: 18,
+              textAlign: "center",
+              letterSpacing: "0.01em"
+            }}>
+              Топовые товары
+            </div>
+            <div style={{
+              width: "100%",
+              position: "relative",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              minHeight: isMobile ? 210 : 240,
+            }}>
+              {/* Стрелка влево */}
+              <button
+                onClick={prevCarousel}
+                style={{
+                  position: "absolute",
+                  left: 0,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "rgba(44,130,255,0.12)",
+                  border: "none",
+                  borderRadius: "50%",
+                  width: 42,
+                  height: 42,
+                  color: ACCENT,
+                  cursor: "pointer",
+                  zIndex: 3,
+                  fontSize: 24,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 1px 6px #1935ff13"
+                }}
+              >‹</button>
+              {/* Блок содержимого */}
+              <motion.div
+                key={carouselIndex}
+                initial={{ opacity: 0, x: 45 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -45 }}
+                transition={{ type: "spring", duration: 0.28 }}
+                style={{
+                  flex: "1 0 0",
+                  maxWidth: 340,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 13,
+                  minHeight: isMobile ? 140 : 170,
+                  zIndex: 2,
+                  margin: "0 42px",
+                }}
+              >
+                <img
+                  src={CAROUSEL_PRODUCTS[carouselIndex].img}
+                  alt=""
+                  style={{
+                    width: isMobile ? 88 : 100,
+                    height: isMobile ? 88 : 100,
+                    borderRadius: 15,
+                    objectFit: "cover",
+                    background: "#222",
+                    marginBottom: 7,
+                  }}
+                  onError={onImgError}
+                />
+                <div style={{ fontWeight: 800, fontSize: isMobile ? 15 : 18 }}>
+                  {CAROUSEL_PRODUCTS[carouselIndex].brand}
+                </div>
+                <div style={{
+                  fontSize: isMobile ? 13 : 15,
+                  color: "#c2c2c2",
+                  textAlign: "center",
+                  minHeight: isMobile ? 32 : 40,
+                  marginBottom: 2,
+                }}>{CAROUSEL_PRODUCTS[carouselIndex].name}</div>
+                <div style={{ fontWeight: 700, fontSize: isMobile ? 15 : 18 }}>
+                  {CAROUSEL_PRODUCTS[carouselIndex].price} ₽
+                </div>
+                <button onClick={() => addToCart(CAROUSEL_PRODUCTS[carouselIndex].id)}
+                  style={{
+                    background: ACCENT,
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: 9,
+                    fontWeight: 700,
+                    padding: isMobile ? "11px 0" : "13px 0",
+                    cursor: "pointer",
+                    fontSize: isMobile ? 14 : 16,
+                    width: "100%",
+                  }}>В корзину</button>
+              </motion.div>
+              {/* Стрелка вправо */}
+              <button
+                onClick={nextCarousel}
+                style={{
+                  position: "absolute",
+                  right: 0,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "rgba(44,130,255,0.12)",
+                  border: "none",
+                  borderRadius: "50%",
+                  width: 42,
+                  height: 42,
+                  color: ACCENT,
+                  cursor: "pointer",
+                  zIndex: 3,
+                  fontSize: 24,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 1px 6px #1935ff13"
+                }}
+              >›</button>
+            </div>
+          </div>
 
           {/* Приветственный блок */}
           <div style={{
@@ -430,9 +443,7 @@ const App = () => {
           </div>
 
           {/* Кнопка Telegram */}
-          <div style={{
-            display: "flex", justifyContent: "center", alignItems: "center"
-          }}>
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
             <a
               href={TELEGRAM_LINK}
               target="_blank"
@@ -454,7 +465,6 @@ const App = () => {
                 justifyContent: "center",
                 transition: ".17s"
               }}>
-              {/* ОФИЦИАЛЬНЫЙ Telegram SVG */}
               <svg width="29" height="29" viewBox="0 0 240 240" fill="none" style={{ display: "block" }}>
                 <circle cx="120" cy="120" r="120" fill="#229ED9"/>
                 <path d="M55 123.6L168.7 78.7C173.5 76.8 178 79.7 176.6 86.2L157.6 171.5C156.4 176.6 153.2 177.9 148.7 175.5L126.6 159.6L115.6 170.1C114.1 171.6 112.8 172.9 110 172.9L111.5 150.2L159.5 104.6C161.5 102.8 159.1 101.7 156.5 103.5L98.5 144.1L76.7 136.6C71.9 135.1 71.8 131.9 77.2 129.7Z" fill="#fff"/>
@@ -494,7 +504,7 @@ const App = () => {
         </div>
       )}
 
-      {/* Каталог (карточки одинаковые!) */}
+      {/* Каталог — все карточки одинакового размера! */}
       {activeSection !== 0 && (
         <div
           style={{
@@ -513,7 +523,6 @@ const App = () => {
           <AnimatePresence mode="wait">
             {products.map((product, i) => {
               const qty = getQtyInCart(product.id);
-
               return (
                 <motion.div
                   key={product.id}
@@ -559,10 +568,10 @@ const App = () => {
                       border: `1.5px solid ${BORDER}`,
                       transition: ".17s"
                     }}
+                    onError={onImgError}
                     initial={false}
                     animate={addAnimId === product.id ? { scale: [1, 1.12, 0.97, 1] } : { scale: 1 }}
                     transition={{ duration: 0.37 }}
-                    onError={e => { e.target.src = product.img; }}
                   />
                   <div style={{
                     fontWeight: 800,
