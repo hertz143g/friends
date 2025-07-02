@@ -1,33 +1,35 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// ====== Анимированный фон ======
+// ====== Анимированный фон (Canvas отключается на мобиле) ======
 function AnimatedBg() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
+    // Отключаем canvas-анимацию для мобильных (можешь подогнать ширину под свои нужды)
+    if (window.innerWidth < 540) return;
     let animId;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
-    const setSize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    let w = window.innerWidth, h = window.innerHeight;
+    canvas.width = w;
+    canvas.height = h;
+    const resize = () => {
+      w = window.innerWidth;
+      h = window.innerHeight;
+      canvas.width = w;
+      canvas.height = h;
     };
-    setSize();
-    window.addEventListener("resize", setSize);
+    window.addEventListener("resize", resize);
 
-    let w = canvas.width, h = canvas.height;
     const blobs = [
       { x: w * 0.2, y: h * 0.32, r: 260, dx: 0.13, dy: 0.09, color: "#212c43" },
       { x: w * 0.7, y: h * 0.15, r: 270, dx: -0.09, dy: 0.12, color: "#192035" },
       { x: w * 0.44, y: h * 0.79, r: 230, dx: 0.09, dy: -0.11, color: "#1c243d" },
       { x: w * 0.87, y: h * 0.71, r: 180, dx: -0.12, dy: 0.07, color: "#2a354b" },
     ];
-
     function draw() {
-      w = canvas.width;
-      h = canvas.height;
       ctx.clearRect(0, 0, w, h);
       for (const b of blobs) {
         const g = ctx.createRadialGradient(b.x, b.y, b.r * 0.32, b.x, b.y, b.r);
@@ -49,9 +51,25 @@ function AnimatedBg() {
     draw();
     return () => {
       cancelAnimationFrame(animId);
-      window.removeEventListener("resize", setSize);
+      window.removeEventListener("resize", resize);
     };
   }, []);
+
+  // Если мобильный — просто статичный фон
+  if (window.innerWidth < 540)
+    return (
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          zIndex: -1,
+          background: "linear-gradient(135deg, #192035 0%, #23293b 100%)",
+        }}
+      />
+    );
 
   return (
     <canvas
@@ -64,7 +82,6 @@ function AnimatedBg() {
         width: "100vw",
         height: "100vh",
         pointerEvents: "none",
-        display: "block",
       }}
     />
   );
@@ -198,8 +215,8 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
               border: "none",
               borderRadius: 8,
               fontWeight: 800,
-              padding: "7px 14px",
-              fontSize: 13.5,
+              padding: "11px 0",
+              fontSize: 15,
               cursor: "pointer",
               width: "100%",
               marginTop: 2
@@ -270,9 +287,9 @@ const App = () => {
   }, []);
   const isMobile = vw < 600;
 
-  // Прокрутка наверх при переходе на другую страницу/категорию/корзину
+  // Скроллить наверх при смене страницы
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo(0, 0);
   }, [activeCategory, showCart]);
 
   // Корзина
@@ -356,7 +373,7 @@ const App = () => {
           />
           <motion.button
             animate={cartTotalCount > 0 ? { scale: [1, 1.13, 0.95, 1] } : { scale: 1 }}
-            transition={{ duration: 0.35, type: "spring" }}
+            transition={{ duration: 0.23, type: "spring" }}
             onClick={() => setShowCart(true)}
             style={{
               position: "absolute",
@@ -407,18 +424,17 @@ const App = () => {
         }}></div>
       </header>
 
-      {/* ---- Переходы между страницами ---- */}
-      <AnimatePresence mode="wait">
-        {/* -------- Главная (категории) -------- */}
+      {/* -------- Плавные fade-переходы между страницами -------- */}
+      <AnimatePresence>
         {!activeCategory && !showCart && (
           <motion.div
             key="main"
-            initial={{ opacity: 0, y: 32 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -32 }}
-            transition={{ duration: 0.38, type: "spring", stiffness: 90 }}
-            style={{ position: "relative", zIndex: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.13, type: "tween", ease: "easeInOut" }}
           >
+            {/* -------- Главная (категории) -------- */}
             <div
               style={{
                 maxWidth: "480px",
@@ -439,9 +455,9 @@ const App = () => {
               }}>
                 {/* Инфо-блок */}
                 <motion.div
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.05, duration: 0.5, type: "spring" }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.05, duration: 0.3, type: "spring" }}
                   style={{
                     background: CARD,
                     borderRadius: 17,
@@ -483,6 +499,7 @@ const App = () => {
                     <b style={{ color: "#9ed6fc" }}>Адрес:</b> <span style={{ color: "#fff" }}>{ADDRESS}</span>
                   </div>
                 </motion.div>
+
                 <div style={{
                   fontWeight: 800, fontSize: 20, textAlign: "center", marginBottom: 18, letterSpacing: "0.01em", color: "#e5eeff"
                 }}>Категории</div>
@@ -523,16 +540,15 @@ const App = () => {
           </motion.div>
         )}
 
-        {/* -------- Страница категории -------- */}
         {activeCategory && !showCart && (
           <motion.div
             key={activeCategory}
-            initial={{ opacity: 0, y: 32 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -32 }}
-            transition={{ duration: 0.21, type: "tween", stiffness: 180 }}
-            style={{ position: "relative", zIndex: 2 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.13, type: "tween", ease: "easeInOut" }}
           >
+            {/* -------- Страница категории -------- */}
             <div
               style={{
                 maxWidth: "480px",
@@ -567,6 +583,7 @@ const App = () => {
                     boxShadow: "0 1.5px 10px #3ca4ff0b",
                     transition: ".16s"
                   }}>← К категориям</button>
+
                 {/* Подкатегории брендов */}
                 <div style={{
                   display: "flex",
@@ -586,6 +603,7 @@ const App = () => {
                     />
                   )}
                 </div>
+
                 {/* Поиск */}
                 <input
                   placeholder="Поиск товаров"
@@ -606,6 +624,7 @@ const App = () => {
                   }}
                 />
               </div>
+
               {/* Товары */}
               {shownProducts.length === 0 && (
                 <div style={{ color: "#bcc5db", fontSize: 16, textAlign: "center", margin: "32px 0 55px 0", fontWeight: 700 }}>
@@ -626,14 +645,13 @@ const App = () => {
           </motion.div>
         )}
 
-        {/* -------- Корзина -------- */}
         {showCart && (
           <motion.div
             key="cart"
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
-            transition={{ duration: 0.18, type: "spring", stiffness: 220 }}
+            transition={{ duration: 0.13, type: "tween", ease: "easeInOut" }}
             style={{
               position: "fixed",
               inset: 0,
