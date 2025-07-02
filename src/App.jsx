@@ -549,7 +549,7 @@ const App = () => {
   style={{
     maxWidth: "480px", // или сколько тебе нужно (например 360px, 400px и т.п.)
     margin: "32px auto 0 auto",
-    padding: "24px",
+    padding: "15px",
     borderRadius: "16px",
     background: "#1c2333",
     boxShadow: "0 2px 12px rgba(0,0,0,0.06)"
