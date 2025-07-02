@@ -1,53 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// ---- ТВОИ КАТЕГОРИИ ----
-const SECTIONS = [
-  { name: "Главная" },
-  { name: "iPhone", emoji: "📱", products: [
-    { id: 1, brand: "Apple", name: "iPhone 15 Pro", price: 120000, desc: "256GB, Новый" }
-  ]},
-  { name: "AirPods", emoji: "🎧", products: [
-    { id: 2, brand: "Apple", name: "AirPods Pro 2", price: 18500, desc: "MagSafe, Оригинал" }
-  ]},
-  { name: "MacBook", emoji: "💻", products: [
-    { id: 3, brand: "Apple", name: "MacBook Air M2", price: 98000, desc: "2023, Новый" }
-  ]},
-  { name: "Marshall", emoji: "🎸", products: [
-    { id: 4, brand: "Marshall", name: "Marshall Major IV", price: 12500, desc: "Bluetooth Наушники" }
-  ]},
-  { name: "Игрушки", emoji: "🧸", products: [
-    { id: 5, brand: "LEGO", name: "LEGO City", price: 3700, desc: "Конструктор" }
-  ]},
-  { name: "Наушники", emoji: "🎵", products: [
-    { id: 6, brand: "Sony", name: "WH-1000XM5", price: 26000, desc: "Hi-Res, Шумодав" }
-  ]},
-  { name: "Apple Watch", emoji: "⌚️", products: [
-    { id: 7, brand: "Apple", name: "Watch Series 9", price: 46000, desc: "GPS, 45mm" }
-  ]},
-  { name: "Чехлы", emoji: "📦", products: [
-    { id: 8, brand: "UAG", name: "UAG для iPhone 15", price: 2800, desc: "Прочный чехол" }
-  ]},
-  { name: "AirPods в разборе", emoji: "🛠️", products: [
-    { id: 9, brand: "Apple", name: "AirPods Запчасти", price: 5000, desc: "Оригинал" }
-  ]},
-  { name: "Аксессуары", emoji: "🔌", products: [
-    { id: 10, brand: "Apple", name: "MagSafe Зарядка", price: 4500, desc: "Оригинал" }
-  ]}
-];
-
-// --------- ОСТАЛЬНОЕ ОСТАВЛЯЮ БЕЗ ИЗМЕНЕНИЙ ---------
-const ACCENT = "#3ca4ff";
-const BG = "#181e28";
-const CARD = "rgba(31,38,50,0.83)";
-const BORDER = "rgba(120,160,220,0.13)";
-const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
-
-// --- Анимированный фон (не меняю) ---
-function AnimatedBg() {
+// НЕОНОВЫЙ ФОН (canvas)
+function NeonBg() {
   useEffect(() => {
     let animId;
-    const canvas = document.getElementById("smoke-bg");
+    const canvas = document.getElementById("neon-bg");
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     let w = window.innerWidth, h = window.innerHeight;
@@ -57,26 +15,31 @@ function AnimatedBg() {
       canvas.width = w; canvas.height = h;
     };
     window.addEventListener("resize", resize);
-    const blobs = [
-      { x: w*0.2, y: h*0.32, r: 260, dx: 0.13, dy: 0.09, color: "#212c4388" },
-      { x: w*0.7, y: h*0.15, r: 270, dx: -0.09, dy: 0.12, color: "#192035a2" },
-      { x: w*0.44, y: h*0.79, r: 230, dx: 0.09, dy: -0.11, color: "#1c243dc4" },
-      { x: w*0.87, y: h*0.71, r: 180, dx: -0.12, dy: 0.07, color: "#2a354b82" },
-    ];
+
+    // Параметры неоновых “пятен”
+    const blobs = Array.from({length: 5}).map((_, i) => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      r: 160 + Math.random()*80,
+      dx: (Math.random()-0.5)*0.7,
+      dy: (Math.random()-0.5)*0.6,
+      color: [
+        "#39f8ff33", "#2b3bff33", "#e23bff28", "#41f1b025", "#fff33a20"
+      ][i]
+    }));
+
     function draw() {
       ctx.clearRect(0,0,w,h);
       for (const b of blobs) {
-        const g = ctx.createRadialGradient(b.x, b.y, b.r*0.32, b.x, b.y, b.r);
-        g.addColorStop(0, b.color.replace("88", "cc"));
+        const g = ctx.createRadialGradient(b.x, b.y, b.r*0.17, b.x, b.y, b.r);
+        g.addColorStop(0, b.color.replace("33", "c5"));
         g.addColorStop(1, b.color);
         ctx.beginPath();
         ctx.arc(b.x, b.y, b.r, 0, 2*Math.PI);
         ctx.fillStyle = g;
-        ctx.globalAlpha = 0.88;
         ctx.fill();
-        ctx.globalAlpha = 1;
-        b.x += b.dx;
-        b.y += b.dy;
+        // движение
+        b.x += b.dx; b.y += b.dy;
         if (b.x < -b.r || b.x > w+b.r) b.dx *= -1;
         if (b.y < -b.r || b.y > h+b.r) b.dy *= -1;
       }
@@ -87,61 +50,119 @@ function AnimatedBg() {
   }, []);
   return (
     <canvas
-      id="smoke-bg"
+      id="neon-bg"
       style={{
         position: "fixed",
         top: 0, left: 0, zIndex: 0,
         width: "100vw", height: "100vh",
         pointerEvents: "none",
-        filter: "blur(13px) brightness(1.02) saturate(1.07)"
+        transition: "filter .6s",
+        filter: "blur(8px) brightness(1.04) saturate(1.12)",
       }}
     />
   );
 }
 
-const CATEGORY_ICONS = {
-  "iPhone": "📱",
-  "AirPods": "🎧",
-  "MacBook": "💻",
-  "Marshall": "🎸",
-  "Игрушки": "🧸",
-  "Наушники": "🎵",
-  "Apple Watch": "⌚️",
-  "Чехлы": "📦",
-  "AirPods в разборе": "🛠️",
-  "Аксессуары": "🔌"
-};
+const ACCENT = "#39f8ff";
+const BG = "#181B23";
+const CARD = "rgba(22,24,32,0.64)";
+const BORDER = "rgba(51, 250, 255, 0.18)";
+const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
+const TELEGRAM_LINK = "https://t.me/forfriendsstore";
+const PHONE = "+7(926)591-21-65";
+const ADDRESS = "Клин, ул. Победы, д. 9, «Ок’ей»";
+const TV_PLACEHOLDER = "https://tech-iq.ru/upload/iblock/324/ixntoljx6r6lclbh3pfr0ve261z3ocn2.webp";
+const FALLBACK_IMG = "data:image/svg+xml,%3Csvg width='90' height='90' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='90' height='90' rx='16' fill='%2323292f'/%3E%3Cpath d='M45 29c-6.627 0-12 5.373-12 12 0 4.418 2.99 8.166 7.092 10.338C40.613 51.736 41 52.859 41 54v2a2 2 0 1 0 4 0v-2c0-1.141.387-2.264 1.908-2.662C54.01 49.166 57 45.418 57 41c0-6.627-5.373-12-12-12zm0 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8z' fill='%23668899'/%3E%3C/svg%3E";
+const PHONE_PLACEHOLDER = FALLBACK_IMG;
+
+const TVS = [
+  { id: 396940, brand: "Xiaomi", name: 'Телевизор ЖК 32" Xiaomi TV A32 2025 RU черный', price: 16000, desc: "Full HD, Smart TV, HDMI" },
+  { id: 394946, brand: "Xiaomi", name: 'Телевизор ЖК 43" Xiaomi TV A43 FHD 2025 RU черный', price: 23100, desc: "4K, Dolby Audio, Android TV" },
+  { id: 395792, brand: "Xiaomi", name: 'Телевизор ЖК 43" Xiaomi TV A43 4K 2025 RU черный', price: 23300, desc: "4K UHD, HDR10+" },
+  { id: 398100, brand: "Xiaomi", name: 'Телевизор ЖК 43" Xiaomi TV A43 Pro 4K 2025 RU черный', price: 26500, desc: "Pro Series, 4K, Wi-Fi 5G" },
+  { id: 394448, brand: "Xiaomi", name: 'Телевизор ЖК 50" Xiaomi TV A50 2025 RU RU черный', price: 27800, desc: "50'', Bluetooth, Ultra Slim" },
+  { id: 394966, brand: "Xiaomi", name: 'Телевизор ЖК 55" Xiaomi TV A55 2025 RU черный', price: 32800, desc: "55'', Frameless, HDR" }
+];
+
+const PHONES = [
+  { id: 101, brand: "Apple", name: "iPhone 15 Pro 128GB Серый", price: 115000, img: PHONE_PLACEHOLDER, desc: "A17 Pro, 3 камеры, iOS" },
+  { id: 102, brand: "Samsung", name: "Samsung Galaxy S24 Ultra 256GB Черный", price: 98000, img: PHONE_PLACEHOLDER, desc: "Snapdragon 8 Gen3, AMOLED" },
+  { id: 103, brand: "Xiaomi", name: "Xiaomi Redmi Note 13 Pro 512GB Синий", price: 34000, img: PHONE_PLACEHOLDER, desc: "512ГБ, 200Мп камера" }
+];
+
+const CAROUSEL_PRODUCTS = [
+  { ...TVS[0], img: TV_PLACEHOLDER },
+  { ...PHONES[0] },
+  { ...TVS[3], img: TV_PLACEHOLDER },
+  { ...PHONES[2] },
+];
+
+const SECTIONS = [
+  { name: "Главная" },
+  {
+    name: "Телевизоры",
+    products: TVS.map(tv => ({
+      ...tv,
+      img: TV_PLACEHOLDER
+    })),
+  },
+  {
+    name: "Телефоны",
+    products: PHONES
+  }
+];
+
+function getColumns() {
+  if (window.innerWidth > 950) return "repeat(3, 1fr)";
+  if (window.innerWidth > 650) return "repeat(2, 1fr)";
+  return "1fr";
+}
 
 const App = () => {
   const [activeSection, setActiveSection] = useState(0);
-  const [vw, setVw] = useState(window.innerWidth);
+  const products = SECTIONS[activeSection]?.products || [];
   const [cart, setCart] = useState([]);
   const [showCart, setShowCart] = useState(false);
   const [cartAnim, setCartAnim] = useState(false);
   const [addAnimId, setAddAnimId] = useState(null);
-  const [search, setSearch] = useState("");
+  const [columns, setColumns] = useState(getColumns());
+  const [carouselIndex, setCarouselIndex] = useState(0);
+  const [vw, setVw] = useState(typeof window !== "undefined" ? window.innerWidth : 375);
 
   useEffect(() => {
-    const onResize = () => setVw(window.innerWidth);
+    const onResize = () => {
+      setColumns(getColumns());
+      setVw(window.innerWidth);
+    };
     window.addEventListener("resize", onResize);
+    onResize();
+    document.body.style.background = BG;
+    document.body.style.margin = "0";
+    document.body.style.padding = "0";
+    document.body.style.minHeight = "100vh";
+    document.body.style.overflowX = "hidden";
+    document.documentElement.style.background = BG;
+    document.documentElement.style.height = "100%";
+    document.documentElement.style.margin = "0";
+    document.documentElement.style.padding = "0";
+    document.documentElement.style.overflowX = "hidden";
     return () => window.removeEventListener("resize", onResize);
   }, []);
-  const isMobile = vw < 650;
-  const mainBlockWidth = isMobile ? "98vw" : "430px";
 
-  // Поиск по товарам
-  const sectionProducts = SECTIONS[activeSection]?.products || [];
-  const filteredProducts = search.trim().length === 0
-    ? sectionProducts
-    : sectionProducts.filter(
-        p =>
-          (p.brand && p.brand.toLowerCase().includes(search.toLowerCase())) ||
-          p.name.toLowerCase().includes(search.toLowerCase()) ||
-          (p.desc && p.desc.toLowerCase().includes(search.toLowerCase()))
-      );
+  useEffect(() => {
+    if (activeSection !== 0) return;
+    const timer = setInterval(() => {
+      setCarouselIndex(idx => (idx + 1) % CAROUSEL_PRODUCTS.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [activeSection]);
 
-  // Корзина
+  const isMobile = vw < 550;
+  const blockWidth = isMobile ? "calc(100vw - 12px)" : "430px";
+  const gapY = isMobile ? 28 : 36;
+
   const cartTotalCount = cart.reduce((a, b) => a + b.qty, 0);
+
   const addToCart = (id) => {
     setCart((prev) => {
       const exist = prev.find((item) => item.id === id);
@@ -156,15 +177,18 @@ const App = () => {
     setCartAnim(true);
     setAddAnimId(id);
     setTimeout(() => setCartAnim(false), 400);
-    setTimeout(() => setAddAnimId(null), 550);
+    setTimeout(() => setAddAnimId(null), 500);
   };
+
   const removeFromCart = (id) => {
     setCart((prev) => prev.filter((item) => item.id !== id));
   };
+
   const getQtyInCart = (id) => {
     const found = cart.find(item => item.id === id);
     return found ? found.qty : 0;
   };
+
   function getProduct(id) {
     for (let section of SECTIONS) {
       if (!section.products) continue;
@@ -173,48 +197,77 @@ const App = () => {
     }
     return null;
   }
+
   const total = cart.reduce(
     (sum, item) => sum + (getProduct(item.id)?.price || 0) * item.qty,
     0
   );
 
-  return (
-    <div style={{
-      minHeight: "100vh",
-      background: BG,
-      color: "#fff",
-      fontFamily: "system-ui,sans-serif",
-      position: "relative",
-      overflowX: "hidden"
-    }}>
-      <AnimatedBg />
+  function nextCarousel() {
+    setCarouselIndex((carouselIndex + 1) % CAROUSEL_PRODUCTS.length);
+  }
+  function prevCarousel() {
+    setCarouselIndex(
+      (carouselIndex - 1 + CAROUSEL_PRODUCTS.length) % CAROUSEL_PRODUCTS.length
+    );
+  }
 
-      {/* ---------- Хедер ---------- */}
-      <header style={{ textAlign: "center", padding: isMobile ? "13px 0 2px 0" : "22px 0 0 0", position: "relative" }}>
-        <img src={logoUrl} alt="logo"
+  function onImgError(e) {
+    e.target.src = FALLBACK_IMG;
+  }
+
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        width: "100vw",
+        maxWidth: "100vw",
+        background: BG,
+        color: "#fff",
+        margin: 0,
+        padding: 0,
+        boxSizing: "border-box",
+        fontFamily: "system-ui,sans-serif",
+        overflowX: "hidden",
+        position: "relative"
+      }}
+    >
+      <NeonBg />
+
+      <header style={{ textAlign: "center", padding: "24px 0 0 0", position: "relative", zIndex: 2 }}>
+        <img
+          src={logoUrl}
+          alt="logo"
           style={{
-            width: isMobile ? 52 : 66, height: isMobile ? 52 : 66,
-            objectFit: "cover", borderRadius: "50%",
-            border: `2.5px solid ${ACCENT}`,
-            background: "#fff", margin: "0 auto", boxShadow: "0 0 18px #0007"
-          }} />
+            width: 68,
+            height: 68,
+            objectFit: "cover",
+            borderRadius: "50%",
+            border: `3px solid ${ACCENT}`,
+            background: "#fff",
+            margin: "0 auto 0 auto",
+            display: "block",
+            boxShadow: "0 0 38px #25faff44",
+          }}
+        />
         <motion.button
-          animate={cartAnim ? { scale: [1, 1.22, 0.9, 1], rotate: [0, -13, 6, 0] } : { scale: 1, rotate: 0 }}
+          animate={cartAnim ? { scale: [1, 1.15, 0.93, 1], rotate: [0, -11, 6, 0] } : { scale: 1, rotate: 0 }}
           transition={{ duration: 0.4, type: "spring" }}
           onClick={() => setShowCart(true)}
           style={{
             position: "absolute",
-            top: isMobile ? 10 : 18,
-            right: isMobile ? 12 : 20,
+            top: 18,
+            right: 20,
             background: "transparent",
             border: "none",
             cursor: "pointer",
-            outline: "none"
+            outline: "none",
+            zIndex: 5
           }}
         >
           <span style={{ position: "relative" }}>
-            <svg width={isMobile ? 23 : 28} height={isMobile ? 23 : 28} viewBox="0 0 24 24" fill={ACCENT}>
-              <path d="M7 18c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm10 0c-1.104 0-2 .896-2 2s-.896 2 2 2 2-.896 2-2-.896-2-2-2zm2-3H7.42l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H6.21l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H5.42l-.94-2H2V4h2l3.6 7.59-1.35 2.44C5.16 14.37 5.92 16 7.22 16H19c.553 0 1-.447 1-1s-.447-1-1-1z" />
+            <svg width={29} height={29} viewBox="0 0 24 24" fill={ACCENT}>
+              <path d="M7 18c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm10 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm2-3H7.42l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H6.21l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H5.42l-.94-2H2V4h2l3.6 7.59-1.35 2.44C5.16 14.37 5.92 16 7.22 16H19c.553 0 1-.447 1-1s-.447-1-1-1z" />
             </svg>
             {cartTotalCount > 0 && (
               <motion.span
@@ -227,12 +280,12 @@ const App = () => {
                   top: -9,
                   right: -13,
                   background: ACCENT,
-                  color: "#fff",
+                  color: "#191c23",
                   borderRadius: "50%",
                   padding: "2.5px 8px",
                   fontSize: 12,
                   fontWeight: 700,
-                  boxShadow: "0 2px 8px #1d7ad5c0"
+                  boxShadow: "0 2px 8px #00e2ffc0"
                 }}
               >
                 {cartTotalCount}
@@ -240,218 +293,477 @@ const App = () => {
             )}
           </span>
         </motion.button>
+        <div style={{
+          width: "100%",
+          maxWidth: blockWidth,
+          margin: "32px auto 0 auto",
+          height: 2,
+          background: "linear-gradient(90deg,#232934 10%, #39f8ff77 40%, #232934 90%)",
+          borderRadius: 3,
+          boxShadow: "0 2px 22px #39f8ff09",
+        }}></div>
       </header>
 
-      {/* ---------- Категории ---------- */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(5, 1fr)",
-          gap: isMobile ? 11 : 18,
-          width: isMobile ? "97vw" : "88vw",
-          margin: "24px auto 16px auto",
-          maxWidth: isMobile ? 420 : 1100,
-        }}>
-        {SECTIONS.slice(1).map((section, idx) => (
-          <motion.button
-            whileTap={{ scale: 0.96 }}
-            whileHover={isMobile ? {} : { scale: 1.04, boxShadow: "0 4px 26px #59b4ff31" }}
+      {/* Категории */}
+      <div style={{
+        display: "flex",
+        justifyContent: "center",
+        gap: 13,
+        margin: "44px 0 34px 0",
+        flexWrap: "wrap",
+        zIndex: 2,
+        position: "relative"
+      }}>
+        {SECTIONS.map((section, idx) => (
+          <button
             key={section.name}
-            onClick={() => { setActiveSection(idx+1); setSearch(""); }}
+            onClick={() => setActiveSection(idx)}
             style={{
-              display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-              background: idx+1 === activeSection
-                ? "linear-gradient(98deg, #3ca4ff 30%, #69d2fa 100%)"
-                : "rgba(34,42,57,0.86)",
-              color: idx+1 === activeSection ? "#fff" : "#bedbfa",
-              border: "none", borderRadius: 15,
-              fontWeight: 800,
-              fontSize: isMobile ? 14.5 : 16.7,
-              height: isMobile ? 48 : 54,
-              boxShadow: idx+1 === activeSection
-                ? "0 8px 26px #3ca4ff17, 0 1px 7px #1671ff21"
-                : "0 2px 8px #1a253949",
-              transition: "all .13s",
-              outline: "none",
+              background: idx === activeSection
+                ? "linear-gradient(93deg,#27e8ff 30%,#2540ff 120%)"
+                : "rgba(41,66,80,0.19)",
+              color: idx === activeSection ? "#fff" : "#b8d5ff",
+              border: "none",
+              borderRadius: 14,
+              padding: "12px 22px",
+              fontWeight: 700,
+              fontSize: 17,
               cursor: "pointer",
-              margin: 0,
-              padding: 0,
-              minWidth: isMobile ? 0 : 108,
-              position: "relative",
-              overflow: "hidden",
-              zIndex: 3
+              boxShadow: idx === activeSection
+                ? "0 3px 18px #39f8ff44"
+                : "0 2px 10px #232c3c22",
+              transition: "0.16s",
+              letterSpacing: "0.01em",
+              textShadow: idx === activeSection ? "0 2px 8px #19c8d4" : "none"
             }}
           >
-            <span style={{
-              fontSize: isMobile ? 22 : 27,
-              marginRight: 6,
-              filter: idx+1 === activeSection ? "drop-shadow(0 1px 5px #6bdcff60)" : "none"
-            }}>{section.emoji || CATEGORY_ICONS[section.name]}</span>
-            <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-              {section.name}
-            </span>
-          </motion.button>
+            {section.name}
+          </button>
         ))}
       </div>
 
-      {/* ---------- Поиск ---------- */}
-      <div style={{
-        width: "100%",
-        maxWidth: isMobile ? "98vw" : 600,
-        margin: isMobile ? "0 auto 12px auto" : "0 auto 22px auto",
-        padding: "0 6px",
-        display: activeSection === 0 ? "none" : "block",
-        position: "relative",
-        zIndex: 5,
-      }}>
-        <div style={{
-          display: "flex",
-          alignItems: "center",
-          background: "rgba(29,37,51,0.97)",
-          borderRadius: 11,
-          border: `1.2px solid ${BORDER}`,
-          boxShadow: "0 2px 8px #141a2d08",
-          padding: isMobile ? "8px 10px" : "11px 16px"
-        }}>
-          <svg width={isMobile ? 18 : 21} height={isMobile ? 18 : 21} fill="#b0d7ff" style={{ marginRight: 7 }}>
-            <path d="M20.71 19.29l-4.388-4.387A7.936 7.936 0 0016 9a8 8 0 10-8 8 7.936 7.936 0 005.903-2.677l4.387 4.388a1 1 0 101.414-1.414zM4 9a5 5 0 115 5 5.006 5.006 0 01-5-5z"/>
-          </svg>
-          <input
-            type="text"
-            placeholder="Поиск по товарам..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            style={{
-              width: "100%",
-              background: "transparent",
-              border: "none",
-              outline: "none",
-              color: "#fff",
-              fontSize: isMobile ? 15 : 17,
-              fontWeight: 500,
-              letterSpacing: ".01em"
-            }}
-          />
-          {search && (
-            <button onClick={() => setSearch("")}
-              style={{
-                background: "none", border: "none", color: "#b2c4e2",
-                fontSize: 19, cursor: "pointer", marginLeft: 2
-              }}>✕</button>
-          )}
-        </div>
-      </div>
-
-      {/* ---------- Главная ---------- */}
+      {/* Главная страница */}
       {activeSection === 0 && (
         <div style={{
-          width: mainBlockWidth,
+          maxWidth: blockWidth,
           margin: "0 auto",
-          padding: isMobile ? "12px 0" : "28px 0 0 0",
+          width: "100%",
+          padding: 0,
+          display: "flex",
+          flexDirection: "column",
+          gap: gapY,
+          zIndex: 2,
+          position: "relative"
         }}>
-          <div style={{
-            width: "100%",
-            background: CARD,
-            borderRadius: 20,
-            boxShadow: "0 4px 24px #1c2d471c",
-            border: `1.6px solid ${BORDER}`,
-            padding: isMobile ? "16px 8px" : "32px 28px",
-            fontSize: isMobile ? 16 : 18,
-            textAlign: "center",
-            fontWeight: 600,
-            color: "#f3f6fa",
-            letterSpacing: "0.01em",
-            lineHeight: 1.45,
-            margin: 0,
-          }}>
-            Добро пожаловать в <span style={{ color: ACCENT, fontWeight: 800 }}>4Friends Store</span>!<br />
-            <span style={{ fontWeight: 400, color: "#b8d7ff" }}>Только новые товары по лучшим ценам.<br />Прокрутите вниз и выберите свой!</span>
-          </div>
+          {/* Карусель */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.6, type: "spring" }}
+            style={{
+              width: "100%",
+              background: "rgba(20,26,36,0.64)",
+              borderRadius: 23,
+              padding: isMobile ? "14px 7px 22px 7px" : "28px 26px",
+              boxShadow: "0 4px 38px #39f8ff1c, 0 1px 10px #13233077",
+              backdropFilter: "blur(12px) saturate(1.2)",
+              margin: "0 auto",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 9,
+              border: `1.7px solid ${BORDER}`,
+              position: "relative"
+            }}>
+            <div style={{
+              fontWeight: 900,
+              fontSize: isMobile ? 18 : 22,
+              marginBottom: 14,
+              textAlign: "center",
+              letterSpacing: "0.01em",
+              color: "#fff",
+              textShadow: "0 2px 10px #0ef8ff24"
+            }}>🔥 Топовые товары</div>
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 13,
+              width: "100%",
+              margin: 0,
+              position: "relative"
+            }}>
+              {/* Стрелка влево */}
+              <button
+                onClick={prevCarousel}
+                style={{
+                  position: "absolute",
+                  left: 3,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "rgba(39,232,255,0.13)",
+                  border: "none",
+                  borderRadius: "50%",
+                  width: 46,
+                  height: 46,
+                  color: ACCENT,
+                  cursor: "pointer",
+                  zIndex: 3,
+                  fontSize: 28,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 2px 12px #39f8ff2d"
+                }}
+              >‹</button>
+              {/* Карточка */}
+              <motion.div
+                key={carouselIndex}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ type: "spring", duration: 0.34 }}
+                style={{
+                  background: "rgba(22,27,38,0.78)",
+                  borderRadius: 23,
+                  boxShadow: "0 6px 32px #39f8ff25, 0 1px 12px #1c183c26",
+                  padding: isMobile ? "18px 10px" : "23px 29px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  minWidth: isMobile ? 188 : 230,
+                  maxWidth: isMobile ? 228 : 300,
+                  width: "100%",
+                  border: `1.4px solid ${BORDER}`,
+                  transition: "box-shadow .2s"
+                }}
+              >
+                <motion.img
+                  src={CAROUSEL_PRODUCTS[carouselIndex].img}
+                  alt=""
+                  style={{
+                    width: isMobile ? 70 : 98,
+                    height: isMobile ? 70 : 98,
+                    borderRadius: 16,
+                    objectFit: "cover",
+                    marginBottom: 14,
+                    background: "#222",
+                    boxShadow: "0 2px 18px #39f8ff1c, 0 1px 8px #2b39ff21"
+                  }}
+                  onError={onImgError}
+                  initial={false}
+                  animate={addAnimId === CAROUSEL_PRODUCTS[carouselIndex].id ? { scale: [1, 1.09, 0.96, 1] } : { scale: 1 }}
+                  transition={{ duration: 0.38 }}
+                />
+                <div style={{
+                  fontWeight: 900,
+                  fontSize: isMobile ? 17 : 19,
+                  marginBottom: 6,
+                  color: "#39f8ff",
+                  letterSpacing: ".04em",
+                  textTransform: "uppercase",
+                  textShadow: "0 1px 8px #0ef8ff28"
+                }}>{CAROUSEL_PRODUCTS[carouselIndex].brand}</div>
+                <div style={{
+                  fontSize: isMobile ? 13.5 : 15.5,
+                  color: "#e0e9f7",
+                  marginBottom: 10,
+                  textAlign: "center",
+                  minHeight: isMobile ? 30 : 40,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontWeight: 500,
+                  textShadow: "0 1px 7px #212a4c11"
+                }}>{CAROUSEL_PRODUCTS[carouselIndex].name}</div>
+                <div style={{
+                  fontSize: isMobile ? 12 : 13.5,
+                  color: "#96f6fa",
+                  marginBottom: 9,
+                  fontWeight: 400,
+                  letterSpacing: ".01em",
+                  textShadow: "0 1px 7px #19f8e622"
+                }}>{CAROUSEL_PRODUCTS[carouselIndex].desc}</div>
+                <div style={{
+                  fontWeight: 900,
+                  fontSize: isMobile ? 17 : 20,
+                  marginBottom: 8,
+                  color: "#fff",
+                  textShadow: "0 2px 10px #39f8ff33"
+                }}>{CAROUSEL_PRODUCTS[carouselIndex].price} ₽</div>
+                <motion.button
+                  whileTap={{ scale: 0.94, backgroundColor: "#197ad2" }}
+                  onClick={() => addToCart(CAROUSEL_PRODUCTS[carouselIndex].id)}
+                  style={{
+                    background: "linear-gradient(91deg,#39f8ff,#284bff 85%)",
+                    color: "#181B23",
+                    border: "none",
+                    borderRadius: 13,
+                    fontWeight: 900,
+                    padding: isMobile ? "11px 0" : "13px 0",
+                    cursor: "pointer",
+                    fontSize: isMobile ? 15 : 17,
+                    width: "100%",
+                    maxWidth: isMobile ? 180 : 240,
+                    boxShadow: "0 1px 12px #39f8ff3e, 0 1px 5px #1c183c11"
+                  }}>В корзину</motion.button>
+              </motion.div>
+              {/* Стрелка вправо */}
+              <button
+                onClick={nextCarousel}
+                style={{
+                  position: "absolute",
+                  right: 3,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "rgba(39,232,255,0.13)",
+                  border: "none",
+                  borderRadius: "50%",
+                  width: 46,
+                  height: 46,
+                  color: ACCENT,
+                  cursor: "pointer",
+                  zIndex: 3,
+                  fontSize: 28,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 2px 12px #39f8ff2d"
+                }}
+              >›</button>
+            </div>
+          </motion.div>
+
+          {/* Приветственный блок */}
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.17, duration: 0.56, type: "spring" }}
+            style={{
+              background: "rgba(30,38,54,0.78)",
+              borderRadius: 23,
+              boxShadow: "0 2px 18px #39f8ff29, 0 2px 10px #0ef8ff13",
+              padding: isMobile ? "25px 9px" : "42px 36px",
+              fontSize: isMobile ? 17.5 : 21,
+              textAlign: "center",
+              fontWeight: 800,
+              color: "#eafaff",
+              marginTop: 0,
+              letterSpacing: "0.02em",
+              lineHeight: 1.39,
+              border: `1.4px solid ${BORDER}`,
+              backdropFilter: "blur(7px) saturate(1.08)"
+            }}>
+            Добро пожаловать в <span style={{ color: ACCENT, fontWeight: 900, textShadow: "0 2px 10px #0ef8ff69" }}>4Friends Store</span>!
+            <br />
+            <span style={{ fontWeight: 400, color: "#b9fff8", textShadow: "0 2px 8px #19f8e629" }}>
+              У нас только новые товары по лучшим ценам.<br />Прокрутите вниз и выберите свой!
+            </span>
+          </motion.div>
+
+          {/* Кнопка Telegram */}
+          <motion.div
+            initial={{ opacity: 0, y: 22 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25, duration: 0.52, type: "spring" }}
+            style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <a
+              href={TELEGRAM_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 15,
+                background: "linear-gradient(91deg,#39f8ff,#254aff 85%)",
+                color: "#181B23",
+                padding: isMobile ? "18px 0" : "24px 0",
+                width: isMobile ? "98vw" : "390px",
+                maxWidth: "100vw",
+                borderRadius: 15,
+                fontWeight: 900,
+                fontSize: isMobile ? 18 : 22,
+                textDecoration: "none",
+                boxShadow: "0 2px 28px #278aff31, 0 1px 8px #0ef8ff1e",
+                justifyContent: "center",
+                border: `1.5px solid #26e8fa`,
+                letterSpacing: "0.04em",
+                transition: ".17s"
+              }}>
+              <svg width="32" height="32" viewBox="0 0 240 240" fill="none" style={{ display: "block", filter: "drop-shadow(0 0 6px #39f8ff99)" }}>
+                <circle cx="120" cy="120" r="120" fill="#229ED9"/>
+                <path d="M55 123.6L168.7 78.7C173.5 76.8 178 79.7 176.6 86.2L157.6 171.5C156.4 176.6 153.2 177.9 148.7 175.5L126.6 159.6L115.6 170.1C114.1 171.6 112.8 172.9 110 172.9L111.5 150.2L159.5 104.6C161.5 102.8 159.1 101.7 156.5 103.5L98.5 144.1L76.7 136.6C71.9 135.1 71.8 131.9 77.2 129.7Z" fill="#fff"/>
+              </svg>
+              Перейти в канал
+            </a>
+          </motion.div>
+
+          {/* Контакты + адрес */}
+          <motion.div
+            initial={{ opacity: 0, y: 22 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.31, duration: 0.49, type: "spring" }}
+            style={{
+              background: "rgba(24,32,44,0.79)",
+              borderRadius: 19,
+              padding: isMobile ? "26px 13px" : "38px 31px",
+              boxShadow: "0 2px 18px #0ef8ff24, 0 2px 10px #1d263740",
+              color: "#e9f3ff",
+              textAlign: "center",
+              display: "flex",
+              flexDirection: "column",
+              gap: isMobile ? 14 : 22,
+              fontSize: isMobile ? 16 : 19,
+              border: `1.2px solid ${BORDER}`,
+              backdropFilter: "blur(7px) saturate(1.09)"
+            }}>
+            <div style={{
+              fontWeight: 900,
+              fontSize: isMobile ? 16 : 22,
+              letterSpacing: "0.01em",
+              color: ACCENT,
+              marginBottom: 2,
+              textShadow: "0 2px 9px #19f8ff39"
+            }}>
+              Контакты магазина
+            </div>
+            <div>
+              <span style={{ color: "#b6cafc" }}>Телефон:</span>{" "}
+              <a href={`tel:${PHONE}`} style={{
+                color: "#fff", textDecoration: "none", fontWeight: 800,
+                textShadow: "0 2px 8px #19f8e622"
+              }}>{PHONE}</a>
+            </div>
+            <div>
+              <span style={{ color: "#b6cafc" }}>Адрес:</span>{" "}
+              <span style={{
+                color: "#fff", fontWeight: 800, textShadow: "0 2px 8px #19f8e622"
+              }}>{ADDRESS}</span>
+            </div>
+            <div style={{
+              fontSize: isMobile ? 12.5 : 14.5,
+              color: "#b5e1ff",
+              marginTop: 2,
+              textShadow: "0 1px 4px #19f8e622"
+            }}>
+              Пишите и звоните — мы всегда на связи!
+            </div>
+          </motion.div>
         </div>
       )}
 
-      {/* ---------- Каталог ---------- */}
+      {/* Каталог */}
       {activeSection !== 0 && (
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr 1fr",
-          gap: isMobile ? 13 : 25,
-          maxWidth: 1200,
-          margin: "0 auto",
-          padding: isMobile ? 6 : 18,
-          width: "100%",
-        }}>
-          <AnimatePresence>
-            {filteredProducts.length === 0 ? (
-              <div style={{
-                gridColumn: "1 / -1",
-                color: "#aad6ff",
-                textAlign: "center",
-                fontWeight: 700,
-                fontSize: isMobile ? 14 : 18,
-                padding: "40px 0"
-              }}>
-                Товары скоро появятся!
-              </div>
-            ) : filteredProducts.map((product, i) => {
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: columns,
+            gap: 34,
+            maxWidth: 1200,
+            margin: "0 auto",
+            padding: 18,
+            width: "100%",
+            alignItems: "stretch",
+            boxSizing: "border-box",
+            overflowX: "hidden",
+            zIndex: 2,
+            position: "relative"
+          }}
+        >
+          <AnimatePresence mode="wait">
+            {products.map((product, i) => {
               const qty = getQtyInCart(product.id);
               return (
                 <motion.div
                   key={product.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 20 }}
-                  transition={{ delay: i * 0.06, duration: 0.32, type: "spring" }}
+                  initial={{ opacity: 0, y: 26, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 36, scale: 0.94 }}
+                  transition={{ delay: i * 0.07, duration: 0.36, type: "spring" }}
                   style={{
-                    background: CARD,
-                    border: `1.2px solid ${BORDER}`,
-                    borderRadius: 15,
-                    boxShadow: "0 8px 18px #08172b13",
-                    padding: isMobile ? 12 : 18,
+                    background: "rgba(30,38,54,0.78)",
+                    border: `1.6px solid ${BORDER}`,
+                    borderRadius: 26,
+                    boxShadow: "0 12px 42px #39f8ff17, 0 2px 12px #19f8e61c",
+                    padding: 26,
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    minHeight: isMobile ? 170 : 215,
+                    minHeight: 355,
+                    height: 355,
                     width: "100%",
+                    boxSizing: "border-box",
                     margin: "0 auto",
+                    justifyContent: "flex-start",
                     position: "relative",
-                    transition: "box-shadow .13s"
+                    overflow: "hidden",
+                    transition: "box-shadow .18s",
+                    backdropFilter: "blur(8px) saturate(1.11)"
+                  }}
+                  whileHover={{
+                    boxShadow: "0 26px 64px #39f8ff3c, 0 4px 22px #0ef8ff1c",
+                    scale: 1.027
                   }}
                 >
+                  <motion.img
+                    src={product.img || FALLBACK_IMG}
+                    alt={product.name}
+                    style={{
+                      width: 112,
+                      height: 112,
+                      objectFit: "cover",
+                      borderRadius: 20,
+                      marginBottom: 15,
+                      background: "#23272f",
+                      boxShadow: "0 2px 16px #39f8ff1c, 0 1px 8px #19f8e626",
+                      border: `1.2px solid ${BORDER}`,
+                      transition: ".17s"
+                    }}
+                    onError={onImgError}
+                    initial={false}
+                    animate={addAnimId === product.id ? { scale: [1, 1.13, 0.96, 1] } : { scale: 1 }}
+                    transition={{ duration: 0.37 }}
+                  />
                   <div style={{
-                    fontWeight: 800,
-                    fontSize: isMobile ? 14.5 : 17.5,
-                    marginBottom: 3,
-                    color: "#fff"
+                    fontWeight: 900,
+                    fontSize: 17,
+                    marginBottom: 8,
+                    textAlign: "center",
+                    width: "100%",
+                    letterSpacing: ".03em",
+                    color: ACCENT,
+                    textShadow: "0 2px 10px #0ef8ff22"
                   }}>
                     {product.brand}
                   </div>
                   <div style={{
-                    fontSize: isMobile ? 12 : 14.2,
-                    marginBottom: 6,
-                    color: "#c2c2c2",
+                    fontSize: 15.5,
+                    marginBottom: 10,
+                    color: "#eafaff",
                     textAlign: "center",
-                    width: "88%",
+                    width: "90%",
                     margin: "0 auto",
-                    lineHeight: 1.28,
+                    lineHeight: 1.45,
+                    fontWeight: 500,
+                    textShadow: "0 1px 6px #212a4c10"
                   }}>
                     {product.name}
                   </div>
-                  {product.desc && (
-                    <div style={{
-                      color: "#a8c8fa",
-                      textAlign: "center",
-                      fontWeight: 400,
-                      fontSize: isMobile ? 10.5 : 13.1,
-                      marginBottom: 7,
-                      textShadow: "0 1px 7px #1978e622"
-                    }}>{product.desc}</div>
-                  )}
+                  <div style={{
+                    fontSize: 13.5,
+                    marginBottom: 12,
+                    color: "#96f6fa",
+                    textAlign: "center",
+                    fontWeight: 400,
+                    letterSpacing: ".01em",
+                    textShadow: "0 1px 7px #19f8e622"
+                  }}>{product.desc}</div>
                   <div style={{
                     fontWeight: 800,
-                    fontSize: isMobile ? 14 : 18.5,
-                    marginBottom: 10,
+                    fontSize: 19,
+                    marginBottom: 17,
                     color: "#fff",
+                    textShadow: "0 2px 10px #39f8ff44"
                   }}>
                     {product.price} ₽
                   </div>
@@ -460,18 +772,19 @@ const App = () => {
                       whileTap={{ scale: 0.93, backgroundColor: "#197ad2" }}
                       onClick={() => addToCart(product.id)}
                       style={{
-                        background: ACCENT,
+                        background: "linear-gradient(93deg,#39f8ff 30%,#2b3bff 120%)",
                         color: "#181B23",
-                        padding: isMobile ? "7px 0" : "13px 0",
-                        borderRadius: 10,
+                        padding: "13px 0",
+                        borderRadius: 11,
                         border: "none",
-                        fontWeight: 800,
-                        fontSize: isMobile ? 13 : 16,
+                        fontWeight: 900,
+                        fontSize: 16.5,
                         cursor: "pointer",
                         width: "100%",
-                        boxShadow: "0 2px 10px #2680d72a",
+                        boxShadow: "0 2px 12px #2680d733",
                         position: "relative",
-                        transition: "background .16s"
+                        letterSpacing: "0.04em",
+                        transition: "background .18s"
                       }}
                     >
                       В корзину
@@ -483,11 +796,11 @@ const App = () => {
                         alignItems: "center",
                         justifyContent: "center",
                         width: "100%",
-                        gap: 7,
+                        gap: 9,
                         background: ACCENT,
-                        borderRadius: 10,
+                        borderRadius: 11,
                         padding: "0 7px",
-                        boxShadow: "0 1px 6px #3ca4ff18"
+                        boxShadow: "0 1px 8px #39f8ff11"
                       }}
                     >
                       <motion.button
@@ -500,9 +813,9 @@ const App = () => {
                           background: "none",
                           border: "none",
                           color: "#191c23",
-                          fontSize: 21,
+                          fontSize: 25,
                           fontWeight: 900,
-                          padding: "6px 10px 7px 10px",
+                          padding: "9px 13px 10px 13px",
                           cursor: "pointer",
                           outline: "none",
                           borderRadius: 6
@@ -510,10 +823,10 @@ const App = () => {
                       >–</motion.button>
                       <div style={{
                         color: "#181B23",
-                        minWidth: 23,
+                        minWidth: 28,
                         textAlign: "center",
                         fontWeight: 900,
-                        fontSize: 15
+                        fontSize: 19
                       }}>
                         {qty}
                       </div>
@@ -524,9 +837,9 @@ const App = () => {
                           background: "none",
                           border: "none",
                           color: "#191c23",
-                          fontSize: 21,
+                          fontSize: 25,
                           fontWeight: 900,
-                          padding: "6px 10px 7px 10px",
+                          padding: "9px 13px 10px 13px",
                           cursor: "pointer",
                           outline: "none",
                           borderRadius: 6
@@ -534,21 +847,22 @@ const App = () => {
                       >+</motion.button>
                     </div>
                   )}
+                  {/* Эффект "+1" */}
                   <AnimatePresence>
                     {addAnimId === product.id && (
                       <motion.div
-                        initial={{ opacity: 0, y: 12, scale: 0.7 }}
-                        animate={{ opacity: 1, y: -22, scale: 1.12 }}
-                        exit={{ opacity: 0, y: -52, scale: 1.25 }}
-                        transition={{ duration: 0.4 }}
+                        initial={{ opacity: 0, y: 18, scale: 0.7 }}
+                        animate={{ opacity: 1, y: -32, scale: 1.13 }}
+                        exit={{ opacity: 0, y: -70, scale: 1.38 }}
+                        transition={{ duration: 0.53 }}
                         style={{
                           position: "absolute",
-                          top: isMobile ? 17 : 32,
-                          right: isMobile ? 18 : 34,
+                          top: 32,
+                          right: 34,
                           color: ACCENT,
                           fontWeight: 900,
-                          fontSize: isMobile ? 16 : 23,
-                          textShadow: "0 2px 13px #3ca4ff13",
+                          fontSize: 26,
+                          textShadow: "0 2px 13px #19f8e622",
                           pointerEvents: "none"
                         }}
                       >
@@ -557,12 +871,13 @@ const App = () => {
                     )}
                   </AnimatePresence>
                 </motion.div>
-              )})}
+              );
+            })}
           </AnimatePresence>
         </div>
       )}
 
-      {/* ---------- Корзина ---------- */}
+      {/* Корзина */}
       {showCart && (
         <div
           style={{
@@ -579,21 +894,21 @@ const App = () => {
           <div
             style={{
               background: CARD,
-              borderRadius: 18,
-              padding: isMobile ? 13 : 28,
-              width: isMobile ? "95vw" : 350,
-              maxWidth: "99vw",
+              borderRadius: 22,
+              padding: 28,
+              width: 350,
+              maxWidth: "98vw",
               boxShadow: "0 8px 28px #0c2340d8",
-              border: `1.6px solid ${BORDER}`,
+              border: `2px solid ${BORDER}`,
               maxHeight: "96vh",
               overflowY: "auto",
               zIndex: 999
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ fontSize: isMobile ? 17 : 23, fontWeight: 900, marginBottom: 12, color: ACCENT, textShadow: "0 2px 8px #3ca4ff12" }}>Корзина</div>
+            <div style={{ fontSize: 23, fontWeight: 900, marginBottom: 17, letterSpacing: "0.02em", color: ACCENT, textShadow: "0 2px 8px #0ef8ff33" }}>Корзина</div>
             {cart.length === 0 ? (
-              <div style={{ color: "#aaa", marginBottom: 10, fontWeight: 600, fontSize: isMobile ? 13 : 16 }}>Корзина пуста</div>
+              <div style={{ color: "#aaa", marginBottom: 10, fontWeight: 600 }}>Корзина пуста</div>
             ) : (
               <>
                 {cart.map((item) => {
@@ -606,27 +921,27 @@ const App = () => {
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "flex-start",
-                        marginBottom: 15,
+                        marginBottom: 22,
                         borderBottom: "1px solid #44f6",
-                        paddingBottom: 7,
-                        gap: 7
+                        paddingBottom: 14,
+                        gap: 14
                       }}
                     >
                       <div style={{ flex: 1, textAlign: "left" }}>
-                        <div style={{ fontWeight: 700, fontSize: isMobile ? 12.5 : 16.5, marginBottom: 1, color: ACCENT }}>{product.brand}</div>
-                        <div style={{ fontSize: isMobile ? 11.5 : 14, color: "#c2c2c2", marginBottom: 4, lineHeight: 1.2 }}>{product.name}</div>
-                        <div style={{ color: "#999", fontSize: isMobile ? 10 : 13, marginBottom: 2 }}>Кол-во: <b>{item.qty}</b></div>
+                        <div style={{ fontWeight: 700, fontSize: 16.5, marginBottom: 2, letterSpacing: "0.015em", color: ACCENT }}>{product.brand}</div>
+                        <div style={{ fontSize: 14, color: "#c2c2c2", marginBottom: 5, lineHeight: 1.4 }}>{product.name}</div>
+                        <div style={{ color: "#999", fontSize: 13, marginBottom: 2 }}>Кол-во: <b>{item.qty}</b></div>
                       </div>
-                      <div style={{ textAlign: "right", minWidth: 60 }}>
-                        <span style={{ fontWeight: 800, fontSize: isMobile ? 11.5 : 16, color: "#fff" }}>{product.price * item.qty} ₽</span>
+                      <div style={{ textAlign: "right", minWidth: 70 }}>
+                        <span style={{ fontWeight: 800, fontSize: 16, color: "#fff" }}>{product.price * item.qty} ₽</span>
                         <button
                           style={{
                             display: "block",
-                            margin: "6px auto 0 auto",
+                            margin: "7px auto 0 auto",
                             color: ACCENT,
                             background: "none",
                             border: "none",
-                            fontSize: isMobile ? 10 : 13,
+                            fontSize: 13,
                             cursor: "pointer",
                             padding: 0,
                             fontWeight: 700,
@@ -639,21 +954,22 @@ const App = () => {
                     </div>
                   );
                 })}
-                <div style={{ fontWeight: 700, fontSize: isMobile ? 13 : 17, textAlign: "right", marginTop: 9, marginBottom: 5 }}>
+                <div style={{ fontWeight: 800, fontSize: 17, textAlign: "right", marginTop: 9, marginBottom: 5, color: ACCENT }}>
                   Итого: {total} ₽
                 </div>
                 <button
                   style={{
                     width: "100%",
-                    marginTop: 10,
-                    background: ACCENT,
-                    color: "#fff",
-                    padding: isMobile ? "9px 0" : "13px 0",
-                    borderRadius: 8,
+                    marginTop: 15,
+                    background: "linear-gradient(93deg,#39f8ff 30%,#2b3bff 120%)",
+                    color: "#181B23",
+                    padding: "14px 0",
+                    borderRadius: 13,
                     border: "none",
-                    fontWeight: 800,
-                    fontSize: isMobile ? 12.5 : 15.5,
+                    fontWeight: 900,
+                    fontSize: 17.5,
                     cursor: "pointer",
+                    boxShadow: "0 2px 18px #39f8ff44"
                   }}
                   onClick={() => {
                     alert(
@@ -677,7 +993,8 @@ const App = () => {
           </div>
         </div>
       )}
-      <div style={{ height: 30 }} />
+
+      <div style={{ height: 36 }} />
     </div>
   );
 };
