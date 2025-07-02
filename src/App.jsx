@@ -98,7 +98,12 @@ const SECTIONS = [
   { name: "Телевизоры", products: TVS },
   { name: "Компьютеры", products: MACS },
   { name: "Б/у", products: USED },
+  { name: "Планшеты", products: [] },
+  { name: "Наушники", products: [] },
+  { name: "Аксессуары", products: [] },
+  { name: "Для дома", products: [] },
 ];
+
 
 function getColumns(vw) {
   if (vw > 1024) return "repeat(3, 1fr)";
