@@ -200,14 +200,13 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
             gap: 7,
             background: ACCENT,
             borderRadius: 8,
-            marginTop: 3,
-            color: "#fff"
+            marginTop: 3
           }}>
             <button onClick={onMinus}
               style={{
                 background: "none",
                 border: "none",
-                color: "#181B23",
+                color: "#fff",
                 fontSize: 20,
                 fontWeight: 900,
                 padding: "6px 10px",
