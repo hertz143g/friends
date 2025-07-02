@@ -545,6 +545,16 @@ const App = () => {
           </div>
 
           {/* Поиск */}
+                  <div
+  style={{
+    maxWidth: "480px", // или сколько тебе нужно (например 360px, 400px и т.п.)
+    margin: "32px auto 0 auto",
+    padding: "24px",
+    borderRadius: "16px",
+    background: "#1c2333",
+    boxShadow: "0 2px 12px rgba(0,0,0,0.06)"
+  }}
+>
           <input
             placeholder="Поиск товаров"
             value={search}
@@ -563,6 +573,7 @@ const App = () => {
               boxSizing: "border-box"
             }}
           />
+          </div>
 
           {/* Товары */}
           {shownProducts.length === 0 && (
