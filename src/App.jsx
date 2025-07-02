@@ -69,20 +69,20 @@ const TV_PLACEHOLDER = "https://tech-iq.ru/upload/iblock/324/ixntoljx6r6lclbh3pf
 const PHONE_PLACEHOLDER = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Smartphone_icon_-_Noun_Project_883.png/64px-Smartphone_icon_-_Noun_Project_883.png";
 
 const CATEGORIES = [
-  { name: "Смартфоны", emoji: "📱", brands: ["iPhone", "Samsung S22/23", "Samsung S24/S25", "Samsung A / наушники / часы", "Xiaomi", "Redmi", "Poco", "OnePlus", "Google Pixel"] },
+  { name: "Смартфоны", emoji: "📱", brands: ["iPhone", "Samsung", "Xiaomi", "Redmi", "Poco", "OnePlus", "Google Pixel"] },
   { name: "Часы", emoji: "⌚", brands: ["Apple Watch", "Casio G-SHOCK", "Garmin"] },
   { name: "Компьютеры и планшеты", emoji: "💻", brands: ["MacBook", "iMac", "iPad"] },
-  { name: "Аудио", emoji: "🎧", brands: ["AirPods", "AirPods в разборе", "Аксессуары", "Колонки", "Marshall"] },
-  { name: "Телевизоры", emoji: "📺", brands: ["Телевизоры", "Электросамокаты"] },
-  { name: "Игровые приставки", emoji: "🎮", brands: ["Xbox", "Sony Ps5"] },
-  { name: "Игрушки", emoji: "🧸", brands: ["Игрушки Labubu"] },
-  { name: "Электроника", emoji: "🔌", brands: ["Apple TV", "GoPro", "Dyson", "Пылесос"] },
+  { name: "Аудио", emoji: "🎧", brands: ["AirPods", "Marshall", "Sony", "JBL"] },
+  { name: "Телевизоры", emoji: "📺", brands: ["Samsung", "Xiaomi"] },
+  { name: "Игровые приставки", emoji: "🎮", brands: ["Xbox", "Sony"] },
+  { name: "Игрушки", emoji: "🧸", brands: ["Labubu"] },
+  { name: "Электроника", emoji: "🔌", brands: ["Apple TV", "GoPro", "Dyson"] },
 ];
 
 const PRODUCTS = {
   "Смартфоны": [
-    { id: 1, name: "iPhone 15 Pro 128GB Серый", brand: "iPhone", price: 115000, img: PHONE_PLACEHOLDER },
-    { id: 2, name: "Galaxy S24 Ultra 256GB", brand: "Samsung S24/S25", price: 98000, img: PHONE_PLACEHOLDER },
+    { id: 1, name: "iPhone 15 Pro 128GB", brand: "iPhone", price: 115000, img: PHONE_PLACEHOLDER },
+    { id: 2, name: "Samsung Galaxy S24 Ultra", brand: "Samsung", price: 98000, img: PHONE_PLACEHOLDER },
     { id: 3, name: "Xiaomi Redmi Note 13 Pro", brand: "Xiaomi", price: 34000, img: PHONE_PLACEHOLDER },
   ],
   "Часы": [
@@ -98,18 +98,18 @@ const PRODUCTS = {
   "Аудио": [
     { id: 10, name: "AirPods Pro 2", brand: "AirPods", price: 25900, img: PHONE_PLACEHOLDER },
     { id: 11, name: "Marshall Emberton II", brand: "Marshall", price: 18500, img: PHONE_PLACEHOLDER },
-    { id: 12, name: "Sony WH-1000XM5", brand: "Аксессуары", price: 29900, img: PHONE_PLACEHOLDER }
+    { id: 12, name: "Sony WH-1000XM5", brand: "Sony", price: 29900, img: PHONE_PLACEHOLDER }
   ],
   "Телевизоры": [
-    { id: 13, name: "Xiaomi TV A32", brand: "Телевизоры", price: 16000, img: TV_PLACEHOLDER },
-    { id: 14, name: "Samsung 4K Crystal", brand: "Телевизоры", price: 37000, img: TV_PLACEHOLDER }
+    { id: 13, name: "Xiaomi TV A32", brand: "Xiaomi", price: 16000, img: TV_PLACEHOLDER },
+    { id: 14, name: "Samsung 4K Crystal", brand: "Samsung", price: 37000, img: TV_PLACEHOLDER }
   ],
   "Игровые приставки": [
-    { id: 15, name: "PlayStation 5", brand: "Sony Ps5", price: 68900, img: PHONE_PLACEHOLDER },
+    { id: 15, name: "PlayStation 5", brand: "Sony", price: 68900, img: PHONE_PLACEHOLDER },
     { id: 16, name: "Xbox Series X", brand: "Xbox", price: 64800, img: PHONE_PLACEHOLDER }
   ],
   "Игрушки": [
-    { id: 17, name: "Labubu Pirate", brand: "Игрушки Labubu", price: 3300, img: PHONE_PLACEHOLDER }
+    { id: 17, name: "Labubu Pirate", brand: "Labubu", price: 3300, img: PHONE_PLACEHOLDER }
   ],
   "Электроника": [
     { id: 18, name: "Apple TV 4K", brand: "Apple TV", price: 25900, img: PHONE_PLACEHOLDER },
@@ -117,7 +117,7 @@ const PRODUCTS = {
   ]
 };
 
-const mainBlockWidth = 430;
+const mainBlockWidth = 420;
 
 // ====== Кнопка бренда ======
 function BrandButton({ name, active, onClick }) {
@@ -159,7 +159,7 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
         alignItems: "center",
         minHeight: 180,
         position: "relative",
-        maxWidth: 350,
+        maxWidth: 340,
         margin: "0 auto 17px auto"
       }}
     >
@@ -291,6 +291,17 @@ const App = () => {
     }
   }
 
+  // Универсальный style-контейнер для блоков
+  const blockStyle = {
+    maxWidth: mainBlockWidth,
+    margin: "0 auto",
+    padding: isMobile ? "0 7px" : "0 20px",
+    width: "100%",
+    boxSizing: "border-box",
+    position: "relative",
+    zIndex: 2
+  };
+
   return (
     <div
       style={{
@@ -300,7 +311,6 @@ const App = () => {
         color: "#fff",
         margin: 0,
         padding: 0,
-        boxSizing: "border-box",
         fontFamily: "system-ui,sans-serif",
         overflowX: "hidden",
         position: "relative"
@@ -313,13 +323,10 @@ const App = () => {
         textAlign: "center",
         padding: `${isMobile ? 32 : 48}px 0 0 0`,
         position: "relative",
-        zIndex: 2
+        zIndex: 2,
+        ...blockStyle
       }}>
-        <div style={{
-          position: "relative",
-          maxWidth: mainBlockWidth,
-          margin: "0 auto"
-        }}>
+        <div style={{ position: "relative" }}>
           <img
             src={logoUrl}
             alt="logo"
@@ -350,7 +357,7 @@ const App = () => {
             }}
           >
             <span style={{ position: "relative" }}>
-              <svg width={isMobile ? 27 : 31} height={isMobile ? 27 : 31} viewBox="0 0 24 24" fill={ACCENT}>
+              <svg width={isMobile ? 26 : 30} height={isMobile ? 26 : 30} viewBox="0 0 24 24" fill={ACCENT}>
                 <path d="M7 18c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm10 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm2-3H7.42l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H6.21l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H5.42l-.94-2H2V4h2l3.6 7.59-1.35 2.44C5.16 14.37 5.92 16 7.22 16H19c.553 0 1-.447 1-1s-.447-1-1-1z" />
               </svg>
               {cartTotalCount > 0 && (
@@ -367,7 +374,7 @@ const App = () => {
                     color: "#fff",
                     borderRadius: "50%",
                     padding: "2.5px 8px",
-                    fontSize: 13,
+                    fontSize: 12,
                     fontWeight: 700,
                     boxShadow: "0 2px 8px #1d7ad5c0"
                   }}
@@ -378,195 +385,202 @@ const App = () => {
             </span>
           </motion.button>
         </div>
+        <div style={{ height: isMobile ? 10 : 18 }} />
         <div style={{
           width: "100%",
-          maxWidth: mainBlockWidth,
-          margin: "17px auto 0 auto",
           height: 2,
           background: "rgba(255,255,255,0.14)",
-          borderRadius: 2
-        }}></div>
+          borderRadius: 2,
+          marginBottom: isMobile ? 10 : 17
+        }} />
       </header>
 
-      {/* -------- Главная (категории) -------- */}
+      {/* -------- Информация -------- */}
       {!activeCategory && (
-        <div style={{
-          width: "100%",
-          maxWidth: mainBlockWidth,
-          margin: "0 auto",
-          marginTop: isMobile ? 16 : 23,
-          zIndex: 2,
-          position: "relative"
-        }}>
-          {/* Инфо-блок */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.05, duration: 0.5, type: "spring" }}
-            style={{
-              background: CARD,
-              borderRadius: 17,
-              padding: isMobile ? "17px 10px 13px 10px" : "26px 22px",
-              boxShadow: "0 3px 22px #12192b14",
-              marginBottom: isMobile ? 18 : 30,
-              border: `1.3px solid ${BORDER}`
-            }}>
-            <div style={{ fontWeight: 800, fontSize: isMobile ? 15 : 17, marginBottom: 8 }}>
-              Добро пожаловать в <span style={{ color: ACCENT }}>4Friends Store!</span>
-            </div>
-            <div style={{ fontWeight: 400, color: "#b8d7ff", fontSize: isMobile ? 13 : 14, marginBottom: 10 }}>
-              Только новые товары по лучшим ценам.<br />Прокрутите вниз и выберите свой!
-            </div>
-            <a href={TELEGRAM_LINK} target="_blank" rel="noopener noreferrer"
-              style={{
-                display: "inline-block",
-                background: ACCENT,
-                color: "#fff",
-                padding: isMobile ? "9px 14px" : "11px 26px",
-                borderRadius: 9,
-                fontWeight: 700,
-                fontSize: isMobile ? 13 : 14.5,
-                textDecoration: "none",
-                marginBottom: 9,
-                marginTop: 6
-              }}>
-              Перейти в Telegram
-            </a>
-            <div style={{
-              background: "#1c2333",
-              borderRadius: 10,
-              padding: "8px 11px",
-              marginTop: 11,
-              fontSize: isMobile ? 12 : 13.5,
-              color: "#b3c7df"
-            }}>
-              <b style={{ color: "#63aaff" }}>Контакты:</b> Телефон: <span style={{ color: "#fff" }}>{PHONE}</span><br />
-              <b style={{ color: "#9ed6fc" }}>Адрес:</b> <span style={{ color: "#fff" }}>{ADDRESS}</span>
-            </div>
-          </motion.div>
-
+        <motion.div
+          style={{
+            ...blockStyle,
+            background: CARD,
+            borderRadius: 15,
+            boxShadow: "0 2px 8px #191f2c1a",
+            padding: isMobile ? "18px 10px" : "24px 25px",
+            marginTop: 0,
+            marginBottom: 20,
+            textAlign: "center",
+            fontWeight: 600,
+            color: "#f3f6fa",
+            fontSize: isMobile ? 15.5 : 17.5
+          }}
+        >
+          <span style={{ fontWeight: 700 }}>Добро пожаловать в <span style={{ color: ACCENT, fontWeight: 800 }}>4Friends Store</span>!</span>
+          <div style={{ fontWeight: 400, color: "#b8d7ff", marginTop: 7 }}>
+            Только новые товары по лучшим ценам.<br />Прокрутите вниз и выберите свой!
+          </div>
           <div style={{
-            fontWeight: 800, fontSize: 20, textAlign: "center", marginBottom: 18, letterSpacing: "0.01em", color: "#e5eeff"
-          }}>Категории</div>
-
-          {/* Список категорий */}
-          <div style={{
+            marginTop: 14,
             display: "flex",
             flexDirection: "column",
-            gap: 11
+            gap: 10,
+            alignItems: "center"
           }}>
-            {CATEGORIES.map(cat =>
+            <a
+              href={TELEGRAM_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 7,
+                background: ACCENT,
+                color: "#fff",
+                padding: isMobile ? "7px 14px" : "10px 22px",
+                borderRadius: 9,
+                fontWeight: 800,
+                fontSize: isMobile ? 14 : 16,
+                textDecoration: "none",
+                border: "none",
+                marginBottom: 2,
+                boxShadow: "0 2px 10px #3ca4ff22",
+              }}
+            >
+              <span role="img" aria-label="tg">✈️</span> Telegram
+            </a>
+            <div style={{ color: "#b6cafc", fontWeight: 700 }}>
+              {PHONE} · {ADDRESS}
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* -------- Категории -------- */}
+      {!activeCategory && (
+        <div style={blockStyle}>
+          <div style={{
+            fontWeight: 800,
+            fontSize: isMobile ? 16.5 : 19,
+            marginBottom: 10,
+            color: ACCENT,
+            letterSpacing: ".01em"
+          }}>
+            Категории
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: isMobile ? 7 : 11 }}>
+            {CATEGORIES.map((cat, idx) => (
               <motion.button
                 key={cat.name}
-                whileTap={{ scale: 0.97 }}
-                onClick={() => { setActiveCategory(cat.name); setActiveBrand(null); setSearch(""); }}
+                onClick={() => {
+                  setActiveCategory(cat.name);
+                  setActiveBrand(null);
+                  setSearch("");
+                }}
+                whileHover={{ scale: 1.013 }}
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  background: "#222a38",
-                  border: `1.2px solid ${BORDER}`,
+                  background: "#212c3d",
+                  color: "#fff",
+                  border: `1.5px solid ${ACCENT}55`,
                   borderRadius: 13,
-                  padding: isMobile ? "11px 10px" : "14px 16px",
+                  padding: isMobile ? "13px 16px" : "17px 23px",
                   fontWeight: 800,
                   fontSize: isMobile ? 16.5 : 18,
-                  color: "#fff",
-                  gap: 18,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 13,
                   cursor: "pointer",
                   marginBottom: 0,
-                  transition: ".14s",
-                  boxShadow: "0 2px 12px #1721440a"
-                }}>
-                <span style={{ fontSize: isMobile ? 22 : 26, marginRight: 8 }}>{cat.emoji}</span>
-                <span>{cat.name}</span>
+                  boxShadow: "0 1.5px 6px #1a3144a5",
+                  transition: "background .13s"
+                }}
+              >
+                <span style={{
+                  fontSize: isMobile ? 22 : 25,
+                  marginRight: 8,
+                  filter: "brightness(1.12)"
+                }}>{cat.emoji}</span>
+                {cat.name}
               </motion.button>
-            )}
+            ))}
           </div>
         </div>
       )}
 
-      {/* -------- Страница категории -------- */}
+      {/* -------- Каталог -------- */}
       {activeCategory && (
-        <div style={{
-          width: "100%",
-          maxWidth: mainBlockWidth,
-          margin: "0 auto",
-          marginTop: isMobile ? 15 : 22
-        }}>
-          {/* Кнопка назад */}
-          <button
-            onClick={() => { setActiveCategory(null); setActiveBrand(null); setSearch(""); }}
-            style={{
-              display: "block",
-              width: "100%",
-              background: "#283762",
-              color: ACCENT,
-              border: "none",
-              borderRadius: 13,
-              fontWeight: 800,
-              fontSize: isMobile ? 15 : 16,
-              padding: "11px 0",
-              marginBottom: isMobile ? 13 : 19,
-              cursor: "pointer",
-              boxShadow: "0 1.5px 10px #3ca4ff0b",
-              transition: ".16s"
-            }}>← К категориям</button>
-
-          {/* Подкатегории брендов */}
+        <div style={blockStyle}>
+          {/* Кнопки брендов */}
           <div style={{
+            marginBottom: 15,
+            marginTop: 8,
             display: "flex",
             overflowX: "auto",
-            gap: 0,
-            marginBottom: 15,
-            paddingBottom: 2,
-            paddingLeft: 1,
-            scrollbarWidth: "thin"
+            paddingBottom: 3,
+            gap: 0
           }}>
-            {CATEGORIES.find(c => c.name === activeCategory).brands.map(brand =>
+            <BrandButton
+              name="Все бренды"
+              active={!activeBrand}
+              onClick={() => setActiveBrand(null)}
+            />
+            {CATEGORIES.find(c => c.name === activeCategory)?.brands.map(b =>
               <BrandButton
-                key={brand}
-                name={brand}
-                active={brand === activeBrand}
-                onClick={() => setActiveBrand(brand === activeBrand ? null : brand)}
+                key={b}
+                name={b}
+                active={activeBrand === b}
+                onClick={() => setActiveBrand(b)}
               />
             )}
           </div>
-
           {/* Поиск */}
           <input
-            placeholder="Поиск товаров"
+            type="text"
+            placeholder="Поиск товара..."
             value={search}
             onChange={e => setSearch(e.target.value)}
             style={{
               width: "100%",
-              padding: "11px 14px",
-              borderRadius: 11,
-              border: `1.2px solid ${BORDER}`,
-              background: "#20294a",
+              padding: "10px 14px",
+              borderRadius: 9,
+              border: `1.3px solid ${ACCENT}33`,
+              fontSize: 15.5,
+              marginBottom: 14,
+              background: "#212c3d",
               color: "#fff",
-              fontSize: 15,
-              fontWeight: 600,
-              outline: "none",
-              marginBottom: 16,
-              boxSizing: "border-box"
+              outline: "none"
             }}
           />
-
+          {/* Назад */}
+          <button
+            onClick={() => { setActiveCategory(null); setActiveBrand(null); setSearch(""); }}
+            style={{
+              width: "100%",
+              background: "none",
+              color: ACCENT,
+              border: `1.3px solid ${ACCENT}66`,
+              borderRadius: 8,
+              padding: "12px 0",
+              fontWeight: 700,
+              fontSize: 16,
+              marginBottom: 18,
+              cursor: "pointer"
+            }}
+          >← Назад к категориям</button>
           {/* Товары */}
-          {shownProducts.length === 0 && (
-            <div style={{ color: "#bcc5db", fontSize: 16, textAlign: "center", margin: "32px 0 55px 0", fontWeight: 700 }}>
-              Нет товаров в этой категории.
-            </div>
-          )}
-          {shownProducts.map(product =>
-            <ProductCard
-              key={product.id}
-              product={product}
-              qty={getQtyInCart(product.id)}
-              onPlus={() => addToCart(product.id)}
-              onMinus={() => removeOneFromCart(product.id)}
-            />
-          )}
-          <div style={{ height: 22 }} />
+          <AnimatePresence mode="wait">
+            {shownProducts.length === 0 ? (
+              <div style={{ color: "#bbb", textAlign: "center", marginTop: 42, fontWeight: 600 }}>
+                Нет товаров
+              </div>
+            ) : (
+              shownProducts.map(product => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  qty={getQtyInCart(product.id)}
+                  onPlus={() => addToCart(product.id)}
+                  onMinus={() => removeOneFromCart(product.id)}
+                />
+              ))
+            )}
+          </AnimatePresence>
         </div>
       )}
 
@@ -586,20 +600,21 @@ const App = () => {
         >
           <div
             style={{
+              ...blockStyle,
               background: CARD,
-              borderRadius: 17,
-              padding: isMobile ? 13 : 27,
-              width: isMobile ? "96vw" : 370,
-              maxWidth: "99vw",
-              boxShadow: "0 8px 28px #0c2340c5",
+              borderRadius: 18,
+              padding: isMobile ? 13 : 28,
+              width: "100%",
+              maxWidth: 370,
+              boxShadow: "0 8px 28px #0c2340d8",
               border: `1.6px solid ${BORDER}`,
-              maxHeight: "95vh",
+              maxHeight: "96vh",
               overflowY: "auto",
               zIndex: 999
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ fontSize: isMobile ? 17 : 22, fontWeight: 900, marginBottom: 10, color: ACCENT, textShadow: "0 2px 8px #3ca4ff12" }}>Корзина</div>
+            <div style={{ fontSize: isMobile ? 17 : 23, fontWeight: 900, marginBottom: 12, color: ACCENT, textShadow: "0 2px 8px #3ca4ff12" }}>Корзина</div>
             {cart.length === 0 ? (
               <div style={{ color: "#aaa", marginBottom: 10, fontWeight: 600, fontSize: isMobile ? 13 : 16 }}>Корзина пуста</div>
             ) : (
@@ -614,19 +629,19 @@ const App = () => {
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "flex-start",
-                        marginBottom: 12,
-                        borderBottom: "1px solid #44f5",
-                        paddingBottom: 6,
-                        gap: 6
+                        marginBottom: 15,
+                        borderBottom: "1px solid #44f6",
+                        paddingBottom: 7,
+                        gap: 7
                       }}
                     >
                       <div style={{ flex: 1, textAlign: "left" }}>
-                        <div style={{ fontWeight: 700, fontSize: isMobile ? 12 : 16.5, marginBottom: 1, color: ACCENT }}>{product.brand}</div>
-                        <div style={{ fontSize: isMobile ? 11 : 14, color: "#c2c2c2", marginBottom: 2, lineHeight: 1.22 }}>{product.name}</div>
+                        <div style={{ fontWeight: 700, fontSize: isMobile ? 12.5 : 16.5, marginBottom: 1, color: ACCENT }}>{product.brand}</div>
+                        <div style={{ fontSize: isMobile ? 11.5 : 14, color: "#c2c2c2", marginBottom: 4, lineHeight: 1.2 }}>{product.name}</div>
                         <div style={{ color: "#999", fontSize: isMobile ? 10 : 13, marginBottom: 2 }}>Кол-во: <b>{item.qty}</b></div>
                       </div>
-                      <div style={{ textAlign: "right", minWidth: 58 }}>
-                        <span style={{ fontWeight: 800, fontSize: isMobile ? 11 : 16, color: "#fff" }}>{product.price * item.qty} ₽</span>
+                      <div style={{ textAlign: "right", minWidth: 60 }}>
+                        <span style={{ fontWeight: 800, fontSize: isMobile ? 11.5 : 16, color: "#fff" }}>{product.price * item.qty} ₽</span>
                         <button
                           style={{
                             display: "block",
@@ -639,7 +654,7 @@ const App = () => {
                             padding: 0,
                             fontWeight: 700,
                           }}
-                          onClick={() => setCart(prev => prev.filter(i => i.id !== item.id))}
+                          onClick={() => removeOneFromCart(item.id)}
                         >
                           Удалить
                         </button>
@@ -686,7 +701,7 @@ const App = () => {
         </div>
       )}
 
-      <div style={{ height: 18 }} />
+      <div style={{ height: 24 }} />
     </div>
   );
 };
