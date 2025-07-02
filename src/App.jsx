@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// ---------- Анимированный фон ----------
+// --- Фон ---
 function AnimatedBg() {
   useEffect(() => {
     let animId;
@@ -57,11 +57,11 @@ function AnimatedBg() {
   );
 }
 
-// ------------ Данные ------------
+// --- ДАННЫЕ ---
 const ACCENT = "#3ca4ff";
 const BG = "#181e28";
-const CARD = "rgba(31,38,50,0.72)";
-const BORDER = "rgba(120,160,220,0.14)";
+const CARD = "rgba(31,38,50,0.70)";
+const BORDER = "rgba(120,160,220,0.13)";
 const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
 const TELEGRAM_LINK = "https://t.me/forfriendsstore";
 const PHONE = "+7(926)591-21-65";
@@ -75,55 +75,28 @@ const PHONES = [
   { id: 103, brand: "Xiaomi", name: "Xiaomi Redmi Note 13 Pro 512GB Синий", price: 34000, img: PHONE_PLACEHOLDER, desc: "512ГБ, 200Мп камера" },
 ];
 
-const WATCHES = [
-  { id: 201, brand: "Apple", name: "Apple Watch Series 9", price: 37000, img: PHONE_PLACEHOLDER, desc: "45mm, GPS" },
-  { id: 202, brand: "Casio", name: "Casio G-SHOCK DW-5600", price: 8900, img: PHONE_PLACEHOLDER, desc: "Shock Resistant" },
-  { id: 203, brand: "Garmin", name: "Garmin Forerunner 255", price: 28500, img: PHONE_PLACEHOLDER, desc: "Спорт-часы" },
+const TVS = [
+  { id: 201, brand: "Xiaomi", name: 'Телевизор ЖК 32" Xiaomi TV A32 2025 RU черный', price: 16000, img: TV_PLACEHOLDER, desc: "Full HD, Smart TV, HDMI" },
+  { id: 202, brand: "Samsung", name: 'Samsung 4K 43" Crystal', price: 37000, img: TV_PLACEHOLDER, desc: "4K UHD, HDR" },
 ];
 
 const MACS = [
   { id: 301, brand: "Apple", name: "MacBook Air 15 2024", price: 127000, img: PHONE_PLACEHOLDER, desc: "M3, 16GB RAM" },
-  { id: 302, brand: "Apple", name: "iMac 24\" 2024", price: 159000, img: PHONE_PLACEHOLDER, desc: "M3, 512GB SSD" },
-  { id: 303, brand: "Apple", name: "iPad Pro 11\" 2024", price: 99000, img: PHONE_PLACEHOLDER, desc: "M4, 256GB" },
-];
-
-const ACCESSORIES = [
-  { id: 401, brand: "Apple", name: "AirPods Pro 2", price: 25900, img: PHONE_PLACEHOLDER, desc: "ANC, MagSafe" },
-  { id: 402, brand: "Marshall", name: "Marshall Emberton II", price: 18500, img: PHONE_PLACEHOLDER, desc: "Портативная колонка" },
-  { id: 403, brand: "Sony", name: "Sony WH-1000XM5", price: 29900, img: PHONE_PLACEHOLDER, desc: "Bluetooth, ANC" },
-];
-
-const TVS = [
-  { id: 501, brand: "Xiaomi", name: 'Телевизор ЖК 32" Xiaomi TV A32 2025 RU черный', price: 16000, img: TV_PLACEHOLDER, desc: "Full HD, Smart TV, HDMI" },
-  { id: 502, brand: "Samsung", name: 'Samsung 4K 43" Crystal', price: 37000, img: TV_PLACEHOLDER, desc: "4K UHD, HDR" },
-];
-
-const CONSOLES = [
-  { id: 601, brand: "Sony", name: "PlayStation 5", price: 68900, img: PHONE_PLACEHOLDER, desc: "Ultra HD Blu-ray" },
-  { id: 602, brand: "Microsoft", name: "Xbox Series X", price: 64800, img: PHONE_PLACEHOLDER, desc: "1TB SSD" },
-];
-
-const TOYS = [
-  { id: 701, brand: "Labubu", name: "Игрушка Labubu Pirate", price: 3300, img: PHONE_PLACEHOLDER, desc: "Коллекционная фигурка" },
 ];
 
 const USED = [
-  { id: 801, brand: "Apple", name: "iPhone 12 Pro 128GB Б/У", price: 47000, img: PHONE_PLACEHOLDER, desc: "Состояние: Отличное" },
+  { id: 401, brand: "Apple", name: "iPhone 12 Pro 128GB Б/У", price: 47000, img: PHONE_PLACEHOLDER, desc: "Состояние: Отличное" },
 ];
 
 const CAROUSEL_PRODUCTS = [
-  PHONES[0], TVS[0], MACS[0], WATCHES[0], ACCESSORIES[0],
+  PHONES[0], TVS[0], MACS[0],
 ];
 
 const SECTIONS = [
   { name: "Главная" },
   { name: "Смартфоны", products: PHONES },
-  { name: "Часы", products: WATCHES },
-  { name: "Компьютеры и планшеты", products: MACS },
-  { name: "Аксессуары и аудио", products: ACCESSORIES },
-  { name: "Телевизоры и электроника", products: TVS },
-  { name: "Игровые приставки", products: CONSOLES },
-  { name: "Игрушки", products: TOYS },
+  { name: "Телевизоры", products: TVS },
+  { name: "Компьютеры", products: MACS },
   { name: "Б/у", products: USED },
 ];
 
@@ -143,7 +116,6 @@ const App = () => {
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [vw, setVw] = useState(window.innerWidth);
   const [search, setSearch] = useState("");
-  const categoryListRef = useRef();
 
   useEffect(() => {
     const onResize = () => {
@@ -160,13 +132,6 @@ const App = () => {
       setCarouselIndex(idx => (idx + 1) % CAROUSEL_PRODUCTS.length);
     }, 3400);
     return () => clearInterval(timer);
-  }, [activeSection]);
-
-  useEffect(() => {
-    if (categoryListRef.current) {
-      const btn = categoryListRef.current.querySelector(".category-btn-active");
-      if (btn) btn.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
-    }
   }, [activeSection]);
 
   // cart utils
@@ -217,9 +182,8 @@ const App = () => {
     e.target.src = PHONE_PLACEHOLDER;
   }
 
-  const isMobile = vw < 600;
-  const mainBlockWidth = isMobile ? "98vw" : "420px";
-  const gapY = isMobile ? 19 : 32;
+  const isMobile = vw < 650;
+  const mainBlockWidth = isMobile ? "99vw" : "420px";
 
   // --- Получить товары текущего раздела и применить поиск
   const sectionProducts = SECTIONS[activeSection]?.products || [];
@@ -320,74 +284,62 @@ const App = () => {
         }}></div>
       </header>
 
-      {/* ---------- КАТЕГОРИИ: bubble bar ---------- */}
+      {/* ---------- Категории: сетка ---------- */}
       <div
-        ref={categoryListRef}
         style={{
           display: "flex",
-          gap: isMobile ? 7 : 14,
-          margin: isMobile ? "16px 2px 12px 2px" : "40px 0 18px 0",
-          padding: isMobile ? "2px 0 2px 0" : "6px 0",
-          overflowX: "auto",
-          WebkitOverflowScrolling: "touch",
-          position: "relative",
-          zIndex: 2,
-          scrollbarWidth: "none"
+          flexWrap: isMobile ? "wrap" : "nowrap",
+          justifyContent: isMobile ? "center" : "center",
+          alignItems: "center",
+          gap: isMobile ? 8 : 14,
+          margin: isMobile ? "18px 0 10px 0" : "38px 0 16px 0",
+          width: "100%",
+          maxWidth: isMobile ? "99vw" : 900,
+          padding: isMobile ? "0 4px" : 0,
+          marginLeft: "auto",
+          marginRight: "auto",
         }}
       >
         {SECTIONS.map((section, idx) => (
-          <motion.button
+          <button
             key={section.name}
             onClick={() => { setActiveSection(idx); setSearch(""); }}
-            className={idx === activeSection ? "category-btn-active" : ""}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 20 }}
             style={{
               background: idx === activeSection
-                ? `linear-gradient(100deg, ${ACCENT} 60%, #6ed0ff 100%)`
-                : "rgba(255,255,255,0.04)",
-              color: idx === activeSection ? "#fff" : "#a2b3d7",
+                ? `linear-gradient(97deg, #4ec8fa 40%, ${ACCENT} 100%)`
+                : "rgba(35, 40, 55, 0.81)",
+              color: idx === activeSection ? "#fff" : "#b4d4f6",
               border: "none",
-              borderRadius: 19,
-              padding: isMobile ? "11px 19px" : "13px 23px",
+              borderRadius: 16,
+              padding: isMobile ? "12px 0" : "10px 18px",
               fontWeight: 800,
-              fontSize: isMobile ? 14.2 : 16.5,
+              fontSize: isMobile ? 14 : 16,
+              minWidth: isMobile ? "28vw" : 110,
+              maxWidth: isMobile ? "32vw" : 180,
+              flex: isMobile ? "1 0 29vw" : "unset",
               cursor: "pointer",
               boxShadow: idx === activeSection
-                ? "0 4px 18px #41a2ff22, 0 1.5px 7px #99ddff36"
-                : "0 2px 6px #141a2d07",
-              transition: "background 0.15s, color 0.13s",
-              letterSpacing: "0.01em",
+                ? "0 4px 16px #3ca4ff2e"
+                : "0 2px 6px #1a24354a",
+              transition: "all .15s",
+              letterSpacing: ".01em",
               outline: "none",
-              marginBottom: 2,
-              borderBottom: idx === activeSection ? `3.5px solid #fff6` : "none",
+              marginBottom: isMobile ? 5 : 0,
+              borderBottom: idx === activeSection ? `2.7px solid #fff7` : "none",
               whiteSpace: "nowrap",
-              position: "relative"
+              overflow: "hidden",
+              textOverflow: "ellipsis"
             }}
           >
             {section.name}
-            {idx === activeSection && (
-              <motion.div
-                layoutId="active-cat-bubble"
-                style={{
-                  position: "absolute",
-                  left: 0, top: 0, right: 0, bottom: 0,
-                  borderRadius: 19,
-                  pointerEvents: "none",
-                  boxShadow: "0 2px 16px #4ccaff33",
-                  zIndex: -1,
-                }}
-                transition={{ type: "spring", stiffness: 340, damping: 30 }}
-              />
-            )}
-          </motion.button>
+          </button>
         ))}
       </div>
 
       {/* ----------- Поиск ----------- */}
       <div style={{
         width: "100%",
-        maxWidth: isMobile ? "96vw" : 600,
+        maxWidth: isMobile ? "97vw" : 600,
         margin: isMobile ? "0 auto 13px auto" : "0 auto 26px auto",
         padding: "0 6px",
         display: activeSection === 0 ? "none" : "block",
@@ -441,7 +393,7 @@ const App = () => {
           padding: 0,
           display: "flex",
           flexDirection: "column",
-          gap: gapY,
+          gap: isMobile ? 19 : 32,
           zIndex: 2,
           position: "relative",
           alignItems: "center"
@@ -540,7 +492,7 @@ const App = () => {
             </div>
           </motion.div>
 
-          {/* Приветственный блок */}
+          {/* Приветствие */}
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
@@ -566,7 +518,7 @@ const App = () => {
             </div>
           </motion.div>
 
-          {/* Кнопка Telegram */}
+          {/* Telegram */}
           <motion.a
             href={TELEGRAM_LINK}
             target="_blank"
@@ -602,7 +554,7 @@ const App = () => {
             Telegram
           </motion.a>
 
-          {/* Контакты + адрес */}
+          {/* Контакты */}
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
