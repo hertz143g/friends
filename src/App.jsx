@@ -16,21 +16,21 @@ function AnimatedBg() {
     };
     window.addEventListener("resize", resize);
     const blobs = [
-      { x: w*0.2, y: h*0.32, r: 260, dx: 0.13, dy: 0.09, color: "#212c43" },
-      { x: w*0.7, y: h*0.15, r: 270, dx: -0.09, dy: 0.12, color: "#192035" },
-      { x: w*0.44, y: h*0.79, r: 230, dx: 0.09, dy: -0.11, color: "#1c243d" },
-      { x: w*0.87, y: h*0.71, r: 180, dx: -0.12, dy: 0.07, color: "#2a354b" },
+      { x: w*0.2, y: h*0.32, r: 260, dx: 0.13, dy: 0.09, color: "#212c4388" },
+      { x: w*0.7, y: h*0.15, r: 270, dx: -0.09, dy: 0.12, color: "#192035a2" },
+      { x: w*0.44, y: h*0.79, r: 230, dx: 0.09, dy: -0.11, color: "#1c243dc4" },
+      { x: w*0.87, y: h*0.71, r: 180, dx: -0.12, dy: 0.07, color: "#2a354b82" },
     ];
     function draw() {
       ctx.clearRect(0,0,w,h);
       for (const b of blobs) {
         const g = ctx.createRadialGradient(b.x, b.y, b.r*0.32, b.x, b.y, b.r);
-        g.addColorStop(0, b.color);
+        g.addColorStop(0, b.color.replace("88", "cc"));
         g.addColorStop(1, b.color);
         ctx.beginPath();
         ctx.arc(b.x, b.y, b.r, 0, 2*Math.PI);
         ctx.fillStyle = g;
-        ctx.globalAlpha = 1;
+        ctx.globalAlpha = 0.88;
         ctx.fill();
         ctx.globalAlpha = 1;
         b.x += b.dx;
@@ -48,9 +48,10 @@ function AnimatedBg() {
       id="smoke-bg"
       style={{
         position: "fixed",
-        top: 0, left: 0, zIndex: -1,
+        top: 0, left: 0, zIndex: 0,
         width: "100vw", height: "100vh",
-        pointerEvents: "none"
+        pointerEvents: "none",
+        filter: "blur(13px) brightness(1.02) saturate(1.07)"
       }}
     />
   );
@@ -59,8 +60,8 @@ function AnimatedBg() {
 // ====== Данные ======
 const ACCENT = "#3ca4ff";
 const BG = "#181e28";
-const CARD = "#23293b";
-const BORDER = "#27395a";
+const CARD = "rgba(31,38,50,0.72)";
+const BORDER = "rgba(120,160,220,0.14)";
 const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
 const TELEGRAM_LINK = "https://t.me/forfriendsstore";
 const PHONE = "+7(926)591-21-65";
@@ -321,7 +322,7 @@ const App = () => {
       {/* -------- Хедер -------- */}
       <header style={{
         textAlign: "center",
-        padding: `${isMobile ? 32 : 48}px 0 0 0`,
+        padding: `${isMobile ? 35 : 50}px 0 0 0`,
         position: "relative",
         zIndex: 2,
         ...blockStyle
@@ -385,7 +386,7 @@ const App = () => {
             </span>
           </motion.button>
         </div>
-        <div style={{ height: isMobile ? 10 : 18 }} />
+        <div style={{ height: isMobile ? 15 : 25 }} />
         <div style={{
           width: "100%",
           height: 2,
@@ -395,59 +396,60 @@ const App = () => {
         }} />
       </header>
 
-      {/* -------- Информация -------- */}
+      {/* -------- Приветственный блок -------- */}
       {!activeCategory && (
         <motion.div
           style={{
             ...blockStyle,
             background: CARD,
             borderRadius: 15,
-            boxShadow: "0 2px 8px #191f2c1a",
-            padding: isMobile ? "18px 10px" : "24px 25px",
-            marginTop: 0,
-            marginBottom: 20,
+            boxShadow: "0 2px 12px #1a1f2e15",
+            padding: isMobile ? "22px 10px" : "30px 28px",
+            fontSize: isMobile ? 15.2 : 18,
             textAlign: "center",
             fontWeight: 600,
             color: "#f3f6fa",
-            fontSize: isMobile ? 15.5 : 17.5
-          }}
-        >
+            marginTop: 0,
+            letterSpacing: "0.01em",
+            lineHeight: 1.37,
+            border: `1.1px solid ${BORDER}`,
+            marginBottom: 22,
+            width: "100%"
+          }}>
           <span style={{ fontWeight: 700 }}>Добро пожаловать в <span style={{ color: ACCENT, fontWeight: 800 }}>4Friends Store</span>!</span>
           <div style={{ fontWeight: 400, color: "#b8d7ff", marginTop: 7 }}>
             Только новые товары по лучшим ценам.<br />Прокрутите вниз и выберите свой!
           </div>
-          <div style={{
-            marginTop: 14,
-            display: "flex",
-            flexDirection: "column",
-            gap: 10,
-            alignItems: "center"
-          }}>
-            <a
-              href={TELEGRAM_LINK}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 7,
-                background: ACCENT,
-                color: "#fff",
-                padding: isMobile ? "7px 14px" : "10px 22px",
-                borderRadius: 9,
-                fontWeight: 800,
-                fontSize: isMobile ? 14 : 16,
-                textDecoration: "none",
-                border: "none",
-                marginBottom: 2,
-                boxShadow: "0 2px 10px #3ca4ff22",
-              }}
-            >
-              <span role="img" aria-label="tg">✈️</span> Telegram
-            </a>
-            <div style={{ color: "#b6cafc", fontWeight: 700 }}>
-              {PHONE} · {ADDRESS}
-            </div>
+          <motion.a
+            href={TELEGRAM_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            initial={{ opacity: 0, y: 17 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15, duration: 0.39, type: "spring" }}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 10,
+              margin: "18px auto 0 auto",
+              background: ACCENT,
+              color: "#fff",
+              padding: isMobile ? "10px 14px" : "13px 25px",
+              borderRadius: 11,
+              fontWeight: 800,
+              fontSize: isMobile ? 13.5 : 16,
+              textDecoration: "none",
+              boxShadow: "0 2px 10px #3ca4ff22",
+              border: "none",
+              transition: ".18s",
+              outline: "none"
+            }}
+          >
+            <span role="img" aria-label="tg">✈️</span>
+            Telegram
+          </motion.a>
+          <div style={{ color: "#b6cafc", fontWeight: 700, marginTop: 10 }}>
+            {PHONE} · {ADDRESS}
           </div>
         </motion.div>
       )}
@@ -506,10 +508,44 @@ const App = () => {
       {/* -------- Каталог -------- */}
       {activeCategory && (
         <div style={blockStyle}>
+          {/* Назад */}
+          <button
+            onClick={() => { setActiveCategory(null); setActiveBrand(null); setSearch(""); }}
+            style={{
+              width: "100%",
+              background: "none",
+              color: ACCENT,
+              border: `1.3px solid ${ACCENT}66`,
+              borderRadius: 8,
+              padding: "12px 0",
+              fontWeight: 700,
+              fontSize: 16,
+              marginBottom: 15,
+              cursor: "pointer"
+            }}
+          >← Назад к категориям</button>
+          {/* Поиск */}
+          <input
+            type="text"
+            placeholder="Поиск товара..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "10px 14px",
+              borderRadius: 9,
+              border: `1.3px solid ${ACCENT}33`,
+              fontSize: 15.5,
+              marginBottom: 14,
+              background: "#212c3d",
+              color: "#fff",
+              outline: "none"
+            }}
+          />
           {/* Кнопки брендов */}
           <div style={{
             marginBottom: 15,
-            marginTop: 8,
+            marginTop: 0,
             display: "flex",
             overflowX: "auto",
             paddingBottom: 3,
@@ -529,40 +565,6 @@ const App = () => {
               />
             )}
           </div>
-          {/* Поиск */}
-          <input
-            type="text"
-            placeholder="Поиск товара..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            style={{
-              width: "100%",
-              padding: "10px 14px",
-              borderRadius: 9,
-              border: `1.3px solid ${ACCENT}33`,
-              fontSize: 15.5,
-              marginBottom: 14,
-              background: "#212c3d",
-              color: "#fff",
-              outline: "none"
-            }}
-          />
-          {/* Назад */}
-          <button
-            onClick={() => { setActiveCategory(null); setActiveBrand(null); setSearch(""); }}
-            style={{
-              width: "100%",
-              background: "none",
-              color: ACCENT,
-              border: `1.3px solid ${ACCENT}66`,
-              borderRadius: 8,
-              padding: "12px 0",
-              fontWeight: 700,
-              fontSize: 16,
-              marginBottom: 18,
-              cursor: "pointer"
-            }}
-          >← Назад к категориям</button>
           {/* Товары */}
           <AnimatePresence mode="wait">
             {shownProducts.length === 0 ? (
@@ -701,7 +703,7 @@ const App = () => {
         </div>
       )}
 
-      <div style={{ height: 24 }} />
+      <div style={{ height: 28 }} />
     </div>
   );
 };
