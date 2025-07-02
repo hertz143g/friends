@@ -458,7 +458,7 @@ const App = () => {
           </motion.div>
 
           <div style={{
-            fontWeight: 800, fontSize: 20, textAlign: "right", marginBottom: 18, letterSpacing: "0.01em", color: "#e5eeff"
+            fontWeight: 800, fontSize: 20, textAlign: "left", marginBottom: 18, letterSpacing: "0.01em", color: "#e5eeff"
           }}>Категории</div>
 </div>
           {/* Список категорий */}
