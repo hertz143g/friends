@@ -390,6 +390,18 @@ const App = () => {
 
       {/* -------- Главная (категории) -------- */}
       {!activeCategory && (
+        <div
+  style={{
+    maxWidth: "480px", // или сколько тебе нужно (например 360px, 400px и т.п.)
+    margin: "32px auto 0 auto",
+    padding: "24px",
+    borderRadius: "16px",
+    background: "#fff",
+    boxShadow: "0 2px 12px rgba(0,0,0,0.06)"
+  }}
+>
+
+
         <div style={{
           width: "100%",
           maxWidth: mainBlockWidth,
@@ -448,7 +460,7 @@ const App = () => {
           <div style={{
             fontWeight: 800, fontSize: 20, textAlign: "center", marginBottom: 18, letterSpacing: "0.01em", color: "#e5eeff"
           }}>Категории</div>
-
+</div>
           {/* Список категорий */}
           <div style={{
             display: "flex",
@@ -483,6 +495,7 @@ const App = () => {
           </div>
         </div>
       )}
+      
 
       {/* -------- Страница категории -------- */}
       {activeCategory && (
