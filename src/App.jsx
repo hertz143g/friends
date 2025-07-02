@@ -427,7 +427,7 @@ const App = () => {
               Добро пожаловать в <span style={{ color: ACCENT }}>4Friends Store!</span>
             </div>
             <div style={{ fontWeight: 400, color: "#b8d7ff", fontSize: isMobile ? 13 : 14, marginBottom: 10 }}>
-              Только новые товары по лучшим ценам.<br />Прокрутите вниз и выберите свой!
+              Только новые товары по лучшим ценам.<br />Прокрутите анус и выберите свой!
             </div>
             <a href={TELEGRAM_LINK} target="_blank" rel="noopener noreferrer"
               style={{
