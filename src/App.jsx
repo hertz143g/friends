@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// --- Анимированный фон ---
 function AnimatedBg() {
   useEffect(() => {
     let animId;
@@ -57,7 +56,6 @@ function AnimatedBg() {
   );
 }
 
-// --- ДАННЫЕ ---
 const ACCENT = "#3ca4ff";
 const BG = "#181e28";
 const CARD = "rgba(31,38,50,0.75)";
@@ -69,7 +67,6 @@ const ADDRESS = "Клин, ул. Победы, д. 9, «Ок’ей»";
 const TV_PLACEHOLDER = "https://tech-iq.ru/upload/iblock/324/ixntoljx6r6lclbh3pfr0ve261z3ocn2.webp";
 const PHONE_PLACEHOLDER = "data:image/svg+xml,%3Csvg width='90' height='90' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='90' height='90' rx='16' fill='%2323292f'/%3E%3Cpath d='M45 29c-6.627 0-12 5.373-12 12 0 4.418 2.99 8.166 7.092 10.338C40.613 51.736 41 52.859 41 54v2a2 2 0 1 0 4 0v-2c0-1.141.387-2.264 1.908-2.662C54.01 49.166 57 45.418 57 41c0-6.627-5.373-12-12-12zm0 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8z' fill='%23668899'/%3E%3C/svg%3E";
 
-// --- КАТЕГОРИИ ---
 const CATEGORIES = [
   { name: "Смартфоны", emoji: "📱" },
   { name: "Часы", emoji: "⌚️" },
@@ -81,7 +78,6 @@ const CATEGORIES = [
   { name: "Электроника", emoji: "🔌" }
 ];
 
-// --- ПРИМЕР ТОВАРОВ/БРЕНДОВ (для теста, расширь сам) ---
 const BRANDS = {
   "Смартфоны": [
     { name: "iPhone", products: [ { id: 1, brand: "Apple", name: "iPhone 15 Pro 128GB", price: 115000, img: PHONE_PLACEHOLDER, desc: "A17 Pro, iOS" } ] },
@@ -97,7 +93,6 @@ const BRANDS = {
 const PRODUCTS = {
   "Смартфоны": BRANDS["Смартфоны"].flatMap(b => b.products),
   "Часы": BRANDS["Часы"].flatMap(b => b.products),
-  // ...
 };
 
 function getColumns(vw) {
@@ -120,7 +115,6 @@ const App = () => {
     return () => window.removeEventListener("resize", onResize);
   }, []);
   const isMobile = vw < 600;
-  // Корзина
   const addToCart = (id) => {
     setCart(prev => {
       const exist = prev.find(item => item.id === id);
@@ -140,7 +134,6 @@ const App = () => {
   const total = cart.reduce((sum, item) => sum + (getProduct(item.id)?.price || 0) * item.qty, 0);
   const mainBlockWidth = isMobile ? "98vw" : 420;
 
-  // --- КРАСИВЫЕ КАТЕГОРИИ ---
   function CategoryCard({ cat, onClick }) {
     return (
       <motion.button
@@ -188,6 +181,137 @@ const App = () => {
     );
   }
 
+  function ProductCard({ product, qty, onPlus, onMinus }) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 18, scale: 0.97 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 38, scale: 0.93 }}
+        transition={{ duration: 0.19, type: "spring" }}
+        style={{
+          background: CARD,
+          border: `1.2px solid ${BORDER}`,
+          borderRadius: 13,
+          boxShadow: "0 3px 12px #08172b14",
+          padding: isMobile ? 9 : 14,
+          display: "flex",
+          alignItems: "center",
+          gap: isMobile ? 8 : 18,
+          position: "relative",
+          minHeight: isMobile ? 75 : 92,
+          marginBottom: isMobile ? 1 : 3,
+        }}
+      >
+        <img src={product.img} alt={product.name}
+          onError={e => (e.target.src = PHONE_PLACEHOLDER)}
+          style={{
+            width: isMobile ? 50 : 72,
+            height: isMobile ? 50 : 72,
+            objectFit: "cover",
+            borderRadius: 9,
+            background: "#22242d",
+            border: `1.1px solid ${BORDER}`,
+            marginRight: 0,
+            flexShrink: 0
+          }}
+        />
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{
+            fontWeight: 800,
+            fontSize: isMobile ? 12 : 14.5,
+            color: "#fff",
+            lineHeight: 1.1,
+            marginBottom: 1,
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis"
+          }}>{product.brand}</div>
+          <div style={{
+            fontSize: isMobile ? 10.5 : 12.5,
+            color: "#b3bfcf",
+            marginBottom: 2,
+            lineHeight: 1.18,
+            maxWidth: "100%",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap"
+          }}>{product.name}</div>
+          <div style={{
+            color: "#a6c9fa",
+            fontSize: isMobile ? 9.5 : 11.5,
+            maxWidth: "100%",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis"
+          }}>{product.desc}</div>
+        </div>
+        <div style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-end",
+          justifyContent: "center",
+          marginLeft: isMobile ? 7 : 18,
+          height: "100%",
+          minWidth: isMobile ? 70 : 90,
+          gap: 5
+        }}>
+          <div style={{
+            fontWeight: 900,
+            fontSize: isMobile ? 12 : 15.5,
+            color: ACCENT,
+            textAlign: "right"
+          }}>{product.price} ₽</div>
+          {qty === 0 ? (
+            <button onClick={onPlus}
+              style={{
+                background: ACCENT, color: "#181B23",
+                border: "none", borderRadius: 7,
+                fontWeight: 800, fontSize: isMobile ? 10.5 : 13.5,
+                padding: isMobile ? "6px 10px" : "7px 16px",
+                cursor: "pointer"
+              }}>
+              В корзину
+            </button>
+          ) : (
+            <div style={{
+              background: ACCENT, borderRadius: 8,
+              display: "flex", alignItems: "center"
+            }}>
+              <button onClick={onMinus}
+                style={{
+                  background: "none", border: "none", color: "#181B23",
+                  fontWeight: 800, fontSize: 16, padding: "3px 8px",
+                  cursor: "pointer"
+                }}>–</button>
+              <span style={{ color: "#181B23", fontWeight: 800, fontSize: 13, margin: "0 4px" }}>{qty}</span>
+              <button onClick={onPlus}
+                style={{
+                  background: "none", border: "none", color: "#181B23",
+                  fontWeight: 800, fontSize: 16, padding: "3px 8px",
+                  cursor: "pointer"
+                }}>+</button>
+            </div>
+          )}
+        </div>
+        <AnimatePresence>
+          {addAnimId === product.id && (
+            <motion.div
+              initial={{ opacity: 0, y: 14, scale: 0.7 }}
+              animate={{ opacity: 1, y: -12, scale: 1.08 }}
+              exit={{ opacity: 0, y: -22, scale: 1.19 }}
+              transition={{ duration: 0.38 }}
+              style={{
+                position: "absolute", top: 6, right: 14,
+                color: ACCENT, fontWeight: 900, fontSize: isMobile ? 12 : 16,
+                pointerEvents: "none"
+              }}
+            >+1</motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    );
+  }
+
   return (
     <div
       style={{
@@ -204,10 +328,13 @@ const App = () => {
     >
       <AnimatedBg />
 
+      {/* --- Отступ сверху --- */}
+      <div style={{ height: isMobile ? 18 : 28 }} />
+
       {/* --- Хедер --- */}
       <header style={{
         textAlign: "center",
-        padding: isMobile ? "14px 0 0 0" : "30px 0 0 0",
+        padding: 0,
         position: "relative",
         zIndex: 2,
         maxWidth: mainBlockWidth,
@@ -229,17 +356,17 @@ const App = () => {
               background: "#fff",
               margin: "0 auto 0 auto",
               display: "block",
-              boxShadow: "0 0 18px #0007",
+              boxShadow: "0 0 15px #0006"
             }}
           />
           <motion.button
-            animate={cartTotalCount > 0 ? { scale: [1, 1.13, 0.98, 1] } : { scale: 1 }}
-            transition={{ duration: 0.37, type: "spring" }}
+            animate={cartTotalCount > 0 ? { scale: [1, 1.13, 0.95, 1], rotate: [0, -11, 6, 0] } : { scale: 1, rotate: 0 }}
+            transition={{ duration: 0.39, type: "spring" }}
             onClick={() => setShowCart(true)}
             style={{
               position: "absolute",
-              right: isMobile ? -5 : -24,
-              top: isMobile ? 2 : 4,
+              right: 0,
+              top: isMobile ? 8 : 12,
               background: "transparent",
               border: "none",
               cursor: "pointer",
@@ -247,79 +374,83 @@ const App = () => {
             }}
           >
             <span style={{ position: "relative" }}>
-              <svg width={isMobile ? 25 : 28} height={isMobile ? 25 : 28} viewBox="0 0 24 24" fill={ACCENT}>
+              <svg width={isMobile ? 22 : 26} height={isMobile ? 22 : 26} viewBox="0 0 24 24" fill={ACCENT}>
                 <path d="M7 18c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm10 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm2-3H7.42l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H6.21l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H5.42l-.94-2H2V4h2l3.6 7.59-1.35 2.44C5.16 14.37 5.92 16 7.22 16H19c.553 0 1-.447 1-1s-.447-1-1-1z" />
               </svg>
               {cartTotalCount > 0 && (
                 <motion.span
                   key={cartTotalCount}
-                  initial={{ scale: 0.7, opacity: 0, y: -9 }}
+                  initial={{ scale: 0.5, opacity: 0, y: -12 }}
                   animate={{ scale: 1, opacity: 1, y: 0 }}
-                  transition={{ type: "spring", stiffness: 320, damping: 14 }}
+                  transition={{ type: "spring", stiffness: 350, damping: 12 }}
                   style={{
                     position: "absolute",
-                    top: -7,
-                    right: -15,
+                    top: -9,
+                    right: -13,
                     background: ACCENT,
                     color: "#fff",
                     borderRadius: "50%",
-                    padding: "1.5px 8px",
-                    fontSize: 11,
+                    padding: "2.5px 8px",
+                    fontSize: 12,
                     fontWeight: 700,
-                    boxShadow: "0 2px 7px #1d7ad5b0"
+                    boxShadow: "0 2px 8px #1d7ad5c0"
                   }}
-                >{cartTotalCount}</motion.span>
+                >
+                  {cartTotalCount}
+                </motion.span>
               )}
             </span>
           </motion.button>
         </div>
-        {/* Полоска */}
+        {/* --- Отступ после лого --- */}
+        <div style={{ height: isMobile ? 13 : 22 }} />
+        {/* --- Полоса --- */}
         <div style={{
           width: "100%",
           maxWidth: mainBlockWidth,
-          margin: isMobile ? "10px auto 0 auto" : "16px auto 0 auto",
-          height: 1.5,
-          background: "rgba(255,255,255,0.12)",
+          margin: "0 auto",
+          height: 1,
+          background: "rgba(255,255,255,0.14)",
           borderRadius: 2,
-        }} />
+        }}></div>
+        {/* --- Отступ после полосы --- */}
+        <div style={{ height: isMobile ? 10 : 16 }} />
       </header>
 
-      {/* --- Приветствие и инфо только на главной! --- */}
+      {/* --- Приветствие и инфо --- */}
       {!activeCategory && (
         <div style={{
-          margin: "14px auto 0 auto",
-          maxWidth: mainBlockWidth,
-          background: "rgba(32,38,55,0.92)",
-          borderRadius: 16,
-          boxShadow: "0 3px 15px #14223422",
-          border: `1.5px solid ${BORDER}`,
-          padding: isMobile ? "14px 8px" : "18px 19px"
+          background: CARD,
+          borderRadius: 19,
+          boxShadow: "0 4px 20px #18315711",
+          padding: isMobile ? "16px 10px" : "26px 28px",
+          fontSize: isMobile ? 14 : 17,
+          textAlign: "center",
+          fontWeight: 600,
+          color: "#f3f6fa",
+          margin: "0 auto 15px auto",
+          maxWidth: mainBlockWidth
         }}>
-          <div style={{
-            fontWeight: 800, fontSize: isMobile ? 15.5 : 17,
-            marginBottom: 3, color: "#fff"
-          }}>
-            Добро пожаловать в <span style={{ color: ACCENT }}>4Friends Store!</span>
+          <div style={{ fontWeight: 800, fontSize: isMobile ? 15.5 : 18, marginBottom: 6 }}>
+            Добро пожаловать в <span style={{ color: ACCENT, fontWeight: 900 }}>4Friends Store</span>!
           </div>
-          <div style={{
-            color: "#b9d8ff", fontSize: isMobile ? 12.2 : 14, fontWeight: 500,
-            marginBottom: 10, letterSpacing: ".01em"
-          }}>
-            Только новые товары по лучшим ценам. <br />Прокрутите вниз и выберите свой!
+          <div style={{ color: "#b8d7ff", fontWeight: 400, fontSize: isMobile ? 11.5 : 14 }}>
+            Только новые товары по лучшим ценам. Прокрутите вниз и выберите свой!
           </div>
-          <a href={TELEGRAM_LINK} target="_blank" rel="noopener noreferrer"
+          <a href={TELEGRAM_LINK}
+            target="_blank" rel="noopener noreferrer"
             style={{
+              display: "block",
+              margin: "15px auto 10px auto",
               background: ACCENT,
               color: "#fff",
-              padding: isMobile ? "8px 0" : "10px 0",
-              borderRadius: 8,
-              fontWeight: 700,
-              fontSize: isMobile ? 13 : 15,
+              borderRadius: 10,
+              fontWeight: 800,
+              fontSize: isMobile ? 13 : 16,
               textDecoration: "none",
-              display: "block",
-              textAlign: "center",
               boxShadow: "0 2px 12px #3ca4ff14",
-              margin: "0 0 10px 0"
+              padding: isMobile ? "9px 0" : "13px 0",
+              textAlign: "center"
             }}>
             Перейти в Telegram
           </a>
@@ -436,7 +567,7 @@ const App = () => {
           </div>
           {/* --- ТОВАРЫ --- */}
           <div style={{
-            display: "flex", flexDirection: "column", gap: 14
+            display: "flex", flexDirection: "column", gap: isMobile ? 7 : 12
           }}>
             {(BRANDS[activeCategory] ? (
               activeBrandIdx !== null
@@ -444,110 +575,15 @@ const App = () => {
                 : BRANDS[activeCategory].flatMap(b => b.products)
             ) : PRODUCTS[activeCategory] || []).filter(
               p => !search || p.name.toLowerCase().includes(search.toLowerCase())
-            ).map(product => {
-              const qty = getQtyInCart(product.id);
-              return (
-                <motion.div key={product.id}
-                  initial={{ opacity: 0, y: 18, scale: 0.97 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 38, scale: 0.93 }}
-                  transition={{ duration: 0.19, type: "spring" }}
-                  style={{
-                    background: CARD,
-                    border: `1.2px solid ${BORDER}`,
-                    borderRadius: 13,
-                    boxShadow: "0 3px 12px #08172b14",
-                    padding: isMobile ? 12 : 16,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: isMobile ? 13 : 22,
-                    position: "relative"
-                  }}
-                >
-                  <img src={product.img} alt={product.name}
-                    onError={e => (e.target.src = PHONE_PLACEHOLDER)}
-                    style={{
-                      width: isMobile ? 55 : 85,
-                      height: isMobile ? 55 : 85,
-                      objectFit: "cover",
-                      borderRadius: 9,
-                      background: "#22242d",
-                      border: `1.1px solid ${BORDER}`,
-                    }}
-                  />
-                  <div style={{ flex: 1 }}>
-                    <div style={{
-                      fontWeight: 800,
-                      fontSize: isMobile ? 14.5 : 19,
-                      color: "#fff"
-                    }}>{product.brand}</div>
-                    <div style={{
-                      fontSize: isMobile ? 12.5 : 15,
-                      color: "#b3bfcf",
-                      marginBottom: 3
-                    }}>{product.name}</div>
-                    <div style={{
-                      color: "#a6c9fa",
-                      fontSize: isMobile ? 11 : 13.2
-                    }}>{product.desc}</div>
-                    <div style={{
-                      fontWeight: 900,
-                      fontSize: isMobile ? 13.5 : 17,
-                      color: ACCENT,
-                      marginTop: 5
-                    }}>{product.price} ₽</div>
-                  </div>
-                  <div style={{ marginLeft: 7 }}>
-                    {qty === 0 ? (
-                      <button onClick={() => addToCart(product.id)}
-                        style={{
-                          background: ACCENT, color: "#181B23",
-                          border: "none", borderRadius: 8,
-                          fontWeight: 800, fontSize: isMobile ? 13 : 16,
-                          padding: isMobile ? "7px 9px" : "11px 16px",
-                          cursor: "pointer"
-                        }}>
-                        В корзину
-                      </button>
-                    ) : (
-                      <div style={{
-                        background: ACCENT, borderRadius: 8,
-                        display: "flex", alignItems: "center"
-                      }}>
-                        <button onClick={() => removeFromCart(product.id)}
-                          style={{
-                            background: "none", border: "none", color: "#181B23",
-                            fontWeight: 800, fontSize: 19, padding: "5px 8px",
-                            cursor: "pointer"
-                          }}>–</button>
-                        <span style={{ color: "#181B23", fontWeight: 800, fontSize: 15, margin: "0 6px" }}>{qty}</span>
-                        <button onClick={() => addToCart(product.id)}
-                          style={{
-                            background: "none", border: "none", color: "#181B23",
-                            fontWeight: 800, fontSize: 19, padding: "5px 8px",
-                            cursor: "pointer"
-                          }}>+</button>
-                      </div>
-                    )}
-                  </div>
-                  <AnimatePresence>
-                    {addAnimId === product.id && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 14, scale: 0.7 }}
-                        animate={{ opacity: 1, y: -22, scale: 1.08 }}
-                        exit={{ opacity: 0, y: -52, scale: 1.19 }}
-                        transition={{ duration: 0.38 }}
-                        style={{
-                          position: "absolute", top: isMobile ? 10 : 18, right: isMobile ? 12 : 25,
-                          color: ACCENT, fontWeight: 900, fontSize: isMobile ? 15 : 21,
-                          pointerEvents: "none"
-                        }}
-                      >+1</motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-              );
-            })}
+            ).map(product => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                qty={getQtyInCart(product.id)}
+                onPlus={() => addToCart(product.id)}
+                onMinus={() => removeFromCart(product.id)}
+              />
+            ))}
           </div>
         </div>
       )}
