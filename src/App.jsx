@@ -396,7 +396,7 @@ const App = () => {
     margin: "32px auto 0 auto",
     padding: "24px",
     borderRadius: "16px",
-    background: "#fff",
+    background: "#1c2333",
     boxShadow: "0 2px 12px rgba(0,0,0,0.06)"
   }}
 >
