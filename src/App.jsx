@@ -214,7 +214,7 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
                 borderRadius: 6
               }}>–</button>
             <div style={{
-              color: "#181B23",
+              color: "#fff",
               minWidth: 21,
               textAlign: "center",
               fontWeight: 900,
@@ -226,7 +226,7 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
               style={{
                 background: "none",
                 border: "none",
-                color: "#181B23",
+                color: "#fff",
                 fontSize: 20,
                 fontWeight: 900,
                 padding: "6px 10px",
