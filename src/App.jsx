@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+// --- Анимированный фон ---
 function AnimatedBg() {
   useEffect(() => {
     let animId;
@@ -56,10 +57,11 @@ function AnimatedBg() {
   );
 }
 
+// --- ДАННЫЕ ---
 const ACCENT = "#3ca4ff";
 const BG = "#181e28";
-const CARD = "rgba(31,38,50,0.75)";
-const BORDER = "rgba(120,160,220,0.13)";
+const CARD = "rgba(31,38,50,0.78)";
+const BORDER = "rgba(120,160,220,0.14)";
 const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
 const TELEGRAM_LINK = "https://t.me/forfriendsstore";
 const PHONE = "+7(926)591-21-65";
@@ -77,7 +79,6 @@ const CATEGORIES = [
   { name: "Игрушки", emoji: "🧸" },
   { name: "Электроника", emoji: "🔌" }
 ];
-
 const BRANDS = {
   "Смартфоны": [
     { name: "iPhone", products: [ { id: 1, brand: "Apple", name: "iPhone 15 Pro 128GB", price: 115000, img: PHONE_PLACEHOLDER, desc: "A17 Pro, iOS" } ] },
@@ -88,18 +89,13 @@ const BRANDS = {
     { name: "Apple Watch", products: [ { id: 11, brand: "Apple", name: "Apple Watch Series 9", price: 37000, img: PHONE_PLACEHOLDER, desc: "GPS, 45mm" } ] },
     { name: "Casio G-SHOCK", products: [ { id: 12, brand: "Casio", name: "Casio G-SHOCK DW-5600", price: 8900, img: PHONE_PLACEHOLDER, desc: "Shock Resistant" } ] }
   ],
-  // ... остальные бренды по аналогии
 };
 const PRODUCTS = {
   "Смартфоны": BRANDS["Смартфоны"].flatMap(b => b.products),
   "Часы": BRANDS["Часы"].flatMap(b => b.products),
 };
 
-function getColumns(vw) {
-  if (vw > 1024) return "repeat(3, 1fr)";
-  if (vw > 650) return "repeat(2, 1fr)";
-  return "1fr";
-}
+const mainBlockWidth = 420;
 
 const App = () => {
   const [vw, setVw] = useState(window.innerWidth);
@@ -115,16 +111,24 @@ const App = () => {
     return () => window.removeEventListener("resize", onResize);
   }, []);
   const isMobile = vw < 600;
-  const addToCart = (id) => {
+  // --- КОРЗИНА ---
+  const addToCart = id => {
     setCart(prev => {
       const exist = prev.find(item => item.id === id);
       if (exist) return prev.map(item => item.id === id ? { ...item, qty: item.qty + 1 } : item);
-      else return [...prev, { id, qty: 1 }];
+      return [...prev, { id, qty: 1 }];
     });
     setAddAnimId(id);
-    setTimeout(() => setAddAnimId(null), 500);
+    setTimeout(() => setAddAnimId(null), 370);
   };
-  const removeFromCart = id => setCart(prev => prev.filter(i => i.id !== id));
+  const removeFromCart = id => {
+    setCart(prev => {
+      const exist = prev.find(item => item.id === id);
+      if (!exist) return prev;
+      if (exist.qty === 1) return prev.filter(item => item.id !== id);
+      return prev.map(item => item.id === id ? { ...item, qty: item.qty - 1 } : item);
+    });
+  };
   const getQtyInCart = id => cart.find(i => i.id === id)?.qty || 0;
   function getProduct(id) {
     for (let arr of Object.values(PRODUCTS)) for (let p of arr) if (p.id === id) return p;
@@ -132,114 +136,72 @@ const App = () => {
   }
   const cartTotalCount = cart.reduce((a, b) => a + b.qty, 0);
   const total = cart.reduce((sum, item) => sum + (getProduct(item.id)?.price || 0) * item.qty, 0);
-  const mainBlockWidth = isMobile ? "98vw" : 420;
 
-  function CategoryCard({ cat, onClick }) {
-    return (
-      <motion.button
-        whileTap={{ scale: 0.97 }}
-        whileHover={{ scale: 1.02 }}
-        onClick={onClick}
-        style={{
-          width: "100%",
-          background: "rgba(36,46,67,0.20)",
-          borderRadius: 18,
-          border: "none",
-          boxShadow: "0 2px 16px #3ca4ff1a, 0 1px 6px #232e441a",
-          display: "flex",
-          alignItems: "center",
-          gap: 17,
-          padding: isMobile ? "14px 17px" : "19px 28px",
-          cursor: "pointer",
-          backdropFilter: "blur(7px)",
-          margin: 0,
-          transition: ".13s"
-        }}
-      >
-        <div style={{
-          background: "rgba(60,164,255,0.07)",
-          width: isMobile ? 38 : 48,
-          height: isMobile ? 38 : 48,
-          borderRadius: "50%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          boxShadow: "0 2px 10px #3ca4ff1b",
-          fontSize: isMobile ? 22 : 27,
-          flexShrink: 0,
-        }}>
-          {cat.emoji}
-        </div>
-        <span style={{
-          fontWeight: 900,
-          fontSize: isMobile ? 16 : 19,
-          color: "#f7f9fa",
-          letterSpacing: ".01em",
-          textShadow: "0 2px 12px #395ba329"
-        }}>{cat.name}</span>
-      </motion.button>
-    );
-  }
-
+  // --- КАРТОЧКА ТОВАРА ---
   function ProductCard({ product, qty, onPlus, onMinus }) {
     return (
       <motion.div
-        initial={{ opacity: 0, y: 18, scale: 0.97 }}
+        initial={{ opacity: 0, y: 14, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 38, scale: 0.93 }}
-        transition={{ duration: 0.19, type: "spring" }}
+        exit={{ opacity: 0, y: 28, scale: 0.93 }}
+        transition={{ duration: 0.17, type: "spring" }}
         style={{
           background: CARD,
-          border: `1.2px solid ${BORDER}`,
-          borderRadius: 13,
+          border: `1.1px solid ${BORDER}`,
+          borderRadius: 15,
           boxShadow: "0 3px 12px #08172b14",
-          padding: isMobile ? 9 : 14,
+          padding: isMobile ? 8 : 15,
           display: "flex",
           alignItems: "center",
-          gap: isMobile ? 8 : 18,
-          position: "relative",
-          minHeight: isMobile ? 75 : 92,
-          marginBottom: isMobile ? 1 : 3,
+          gap: isMobile ? 10 : 24,
+          minHeight: isMobile ? 67 : 95,
+          marginBottom: 1
         }}
       >
         <img src={product.img} alt={product.name}
           onError={e => (e.target.src = PHONE_PLACEHOLDER)}
           style={{
-            width: isMobile ? 50 : 72,
-            height: isMobile ? 50 : 72,
+            width: isMobile ? 48 : 70,
+            height: isMobile ? 48 : 70,
             objectFit: "cover",
-            borderRadius: 9,
-            background: "#22242d",
-            border: `1.1px solid ${BORDER}`,
-            marginRight: 0,
+            borderRadius: 10,
+            background: "#21242b",
+            border: `1px solid ${BORDER}`,
             flexShrink: 0
           }}
         />
-        <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{
+          flex: 1,
+          minWidth: 0,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          justifyContent: "center",
+        }}>
           <div style={{
-            fontWeight: 800,
+            fontWeight: 900,
             fontSize: isMobile ? 12 : 14.5,
             color: "#fff",
-            lineHeight: 1.1,
             marginBottom: 1,
+            maxWidth: "100%",
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis"
           }}>{product.brand}</div>
           <div style={{
-            fontSize: isMobile ? 10.5 : 12.5,
+            fontSize: isMobile ? 10.5 : 12,
             color: "#b3bfcf",
             marginBottom: 2,
-            lineHeight: 1.18,
-            maxWidth: "100%",
+            lineHeight: 1.2,
+            maxWidth: "98%",
+            whiteSpace: "nowrap",
             overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap"
+            textOverflow: "ellipsis"
           }}>{product.name}</div>
           <div style={{
             color: "#a6c9fa",
             fontSize: isMobile ? 9.5 : 11.5,
-            maxWidth: "100%",
+            maxWidth: "98%",
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis"
@@ -249,15 +211,14 @@ const App = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "flex-end",
-          justifyContent: "center",
-          marginLeft: isMobile ? 7 : 18,
-          height: "100%",
-          minWidth: isMobile ? 70 : 90,
-          gap: 5
+          justifyContent: "space-between",
+          height: isMobile ? 46 : 62,
+          minWidth: isMobile ? 68 : 90,
+          marginLeft: isMobile ? 6 : 14
         }}>
           <div style={{
             fontWeight: 900,
-            fontSize: isMobile ? 12 : 15.5,
+            fontSize: isMobile ? 13 : 15.5,
             color: ACCENT,
             textAlign: "right"
           }}>{product.price} ₽</div>
@@ -265,17 +226,19 @@ const App = () => {
             <button onClick={onPlus}
               style={{
                 background: ACCENT, color: "#181B23",
-                border: "none", borderRadius: 7,
-                fontWeight: 800, fontSize: isMobile ? 10.5 : 13.5,
-                padding: isMobile ? "6px 10px" : "7px 16px",
-                cursor: "pointer"
+                border: "none", borderRadius: 8,
+                fontWeight: 800, fontSize: isMobile ? 10.5 : 13,
+                padding: isMobile ? "5px 9px" : "8px 16px",
+                cursor: "pointer",
+                marginTop: 2
               }}>
               В корзину
             </button>
           ) : (
             <div style={{
               background: ACCENT, borderRadius: 8,
-              display: "flex", alignItems: "center"
+              display: "flex", alignItems: "center",
+              marginTop: 2
             }}>
               <button onClick={onMinus}
                 style={{
@@ -296,12 +259,12 @@ const App = () => {
         <AnimatePresence>
           {addAnimId === product.id && (
             <motion.div
-              initial={{ opacity: 0, y: 14, scale: 0.7 }}
-              animate={{ opacity: 1, y: -12, scale: 1.08 }}
-              exit={{ opacity: 0, y: -22, scale: 1.19 }}
-              transition={{ duration: 0.38 }}
+              initial={{ opacity: 0, y: 8, scale: 0.7 }}
+              animate={{ opacity: 1, y: -8, scale: 1.08 }}
+              exit={{ opacity: 0, y: -18, scale: 1.19 }}
+              transition={{ duration: 0.33 }}
               style={{
-                position: "absolute", top: 6, right: 14,
+                position: "absolute", top: 9, right: 14,
                 color: ACCENT, fontWeight: 900, fontSize: isMobile ? 12 : 16,
                 pointerEvents: "none"
               }}
@@ -309,6 +272,41 @@ const App = () => {
           )}
         </AnimatePresence>
       </motion.div>
+    );
+  }
+
+  function CategoryCard({ cat, onClick }) {
+    return (
+      <motion.button
+        whileTap={{ scale: 0.98 }}
+        whileHover={{ scale: 1.015 }}
+        onClick={onClick}
+        style={{
+          width: "100%",
+          background: "rgba(36,46,67,0.24)",
+          borderRadius: 14,
+          border: "none",
+          boxShadow: "0 2px 12px #3ca4ff12, 0 1px 6px #232e4410",
+          display: "flex",
+          alignItems: "center",
+          gap: isMobile ? 17 : 23,
+          padding: isMobile ? "15px 19px" : "22px 32px",
+          cursor: "pointer",
+          backdropFilter: "blur(8px)",
+          margin: 0,
+          transition: ".13s",
+          fontSize: isMobile ? 15 : 18,
+          fontWeight: 800,
+          color: "#fff",
+          letterSpacing: ".02em"
+        }}
+      >
+        <span style={{
+          fontSize: isMobile ? 23 : 27,
+          marginRight: 7
+        }}>{cat.emoji}</span>
+        {cat.name}
+      </motion.button>
     );
   }
 
@@ -323,15 +321,15 @@ const App = () => {
         fontFamily: "system-ui,sans-serif",
         overflowX: "hidden",
         position: "relative",
-        paddingBottom: 38,
+        paddingBottom: 40
       }}
     >
       <AnimatedBg />
 
-      {/* --- Отступ сверху --- */}
-      <div style={{ height: isMobile ? 18 : 28 }} />
+      {/* --- ОТСТУП СВЕРХУ --- */}
+      <div style={{ height: isMobile ? 19 : 28 }} />
 
-      {/* --- Хедер --- */}
+      {/* --- ХЕДЕР --- */}
       <header style={{
         textAlign: "center",
         padding: 0,
@@ -348,13 +346,13 @@ const App = () => {
         }}>
           <img src={logoUrl} alt="logo"
             style={{
-              width: isMobile ? 48 : 58,
-              height: isMobile ? 48 : 58,
+              width: isMobile ? 46 : 62,
+              height: isMobile ? 46 : 62,
               objectFit: "cover",
               borderRadius: "50%",
-              border: `2.2px solid ${ACCENT}`,
+              border: `2.5px solid ${ACCENT}`,
               background: "#fff",
-              margin: "0 auto 0 auto",
+              margin: "0 auto",
               display: "block",
               boxShadow: "0 0 15px #0006"
             }}
