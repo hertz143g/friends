@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 // ---------- Анимированный фон ----------
@@ -57,119 +57,79 @@ function AnimatedBg() {
   );
 }
 
-// ------------ Данные ------------
-const ACCENT = "#3ca4ff";
-const BG = "#181e28";
-const CARD = "rgba(31,38,50,0.72)";
-const BORDER = "rgba(120,160,220,0.14)";
-const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
-const TELEGRAM_LINK = "https://t.me/forfriendsstore";
-const PHONE = "+7(926)591-21-65";
-const ADDRESS = "Клин, ул. Победы, д. 9, «Ок’ей»";
-const TV_PLACEHOLDER = "https://tech-iq.ru/upload/iblock/324/ixntoljx6r6lclbh3pfr0ve261z3ocn2.webp";
-const PHONE_PLACEHOLDER = "data:image/svg+xml,%3Csvg width='90' height='90' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='90' height='90' rx='16' fill='%2323292f'/%3E%3Cpath d='M45 29c-6.627 0-12 5.373-12 12 0 4.418 2.99 8.166 7.092 10.338C40.613 51.736 41 52.859 41 54v2a2 2 0 1 0 4 0v-2c0-1.141.387-2.264 1.908-2.662C54.01 49.166 57 45.418 57 41c0-6.627-5.373-12-12-12zm0 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8z' fill='%23668899'/%3E%3C/svg%3E";
+// ---------- Категории + эмодзи ----------
+const CATEGORY_ICONS = {
+  "Главная": "🏠",
+  "Смартфоны": "📱",
+  "Телевизоры": "📺",
+  "Планшеты": "📲",
+  "Компьютеры и ноутбуки": "💻",
+  "Наушники и аксессуары": "🎧",
+  "Часы и браслеты": "⌚️",
+  "Игрушки": "🧸",
+  "Б/у устройства": "♻️",
+  "Для дома": "🏡"
+};
 
-const PHONES = [
-  { id: 101, brand: "Apple", name: "iPhone 15 Pro 128GB Серый", price: 115000, img: PHONE_PLACEHOLDER, desc: "A17 Pro, 3 камеры, iOS" },
-  { id: 102, brand: "Samsung", name: "Samsung Galaxy S24 Ultra 256GB Черный", price: 98000, img: PHONE_PLACEHOLDER, desc: "Snapdragon 8 Gen3, AMOLED" },
-  { id: 103, brand: "Xiaomi", name: "Xiaomi Redmi Note 13 Pro 512GB Синий", price: 34000, img: PHONE_PLACEHOLDER, desc: "512ГБ, 200Мп камера" },
-];
-
-const WATCHES = [
-  { id: 201, brand: "Apple", name: "Apple Watch Series 9", price: 37000, img: PHONE_PLACEHOLDER, desc: "45mm, GPS" },
-  { id: 202, brand: "Casio", name: "Casio G-SHOCK DW-5600", price: 8900, img: PHONE_PLACEHOLDER, desc: "Shock Resistant" },
-  { id: 203, brand: "Garmin", name: "Garmin Forerunner 255", price: 28500, img: PHONE_PLACEHOLDER, desc: "Спорт-часы" },
-];
-
-const MACS = [
-  { id: 301, brand: "Apple", name: "MacBook Air 15 2024", price: 127000, img: PHONE_PLACEHOLDER, desc: "M3, 16GB RAM" },
-  { id: 302, brand: "Apple", name: "iMac 24\" 2024", price: 159000, img: PHONE_PLACEHOLDER, desc: "M3, 512GB SSD" },
-  { id: 303, brand: "Apple", name: "iPad Pro 11\" 2024", price: 99000, img: PHONE_PLACEHOLDER, desc: "M4, 256GB" },
-];
-
-const ACCESSORIES = [
-  { id: 401, brand: "Apple", name: "AirPods Pro 2", price: 25900, img: PHONE_PLACEHOLDER, desc: "ANC, MagSafe" },
-  { id: 402, brand: "Marshall", name: "Marshall Emberton II", price: 18500, img: PHONE_PLACEHOLDER, desc: "Портативная колонка" },
-  { id: 403, brand: "Sony", name: "Sony WH-1000XM5", price: 29900, img: PHONE_PLACEHOLDER, desc: "Bluetooth, ANC" },
-];
-
-const TVS = [
-  { id: 501, brand: "Xiaomi", name: 'Телевизор ЖК 32" Xiaomi TV A32 2025 RU черный', price: 16000, img: TV_PLACEHOLDER, desc: "Full HD, Smart TV, HDMI" },
-  { id: 502, brand: "Samsung", name: 'Samsung 4K 43" Crystal', price: 37000, img: TV_PLACEHOLDER, desc: "4K UHD, HDR" },
-];
-
-const CONSOLES = [
-  { id: 601, brand: "Sony", name: "PlayStation 5", price: 68900, img: PHONE_PLACEHOLDER, desc: "Ultra HD Blu-ray" },
-  { id: 602, brand: "Microsoft", name: "Xbox Series X", price: 64800, img: PHONE_PLACEHOLDER, desc: "1TB SSD" },
-];
-
-const TOYS = [
-  { id: 701, brand: "Labubu", name: "Игрушка Labubu Pirate", price: 3300, img: PHONE_PLACEHOLDER, desc: "Коллекционная фигурка" },
-];
-
-const USED = [
-  { id: 801, brand: "Apple", name: "iPhone 12 Pro 128GB Б/У", price: 47000, img: PHONE_PLACEHOLDER, desc: "Состояние: Отличное" },
-];
-
-const CAROUSEL_PRODUCTS = [
-  PHONES[0], TVS[0], MACS[0], WATCHES[0], ACCESSORIES[0],
-];
+// --- Демо-товары (замени на свои массивы!) ---
+const PHONES = [{ id: 1, brand: "Apple", name: "iPhone 15 Pro", price: 123000, desc: "Флагман" }];
+const TVS = [{ id: 2, brand: "Xiaomi", name: "TV 43 A1", price: 23000, desc: "4K, Smart TV" }];
+const TABLETS = [{ id: 3, brand: "Samsung", name: "Tab S9", price: 48000, desc: "AMOLED" }];
+const MACS = [{ id: 4, brand: "Apple", name: "MacBook Air", price: 109000, desc: "M2" }];
+const HEADPHONES = [{ id: 5, brand: "Sony", name: "WH-1000XM5", price: 22000, desc: "Шумодав" }];
+const WATCHES = [{ id: 6, brand: "Apple", name: "Watch S9", price: 39000, desc: "GPS" }];
+const TOYS = [{ id: 7, brand: "LEGO", name: "City Police", price: 4500, desc: "Конструктор" }];
+const USED = [{ id: 8, brand: "Apple", name: "iPhone 12 б/у", price: 45000, desc: "Б/у" }];
+const HOME = [{ id: 9, brand: "Xiaomi", name: "Robot Vacuum", price: 17000, desc: "Робот-пылесос" }];
 
 const SECTIONS = [
   { name: "Главная" },
   { name: "Смартфоны", products: PHONES },
-  { name: "Часы", products: WATCHES },
-  { name: "Компьютеры и планшеты", products: MACS },
-  { name: "Аксессуары и аудио", products: ACCESSORIES },
-  { name: "Телевизоры и электроника", products: TVS },
-  { name: "Игровые приставки", products: CONSOLES },
+  { name: "Телевизоры", products: TVS },
+  { name: "Планшеты", products: TABLETS },
+  { name: "Компьютеры и ноутбуки", products: MACS },
+  { name: "Наушники и аксессуары", products: HEADPHONES },
+  { name: "Часы и браслеты", products: WATCHES },
   { name: "Игрушки", products: TOYS },
-  { name: "Б/у", products: USED },
+  { name: "Б/у устройства", products: USED },
+  { name: "Для дома", products: HOME },
 ];
 
-function getColumns(vw) {
-  if (vw > 1024) return "repeat(3, 1fr)";
-  if (vw > 650) return "repeat(2, 1fr)";
-  return "1fr";
-}
+const ACCENT = "#3ca4ff";
+const BG = "#181e28";
+const CARD = "rgba(31,38,50,0.83)";
+const BORDER = "rgba(120,160,220,0.13)";
+const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
 
 const App = () => {
   const [activeSection, setActiveSection] = useState(0);
+  const [vw, setVw] = useState(window.innerWidth);
   const [cart, setCart] = useState([]);
   const [showCart, setShowCart] = useState(false);
   const [cartAnim, setCartAnim] = useState(false);
   const [addAnimId, setAddAnimId] = useState(null);
-  const [columns, setColumns] = useState(getColumns(window.innerWidth));
-  const [carouselIndex, setCarouselIndex] = useState(0);
-  const [vw, setVw] = useState(window.innerWidth);
   const [search, setSearch] = useState("");
-  const categoryListRef = useRef();
 
   useEffect(() => {
-    const onResize = () => {
-      setVw(window.innerWidth);
-      setColumns(getColumns(window.innerWidth));
-    };
+    const onResize = () => setVw(window.innerWidth);
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
+  const isMobile = vw < 650;
+  const mainBlockWidth = isMobile ? "98vw" : "430px";
 
-  useEffect(() => {
-    if (activeSection !== 0) return;
-    const timer = setInterval(() => {
-      setCarouselIndex(idx => (idx + 1) % CAROUSEL_PRODUCTS.length);
-    }, 3400);
-    return () => clearInterval(timer);
-  }, [activeSection]);
+  // Поиск по товарам
+  const sectionProducts = SECTIONS[activeSection]?.products || [];
+  const filteredProducts = search.trim().length === 0
+    ? sectionProducts
+    : sectionProducts.filter(
+        p =>
+          p.brand.toLowerCase().includes(search.toLowerCase()) ||
+          p.name.toLowerCase().includes(search.toLowerCase()) ||
+          (p.desc && p.desc.toLowerCase().includes(search.toLowerCase()))
+      );
 
-  useEffect(() => {
-    if (categoryListRef.current) {
-      const btn = categoryListRef.current.querySelector(".category-btn-active");
-      if (btn) btn.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
-    }
-  }, [activeSection]);
-
-  // cart utils
+  // Корзина
   const cartTotalCount = cart.reduce((a, b) => a + b.qty, 0);
   const addToCart = (id) => {
     setCart((prev) => {
@@ -207,67 +167,26 @@ const App = () => {
     0
   );
 
-  function nextCarousel() {
-    setCarouselIndex((carouselIndex + 1) % CAROUSEL_PRODUCTS.length);
-  }
-  function prevCarousel() {
-    setCarouselIndex((carouselIndex - 1 + CAROUSEL_PRODUCTS.length) % CAROUSEL_PRODUCTS.length);
-  }
-  function onImgError(e) {
-    e.target.src = PHONE_PLACEHOLDER;
-  }
-
-  const isMobile = vw < 600;
-  const mainBlockWidth = isMobile ? "98vw" : "420px";
-  const gapY = isMobile ? 19 : 32;
-
-  // --- Получить товары текущего раздела и применить поиск
-  const sectionProducts = SECTIONS[activeSection]?.products || [];
-  const filteredProducts = search.trim().length === 0
-    ? sectionProducts
-    : sectionProducts.filter(
-        p =>
-          p.brand.toLowerCase().includes(search.toLowerCase()) ||
-          p.name.toLowerCase().includes(search.toLowerCase()) ||
-          (p.desc && p.desc.toLowerCase().includes(search.toLowerCase()))
-      );
-
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        width: "100vw",
-        background: BG,
-        color: "#fff",
-        fontFamily: "system-ui,sans-serif",
-        position: "relative",
-        overflowX: "hidden",
-      }}
-    >
+    <div style={{
+      minHeight: "100vh",
+      background: BG,
+      color: "#fff",
+      fontFamily: "system-ui,sans-serif",
+      position: "relative",
+      overflowX: "hidden"
+    }}>
       <AnimatedBg />
 
       {/* ---------- Хедер ---------- */}
-      <header style={{
-        textAlign: "center",
-        padding: isMobile ? "10px 0 0 0" : "18px 0 0 0",
-        position: "relative",
-        zIndex: 2
-      }}>
-        <img
-          src={logoUrl}
-          alt="logo"
+      <header style={{ textAlign: "center", padding: isMobile ? "13px 0 2px 0" : "22px 0 0 0", position: "relative" }}>
+        <img src={logoUrl} alt="logo"
           style={{
-            width: isMobile ? 48 : 62,
-            height: isMobile ? 48 : 62,
-            objectFit: "cover",
-            borderRadius: "50%",
+            width: isMobile ? 52 : 66, height: isMobile ? 52 : 66,
+            objectFit: "cover", borderRadius: "50%",
             border: `2.5px solid ${ACCENT}`,
-            background: "#fff",
-            margin: "0 auto",
-            display: "block",
-            boxShadow: "0 0 18px #0007",
-          }}
-        />
+            background: "#fff", margin: "0 auto", boxShadow: "0 0 18px #0007"
+          }} />
         <motion.button
           animate={cartAnim ? { scale: [1, 1.22, 0.9, 1], rotate: [0, -13, 6, 0] } : { scale: 1, rotate: 0 }}
           transition={{ duration: 0.4, type: "spring" }}
@@ -284,7 +203,7 @@ const App = () => {
         >
           <span style={{ position: "relative" }}>
             <svg width={isMobile ? 23 : 28} height={isMobile ? 23 : 28} viewBox="0 0 24 24" fill={ACCENT}>
-              <path d="M7 18c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm10 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm2-3H7.42l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H6.21l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H5.42l-.94-2H2V4h2l3.6 7.59-1.35 2.44C5.16 14.37 5.92 16 7.22 16H19c.553 0 1-.447 1-1s-.447-1-1-1z" />
+              <path d="M7 18c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm10 0c-1.104 0-2 .896-2 2s-.896 2 2 2 2-.896 2-2-.896-2-2-2zm2-3H7.42l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H6.21l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H5.42l-.94-2H2V4h2l3.6 7.59-1.35 2.44C5.16 14.37 5.92 16 7.22 16H19c.553 0 1-.447 1-1s-.447-1-1-1z" />
             </svg>
             {cartTotalCount > 0 && (
               <motion.span
@@ -310,85 +229,65 @@ const App = () => {
             )}
           </span>
         </motion.button>
-        <div style={{
-          width: "100%",
-          maxWidth: mainBlockWidth,
-          margin: isMobile ? "13px auto 0 auto" : "22px auto 0 auto",
-          height: 1,
-          background: "rgba(255,255,255,0.13)",
-          borderRadius: 2,
-        }}></div>
       </header>
 
-      {/* ---------- КАТЕГОРИИ: bubble bar ---------- */}
+      {/* ---------- Категории ---------- */}
       <div
-        ref={categoryListRef}
         style={{
-          display: "flex",
-          gap: isMobile ? 7 : 14,
-          margin: isMobile ? "16px 2px 12px 2px" : "40px 0 18px 0",
-          padding: isMobile ? "2px 0 2px 0" : "6px 0",
-          overflowX: "auto",
-          WebkitOverflowScrolling: "touch",
-          position: "relative",
-          zIndex: 2,
-          scrollbarWidth: "none"
-        }}
-      >
+          display: "grid",
+          gridTemplateColumns: isMobile ? "1fr 1fr" : `repeat(${SECTIONS.length}, 1fr)`,
+          gap: isMobile ? 11 : 18,
+          width: isMobile ? "97vw" : "88vw",
+          margin: "24px auto 16px auto",
+          maxWidth: isMobile ? 420 : 1100,
+        }}>
         {SECTIONS.map((section, idx) => (
           <motion.button
+            whileTap={{ scale: 0.96 }}
+            whileHover={isMobile ? {} : { scale: 1.04, boxShadow: "0 4px 26px #59b4ff31" }}
             key={section.name}
             onClick={() => { setActiveSection(idx); setSearch(""); }}
-            className={idx === activeSection ? "category-btn-active" : ""}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 20 }}
             style={{
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
               background: idx === activeSection
-                ? `linear-gradient(100deg, ${ACCENT} 60%, #6ed0ff 100%)`
-                : "rgba(255,255,255,0.04)",
-              color: idx === activeSection ? "#fff" : "#a2b3d7",
-              border: "none",
-              borderRadius: 19,
-              padding: isMobile ? "11px 19px" : "13px 23px",
+                ? "linear-gradient(98deg, #3ca4ff 30%, #69d2fa 100%)"
+                : "rgba(34,42,57,0.86)",
+              color: idx === activeSection ? "#fff" : "#bedbfa",
+              border: "none", borderRadius: 15,
               fontWeight: 800,
-              fontSize: isMobile ? 14.2 : 16.5,
-              cursor: "pointer",
+              fontSize: isMobile ? 14.5 : 16.7,
+              height: isMobile ? 48 : 54,
               boxShadow: idx === activeSection
-                ? "0 4px 18px #41a2ff22, 0 1.5px 7px #99ddff36"
-                : "0 2px 6px #141a2d07",
-              transition: "background 0.15s, color 0.13s",
-              letterSpacing: "0.01em",
+                ? "0 8px 26px #3ca4ff17, 0 1px 7px #1671ff21"
+                : "0 2px 8px #1a253949",
+              transition: "all .13s",
               outline: "none",
-              marginBottom: 2,
-              borderBottom: idx === activeSection ? `3.5px solid #fff6` : "none",
-              whiteSpace: "nowrap",
-              position: "relative"
+              cursor: "pointer",
+              margin: 0,
+              padding: 0,
+              minWidth: isMobile ? 0 : 108,
+              position: "relative",
+              overflow: "hidden",
+              zIndex: 3
             }}
           >
-            {section.name}
-            {idx === activeSection && (
-              <motion.div
-                layoutId="active-cat-bubble"
-                style={{
-                  position: "absolute",
-                  left: 0, top: 0, right: 0, bottom: 0,
-                  borderRadius: 19,
-                  pointerEvents: "none",
-                  boxShadow: "0 2px 16px #4ccaff33",
-                  zIndex: -1,
-                }}
-                transition={{ type: "spring", stiffness: 340, damping: 30 }}
-              />
-            )}
+            <span style={{
+              fontSize: isMobile ? 22 : 27,
+              marginRight: 6,
+              filter: idx === activeSection ? "drop-shadow(0 1px 5px #6bdcff60)" : "none"
+            }}>{CATEGORY_ICONS[section.name]}</span>
+            <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              {section.name}
+            </span>
           </motion.button>
         ))}
       </div>
 
-      {/* ----------- Поиск ----------- */}
+      {/* ---------- Поиск ---------- */}
       <div style={{
         width: "100%",
-        maxWidth: isMobile ? "96vw" : 600,
-        margin: isMobile ? "0 auto 13px auto" : "0 auto 26px auto",
+        maxWidth: isMobile ? "98vw" : 600,
+        margin: isMobile ? "0 auto 12px auto" : "0 auto 22px auto",
         padding: "0 6px",
         display: activeSection === 0 ? "none" : "block",
         position: "relative",
@@ -437,435 +336,235 @@ const App = () => {
         <div style={{
           maxWidth: mainBlockWidth,
           margin: "0 auto",
-          width: "100%",
-          padding: 0,
           display: "flex",
           flexDirection: "column",
-          gap: gapY,
-          zIndex: 2,
-          position: "relative",
-          alignItems: "center"
+          alignItems: "center",
+          gap: isMobile ? 17 : 27,
         }}>
-          {/* Карусель */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.07, duration: 0.55, type: "spring" }}
-            style={{
-              width: "100%",
-              background: CARD,
-              borderRadius: 21,
-              padding: isMobile ? "11px 3px 19px 3px" : "28px 22px",
-              boxShadow: "0 4px 30px #1c2d4725, 0 1px 10px #13233044",
-              border: `1.3px solid ${BORDER}`,
-              margin: "0 auto",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 10
-            }}>
-            <div style={{
-              fontWeight: 800,
-              fontSize: isMobile ? 15 : 18,
-              marginBottom: 5,
-              textAlign: "center",
-              letterSpacing: "0.01em",
-              color: "#fff"
-            }}>Топовые товары</div>
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 8,
-              width: "100%",
-              margin: 0,
-            }}>
-              <button onClick={prevCarousel} style={{ background: "none", border: "none", fontSize: 26, color: ACCENT, cursor: "pointer" }}>‹</button>
-              <motion.div
-                key={carouselIndex}
-                initial={{ opacity: 0, x: 48 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -48 }}
-                transition={{ type: "spring", duration: 0.32 }}
-                style={{
-                  background: "rgba(32,36,47,0.83)",
-                  borderRadius: 17,
-                  boxShadow: "0 3px 14px #181e281c",
-                  padding: isMobile ? "13px 8px" : "18px 18px",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  minWidth: isMobile ? 135 : 195,
-                  maxWidth: isMobile ? 210 : 260,
-                  width: "100%",
-                  border: `1px solid ${BORDER}`
-                }}
-              >
-                <img src={CAROUSEL_PRODUCTS[carouselIndex].img}
-                  onError={onImgError}
-                  alt="" style={{
-                  width: isMobile ? 52 : 82,
-                  height: isMobile ? 52 : 82,
-                  borderRadius: 11,
-                  objectFit: "cover",
-                  marginBottom: 7,
-                  background: "#21242b",
-                  border: `1.2px solid ${BORDER}`,
-                }} />
-                <div style={{ fontWeight: 800, fontSize: isMobile ? 13.5 : 16, marginBottom: 2 }}>{CAROUSEL_PRODUCTS[carouselIndex].brand}</div>
-                <div style={{
-                  fontSize: isMobile ? 11 : 13,
-                  color: "#b2bfd7",
-                  marginBottom: 4,
-                  textAlign: "center",
-                  minHeight: isMobile ? 18 : 32,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center"
-                }}>{CAROUSEL_PRODUCTS[carouselIndex].name}</div>
-                <div style={{ fontWeight: 800, fontSize: isMobile ? 12.5 : 15, marginBottom: 5, color: ACCENT }}>{CAROUSEL_PRODUCTS[carouselIndex].price} ₽</div>
-                <button onClick={() => addToCart(CAROUSEL_PRODUCTS[carouselIndex].id)}
-                  style={{
-                    background: ACCENT,
-                    color: "#181B23",
-                    border: "none",
-                    borderRadius: 9,
-                    fontWeight: 700,
-                    padding: isMobile ? "6px 11px" : "10px 15px",
-                    cursor: "pointer",
-                    fontSize: isMobile ? 12 : 14,
-                  }}>В корзину</button>
-              </motion.div>
-              <button onClick={nextCarousel} style={{ background: "none", border: "none", fontSize: 26, color: ACCENT, cursor: "pointer" }}>›</button>
-            </div>
-          </motion.div>
-
-          {/* Приветственный блок */}
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.14, duration: 0.52, type: "spring" }}
-            style={{
-              background: CARD,
-              borderRadius: 15,
-              boxShadow: "0 2px 9px #1a1f2e15",
-              padding: isMobile ? "16px 7px" : "30px 26px",
-              fontSize: isMobile ? 15 : 18,
-              textAlign: "center",
-              fontWeight: 600,
-              color: "#f3f6fa",
-              marginTop: 0,
-              letterSpacing: "0.01em",
-              lineHeight: 1.37,
-              border: `1.1px solid ${BORDER}`,
-              width: "100%"
-            }}>
-            <span style={{ fontWeight: 700 }}>Добро пожаловать в <span style={{ color: ACCENT, fontWeight: 800 }}>4Friends Store</span>!</span>
-            <div style={{ fontWeight: 400, color: "#b8d7ff", marginTop: 7 }}>
-              Только новые товары по лучшим ценам.<br />Прокрутите вниз и выберите свой!
-            </div>
-          </motion.div>
-
-          {/* Кнопка Telegram */}
-          <motion.a
-            href={TELEGRAM_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-            initial={{ opacity: 0, y: 17 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.19, duration: 0.46, type: "spring" }}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 10,
-              margin: "0 auto",
-              background: ACCENT,
-              color: "#fff",
-              padding: isMobile ? "10px 14px" : "15px 25px",
-              borderRadius: 11,
-              fontWeight: 800,
-              fontSize: isMobile ? 13.5 : 16,
-              textDecoration: "none",
-              boxShadow: "0 2px 10px #3ca4ff22",
-              border: "none",
-              transition: ".18s",
-              outline: "none",
-              width: "100%",
-              maxWidth: "100%"
-            }}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" height={isMobile ? 17 : 23} width={isMobile ? 17 : 23} viewBox="0 0 24 24" style={{ marginRight: 8, flexShrink: 0 }}>
-              <circle cx="12" cy="12" r="12" fill="#229ed9"/>
-              <path fill="#fff" d="M18.84 7.3a.79.79 0 0 0-.85-.08l-10.44 4.6a.82.82 0 0 0 .05 1.5l2.45.95 1.07 3.17a.8.8 0 0 0 .74.54h.03a.8.8 0 0 0 .74-.57l1.03-3.25 4.06-4.12a.81.81 0 0 0-.13-1.19z"/>
-            </svg>
-            Telegram
-          </motion.a>
-
-          {/* Контакты + адрес */}
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.26, duration: 0.48, type: "spring" }}
-            style={{
-              background: CARD,
-              borderRadius: 12,
-              padding: isMobile ? "15px 7px" : "24px 20px",
-              boxShadow: "0 2px 12px #1d26374c",
-              color: "#e9f3ff",
-              textAlign: "center",
-              display: "flex",
-              flexDirection: "column",
-              gap: isMobile ? 8 : 14,
-              fontSize: isMobile ? 13 : 16,
-              border: `1px solid ${BORDER}`,
-              width: "100%"
-            }}>
-            <div style={{ fontWeight: 800, fontSize: isMobile ? 13.5 : 16.5, color: ACCENT, marginBottom: 2 }}>
-              Контакты
-            </div>
-            <div>
-              <span style={{ color: "#b6cafc" }}>Телефон:</span>{" "}
-              <a href={`tel:${PHONE}`} style={{ color: "#fff", textDecoration: "none", fontWeight: 700 }}>{PHONE}</a>
-            </div>
-            <div>
-              <span style={{ color: "#b6cafc" }}>Адрес:</span>{" "}
-              <span style={{ color: "#fff", fontWeight: 700 }}>{ADDRESS}</span>
-            </div>
-            <div style={{ fontSize: isMobile ? 10.5 : 13, color: "#b5e1ff", marginTop: 2 }}>
-              Пишите и звоните — мы всегда на связи!
-            </div>
-          </motion.div>
+          {/* Все блоки одинаковой ширины! */}
+          <div style={{
+            width: "100%",
+            background: CARD,
+            borderRadius: 20,
+            boxShadow: "0 4px 24px #1c2d471c",
+            border: `1.6px solid ${BORDER}`,
+            padding: isMobile ? "16px 8px" : "32px 28px",
+            fontSize: isMobile ? 16 : 18,
+            textAlign: "center",
+            fontWeight: 600,
+            color: "#f3f6fa",
+            letterSpacing: "0.01em",
+            lineHeight: 1.45,
+            margin: 0,
+          }}>
+            Добро пожаловать в <span style={{ color: ACCENT, fontWeight: 800 }}>4Friends Store</span>!<br />
+            <span style={{ fontWeight: 400, color: "#b8d7ff" }}>Только новые товары по лучшим ценам.<br />Прокрутите вниз и выберите свой!</span>
+          </div>
+          <div style={{
+            width: "100%",
+            background: CARD,
+            borderRadius: 20,
+            boxShadow: "0 2px 8px #1c2d473c",
+            border: `1.6px solid ${BORDER}`,
+            padding: isMobile ? "15px 7px" : "22px 24px",
+            fontSize: isMobile ? 15 : 17,
+            textAlign: "center",
+            color: "#fff"
+          }}>
+            Здесь может быть топ товаров, ссылка на Telegram, адрес, контакты — просто повторяй блок, чтобы все были одинаковыми по ширине!
+          </div>
         </div>
       )}
 
       {/* ---------- Каталог ---------- */}
       {activeSection !== 0 && (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: columns,
-            gap: isMobile ? 16 : 32,
-            maxWidth: 1200,
-            margin: "0 auto",
-            padding: isMobile ? 6 : 16,
-            width: "100%",
-            alignItems: "stretch",
-            boxSizing: "border-box",
-            overflowX: "hidden",
-            zIndex: 2,
-            position: "relative"
-          }}
-        >
-          <AnimatePresence mode="wait">
-            {filteredProducts.length === 0 ? (
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr 1fr",
+          gap: isMobile ? 13 : 25,
+          maxWidth: 1200,
+          margin: "0 auto",
+          padding: isMobile ? 6 : 18,
+          width: "100%",
+        }}>
+          <AnimatePresence>
+          {filteredProducts.length === 0 ? (
+            <div style={{
+              gridColumn: "1 / -1",
+              color: "#aad6ff",
+              textAlign: "center",
+              fontWeight: 700,
+              fontSize: isMobile ? 14 : 18,
+              padding: "40px 0"
+            }}>
+              Товары скоро появятся!
+            </div>
+          ) : filteredProducts.map((product, i) => {
+            const qty = getQtyInCart(product.id);
+            return (
+            <motion.div
+              key={product.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ delay: i * 0.06, duration: 0.32, type: "spring" }}
+              style={{
+                background: CARD,
+                border: `1.2px solid ${BORDER}`,
+                borderRadius: 15,
+                boxShadow: "0 8px 18px #08172b13",
+                padding: isMobile ? 12 : 18,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                minHeight: isMobile ? 170 : 215,
+                width: "100%",
+                margin: "0 auto",
+                position: "relative",
+                transition: "box-shadow .13s"
+              }}
+            >
               <div style={{
-                gridColumn: "1 / -1",
-                color: "#aad6ff",
-                textAlign: "center",
-                fontWeight: 700,
-                fontSize: isMobile ? 15 : 19,
-                padding: "40px 0"
+                fontWeight: 800,
+                fontSize: isMobile ? 14.5 : 17.5,
+                marginBottom: 3,
+                color: "#fff"
               }}>
-                Ничего не найдено 😢
+                {product.brand}
               </div>
-            ) : filteredProducts.map((product, i) => {
-              const qty = getQtyInCart(product.id);
-              return (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0, y: 32, scale: 0.96 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 42, scale: 0.95 }}
-                  transition={{ delay: i * 0.03, duration: 0.32, type: "spring" }}
+              <div style={{
+                fontSize: isMobile ? 12 : 14.2,
+                marginBottom: 6,
+                color: "#c2c2c2",
+                textAlign: "center",
+                width: "88%",
+                margin: "0 auto",
+                lineHeight: 1.28,
+              }}>
+                {product.name}
+              </div>
+              {product.desc && (
+                <div style={{
+                  color: "#a8c8fa",
+                  textAlign: "center",
+                  fontWeight: 400,
+                  fontSize: isMobile ? 10.5 : 13.1,
+                  marginBottom: 7,
+                  textShadow: "0 1px 7px #1978e622"
+                }}>{product.desc}</div>
+              )}
+              <div style={{
+                fontWeight: 800,
+                fontSize: isMobile ? 14 : 18.5,
+                marginBottom: 10,
+                color: "#fff",
+              }}>
+                {product.price} ₽
+              </div>
+              {qty === 0 ? (
+                <motion.button
+                  whileTap={{ scale: 0.93, backgroundColor: "#197ad2" }}
+                  onClick={() => addToCart(product.id)}
                   style={{
-                    background: CARD,
-                    border: `1.2px solid ${BORDER}`,
-                    borderRadius: 15,
-                    boxShadow: "0 8px 22px #08172b15, 0 1.5px 8px #10192840",
-                    padding: isMobile ? 11 : 22,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    minHeight: isMobile ? 235 : 335,
-                    height: isMobile ? 235 : 335,
+                    background: ACCENT,
+                    color: "#181B23",
+                    padding: isMobile ? "7px 0" : "13px 0",
+                    borderRadius: 10,
+                    border: "none",
+                    fontWeight: 800,
+                    fontSize: isMobile ? 13 : 16,
+                    cursor: "pointer",
                     width: "100%",
-                    boxSizing: "border-box",
-                    margin: "0 auto",
-                    justifyContent: "flex-start",
+                    boxShadow: "0 2px 10px #2680d72a",
                     position: "relative",
-                    overflow: "hidden",
-                    transition: "box-shadow .13s",
-                    backdropFilter: "blur(7px)"
-                  }}
-                  whileHover={{
-                    boxShadow: "0 10px 30px #3ca4ff20, 0 2px 8px #091d3c44",
-                    scale: 1.022
+                    transition: "background .16s"
                   }}
                 >
-                  <motion.img
-                    src={product.img || TV_PLACEHOLDER}
-                    onError={onImgError}
-                    alt={product.name}
-                    style={{
-                      width: isMobile ? 70 : 110,
-                      height: isMobile ? 70 : 110,
-                      objectFit: "cover",
-                      borderRadius: 11,
-                      marginBottom: 9,
-                      background: "#23272f",
-                      boxShadow: "0 2px 8px #18408032",
-                      border: `1.2px solid ${BORDER}`,
-                      transition: ".14s"
-                    }}
-                    initial={false}
-                    animate={addAnimId === product.id ? { scale: [1, 1.09, 0.96, 1] } : { scale: 1 }}
-                    transition={{ duration: 0.31 }}
-                  />
-                  <div style={{
-                    fontWeight: 800,
-                    fontSize: isMobile ? 14.5 : 17.5,
-                    marginBottom: 3,
-                    textAlign: "center",
+                  В корзину
+                </motion.button>
+              ) : (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                     width: "100%",
-                    color: "#fff"
-                  }}>
-                    {product.brand}
-                  </div>
+                    gap: 7,
+                    background: ACCENT,
+                    borderRadius: 10,
+                    padding: "0 7px",
+                    boxShadow: "0 1px 6px #3ca4ff18"
+                  }}
+                >
+                  <motion.button
+                    whileTap={{ scale: 0.89 }}
+                    onClick={() => {
+                      if (qty === 1) removeFromCart(product.id);
+                      else setCart(prev => prev.map(item => item.id === product.id ? { ...item, qty: item.qty - 1 } : item));
+                    }}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      color: "#191c23",
+                      fontSize: 21,
+                      fontWeight: 900,
+                      padding: "6px 10px 7px 10px",
+                      cursor: "pointer",
+                      outline: "none",
+                      borderRadius: 6
+                    }}
+                  >–</motion.button>
                   <div style={{
-                    fontSize: isMobile ? 12 : 13.7,
-                    marginBottom: 7,
-                    color: "#c2c2c2",
+                    color: "#181B23",
+                    minWidth: 23,
                     textAlign: "center",
-                    width: "88%",
-                    margin: "0 auto",
-                    lineHeight: 1.28,
+                    fontWeight: 900,
+                    fontSize: 15
                   }}>
-                    {product.name}
+                    {qty}
                   </div>
-                  {product.desc && (
-                    <div style={{
-                      color: "#a8c8fa",
-                      textAlign: "center",
-                      fontWeight: 400,
-                      fontSize: isMobile ? 10.5 : 13.1,
-                      marginBottom: 7,
-                      textShadow: "0 1px 7px #1978e622"
-                    }}>{product.desc}</div>
-                  )}
-                  <div style={{
-                    fontWeight: 800,
-                    fontSize: isMobile ? 14 : 18.5,
-                    marginBottom: 10,
-                    color: "#fff",
-                  }}>
-                    {product.price} ₽
-                  </div>
-                  {qty === 0 ? (
-                    <motion.button
-                      whileTap={{ scale: 0.93, backgroundColor: "#197ad2" }}
-                      onClick={() => addToCart(product.id)}
-                      style={{
-                        background: ACCENT,
-                        color: "#181B23",
-                        padding: isMobile ? "7px 0" : "13px 0",
-                        borderRadius: 10,
-                        border: "none",
-                        fontWeight: 800,
-                        fontSize: isMobile ? 13 : 16,
-                        cursor: "pointer",
-                        width: "100%",
-                        boxShadow: "0 2px 10px #2680d72a",
-                        position: "relative",
-                        transition: "background .16s"
-                      }}
-                    >
-                      В корзину
-                    </motion.button>
-                  ) : (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        width: "100%",
-                        gap: 7,
-                        background: ACCENT,
-                        borderRadius: 10,
-                        padding: "0 7px",
-                        boxShadow: "0 1px 6px #3ca4ff18"
-                      }}
-                    >
-                      <motion.button
-                        whileTap={{ scale: 0.89 }}
-                        onClick={() => {
-                          if (qty === 1) removeFromCart(product.id);
-                          else setCart(prev => prev.map(item => item.id === product.id ? { ...item, qty: item.qty - 1 } : item));
-                        }}
-                        style={{
-                          background: "none",
-                          border: "none",
-                          color: "#191c23",
-                          fontSize: 21,
-                          fontWeight: 900,
-                          padding: "6px 10px 7px 10px",
-                          cursor: "pointer",
-                          outline: "none",
-                          borderRadius: 6
-                        }}
-                      >–</motion.button>
-                      <div style={{
-                        color: "#181B23",
-                        minWidth: 23,
-                        textAlign: "center",
-                        fontWeight: 900,
-                        fontSize: 15
-                      }}>
-                        {qty}
-                      </div>
-                      <motion.button
-                        whileTap={{ scale: 0.89 }}
-                        onClick={() => addToCart(product.id)}
-                        style={{
-                          background: "none",
-                          border: "none",
-                          color: "#191c23",
-                          fontSize: 21,
-                          fontWeight: 900,
-                          padding: "6px 10px 7px 10px",
-                          cursor: "pointer",
-                          outline: "none",
-                          borderRadius: 6
-                        }}
-                      >+</motion.button>
-                    </div>
-                  )}
-                  {/* Эффект "+1" */}
-                  <AnimatePresence>
-                    {addAnimId === product.id && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 12, scale: 0.7 }}
-                        animate={{ opacity: 1, y: -22, scale: 1.12 }}
-                        exit={{ opacity: 0, y: -52, scale: 1.25 }}
-                        transition={{ duration: 0.4 }}
-                        style={{
-                          position: "absolute",
-                          top: isMobile ? 17 : 32,
-                          right: isMobile ? 18 : 34,
-                          color: ACCENT,
-                          fontWeight: 900,
-                          fontSize: isMobile ? 16 : 23,
-                          textShadow: "0 2px 13px #3ca4ff13",
-                          pointerEvents: "none"
-                        }}
-                      >
-                        +1
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-              );
-            })}
+                  <motion.button
+                    whileTap={{ scale: 0.89 }}
+                    onClick={() => addToCart(product.id)}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      color: "#191c23",
+                      fontSize: 21,
+                      fontWeight: 900,
+                      padding: "6px 10px 7px 10px",
+                      cursor: "pointer",
+                      outline: "none",
+                      borderRadius: 6
+                    }}
+                  >+</motion.button>
+                </div>
+              )}
+              {/* Эффект "+1" */}
+              <AnimatePresence>
+                {addAnimId === product.id && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 12, scale: 0.7 }}
+                    animate={{ opacity: 1, y: -22, scale: 1.12 }}
+                    exit={{ opacity: 0, y: -52, scale: 1.25 }}
+                    transition={{ duration: 0.4 }}
+                    style={{
+                      position: "absolute",
+                      top: isMobile ? 17 : 32,
+                      right: isMobile ? 18 : 34,
+                      color: ACCENT,
+                      fontWeight: 900,
+                      fontSize: isMobile ? 16 : 23,
+                      textShadow: "0 2px 13px #3ca4ff13",
+                      pointerEvents: "none"
+                    }}
+                  >
+                    +1
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          )})}
           </AnimatePresence>
         </div>
       )}
@@ -985,7 +684,7 @@ const App = () => {
           </div>
         </div>
       )}
-      <div style={{ height: 20 }} />
+      <div style={{ height: 30 }} />
     </div>
   );
 };
