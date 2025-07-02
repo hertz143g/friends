@@ -16,21 +16,21 @@ function AnimatedBg() {
     };
     window.addEventListener("resize", resize);
     const blobs = [
-      { x: w*0.2, y: h*0.32, r: 260, dx: 0.13, dy: 0.09, color: "#212c4388" },
-      { x: w*0.7, y: h*0.15, r: 270, dx: -0.09, dy: 0.12, color: "#192035a2" },
-      { x: w*0.44, y: h*0.79, r: 230, dx: 0.09, dy: -0.11, color: "#1c243dc4" },
-      { x: w*0.87, y: h*0.71, r: 180, dx: -0.12, dy: 0.07, color: "#2a354b82" },
+      { x: w*0.2, y: h*0.32, r: 260, dx: 0.13, dy: 0.09, color: "#212c43" },
+      { x: w*0.7, y: h*0.15, r: 270, dx: -0.09, dy: 0.12, color: "#192035" },
+      { x: w*0.44, y: h*0.79, r: 230, dx: 0.09, dy: -0.11, color: "#1c243d" },
+      { x: w*0.87, y: h*0.71, r: 180, dx: -0.12, dy: 0.07, color: "#2a354b" },
     ];
     function draw() {
       ctx.clearRect(0,0,w,h);
       for (const b of blobs) {
         const g = ctx.createRadialGradient(b.x, b.y, b.r*0.32, b.x, b.y, b.r);
-        g.addColorStop(0, b.color.replace("88", "cc"));
+        g.addColorStop(0, b.color);
         g.addColorStop(1, b.color);
         ctx.beginPath();
         ctx.arc(b.x, b.y, b.r, 0, 2*Math.PI);
         ctx.fillStyle = g;
-        ctx.globalAlpha = 0.88;
+        ctx.globalAlpha = 1;
         ctx.fill();
         ctx.globalAlpha = 1;
         b.x += b.dx;
@@ -50,8 +50,7 @@ function AnimatedBg() {
         position: "fixed",
         top: 0, left: 0, zIndex: 0,
         width: "100vw", height: "100vh",
-        pointerEvents: "none",
-        filter: "blur(13px) brightness(1.02) saturate(1.07)"
+        pointerEvents: "none"
       }}
     />
   );
@@ -60,8 +59,8 @@ function AnimatedBg() {
 // ====== Данные ======
 const ACCENT = "#3ca4ff";
 const BG = "#181e28";
-const CARD = "rgba(31,38,50,1)"; // ← нет затемнения!
-const BORDER = "rgba(120,160,220,0.14)";
+const CARD = "#23293b"; // ПЛОТНЫЙ БЛОК!
+const BORDER = "#27395a";
 const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
 const TELEGRAM_LINK = "https://t.me/forfriendsstore";
 const PHONE = "+7(926)591-21-65";
@@ -124,7 +123,7 @@ const mainBlockWidth = 430;
 function CategoryCard({ cat, onClick }) {
   return (
     <motion.div
-      whileHover={{ scale: 1.032 }}
+      whileHover={{ scale: 1.028 }}
       onClick={onClick}
       style={{
         display: "flex",
@@ -132,14 +131,14 @@ function CategoryCard({ cat, onClick }) {
         gap: 19,
         padding: "16px 20px",
         marginBottom: 15,
-        background: "rgba(31,38,50,0.96)",
+        background: CARD,
         borderRadius: 15,
         cursor: "pointer",
         border: `1.2px solid ${BORDER}`,
         fontWeight: 800,
         fontSize: 19,
         color: "#fff",
-        boxShadow: "0 1.5px 7px #1722412a",
+        boxShadow: "0 1.5px 7px #17224120",
         transition: "all .18s"
       }}
     >
@@ -149,38 +148,37 @@ function CategoryCard({ cat, onClick }) {
   );
 }
 
-// ====== Карточка товара (старый стиль, фото слева, бренд сверху, название жирным) ======
+// ====== Карточка товара (фото сверху, бренд маленьким, название жирным) ======
 function ProductCard({ product, qty, onPlus, onMinus }) {
   return (
     <motion.div
-      whileHover={{ scale: 1.012 }}
+      whileHover={{ scale: 1.018 }}
       style={{
         background: CARD,
         border: `1.2px solid ${BORDER}`,
-        borderRadius: 13,
-        boxShadow: "0 3px 11px #1d1f2834",
-        padding: "13px 9px",
-        marginBottom: 13,
+        borderRadius: 17,
+        boxShadow: "0 5px 22px #1d1f2834",
+        padding: "19px 13px 16px 13px",
+        marginBottom: 21,
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
-        gap: 15,
-        minHeight: 95
+        minHeight: 230,
+        position: "relative"
       }}
     >
       <img
         src={product.img}
         alt={product.name}
         style={{
-          width: 64, height: 64, borderRadius: 11, background: "#212942",
-          objectFit: "cover", flexShrink: 0
+          width: 85, height: 85, borderRadius: 13, background: "#212942",
+          objectFit: "cover", marginBottom: 10
         }}
       />
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontWeight: 700, color: "#b1d2ff", fontSize: 13, marginBottom: 5, textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>{product.brand}</div>
-        <div style={{ fontWeight: 900, fontSize: 17, color: "#fff", marginBottom: 5, textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>{product.name}</div>
-        <div style={{ fontWeight: 800, color: ACCENT, fontSize: 15 }}>{product.price} ₽</div>
-      </div>
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 5 }}>
+      <div style={{ width: "100%", textAlign: "center" }}>
+        <div style={{ fontWeight: 700, color: "#b1d2ff", fontSize: 13, marginBottom: 5, minHeight: 16 }}>{product.brand}</div>
+        <div style={{ fontWeight: 900, fontSize: 17.5, color: "#fff", marginBottom: 7, minHeight: 20 }}>{product.name}</div>
+        <div style={{ fontWeight: 800, color: ACCENT, fontSize: 16, marginBottom: 9 }}>{product.price} ₽</div>
         {qty === 0 ? (
           <button
             onClick={onPlus}
@@ -188,24 +186,57 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
               background: ACCENT,
               color: "#fff",
               border: "none",
-              borderRadius: 8,
+              borderRadius: 9,
               fontWeight: 800,
-              padding: "5px 13px",
-              fontSize: 16,
-              cursor: "pointer"
+              padding: "9px 17px",
+              fontSize: 15.5,
+              cursor: "pointer",
+              width: "100%",
+              marginTop: 2
             }}
-          >+</button>
+          >В корзину</button>
         ) : (
-          <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-            <button onClick={onMinus} style={{
-              background: "#23344e", color: "#fff", border: "none", borderRadius: 8,
-              fontWeight: 800, fontSize: 15, width: 26, height: 26, cursor: "pointer"
-            }}>–</button>
-            <span style={{ fontWeight: 700, color: "#fff", fontSize: 15 }}>{qty}</span>
-            <button onClick={onPlus} style={{
-              background: ACCENT, color: "#fff", border: "none", borderRadius: 8,
-              fontWeight: 800, fontSize: 15, width: 26, height: 26, cursor: "pointer"
-            }}>+</button>
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+            gap: 8,
+            background: ACCENT,
+            borderRadius: 9,
+            marginTop: 3
+          }}>
+            <button onClick={onMinus}
+              style={{
+                background: "none",
+                border: "none",
+                color: "#181B23",
+                fontSize: 23,
+                fontWeight: 900,
+                padding: "8px 15px 8px 15px",
+                cursor: "pointer",
+                borderRadius: 6
+              }}>–</button>
+            <div style={{
+              color: "#181B23",
+              minWidth: 24,
+              textAlign: "center",
+              fontWeight: 900,
+              fontSize: 16.2
+            }}>
+              {qty}
+            </div>
+            <button onClick={onPlus}
+              style={{
+                background: "none",
+                border: "none",
+                color: "#181B23",
+                fontSize: 23,
+                fontWeight: 900,
+                padding: "8px 15px 8px 15px",
+                cursor: "pointer",
+                borderRadius: 6
+              }}>+</button>
           </div>
         )}
       </div>
@@ -334,13 +365,13 @@ const App = () => {
                   transition={{ type: "spring", stiffness: 350, damping: 12 }}
                   style={{
                     position: "absolute",
-                    top: -10,
-                    right: -15,
+                    top: -11,
+                    right: -17,
                     background: ACCENT,
                     color: "#fff",
                     borderRadius: "50%",
                     padding: "3px 9px",
-                    fontSize: 13,
+                    fontSize: 14,
                     fontWeight: 700,
                     boxShadow: "0 2px 8px #1d7ad5c0"
                   }}
@@ -354,20 +385,20 @@ const App = () => {
         <div style={{
           width: "100%",
           maxWidth: mainBlockWidth,
-          margin: "18px auto 0 auto",
-          height: 1.5,
-          background: "rgba(255,255,255,0.13)",
+          margin: "25px auto 0 auto",
+          height: 2,
+          background: "rgba(255,255,255,0.14)",
           borderRadius: 2
         }}></div>
       </header>
 
-      {/* ----- Главная ----- */}
+      {/* -------- Главная (категории) -------- */}
       {!activeCategory && (
         <div style={{
           width: "100%",
           maxWidth: mainBlockWidth,
           margin: "0 auto",
-          marginTop: isMobile ? 18 : 32,
+          marginTop: isMobile ? 23 : 36,
           zIndex: 2,
           position: "relative"
         }}>
@@ -378,10 +409,10 @@ const App = () => {
             transition={{ delay: 0.05, duration: 0.5, type: "spring" }}
             style={{
               background: CARD,
-              borderRadius: 18,
-              padding: isMobile ? "19px 12px 13px 12px" : "29px 25px",
-              boxShadow: "0 3px 24px #12192b13",
-              marginBottom: isMobile ? 19 : 32,
+              borderRadius: 17,
+              padding: isMobile ? "20px 12px 15px 12px" : "32px 28px",
+              boxShadow: "0 3px 22px #12192b14",
+              marginBottom: isMobile ? 22 : 36,
               border: `1.3px solid ${BORDER}`
             }}>
             <div style={{ fontWeight: 800, fontSize: isMobile ? 16 : 18, marginBottom: 8 }}>
@@ -406,11 +437,11 @@ const App = () => {
               Перейти в Telegram
             </a>
             <div style={{
-              background: "rgba(25,32,47,0.61)",
+              background: "#1c2333",
               borderRadius: 11,
-              padding: "9px 11px",
-              marginTop: 10,
-              fontSize: isMobile ? 12.3 : 14.2,
+              padding: "10px 13px",
+              marginTop: 12,
+              fontSize: isMobile ? 12.5 : 14.2,
               color: "#b3c7df"
             }}>
               <b style={{ color: "#63aaff" }}>Контакты:</b> Телефон: <span style={{ color: "#fff" }}>{PHONE}</span><br />
@@ -419,7 +450,7 @@ const App = () => {
           </motion.div>
 
           <div style={{
-            fontWeight: 800, fontSize: 22, textAlign: "center", marginBottom: 21, letterSpacing: "0.01em", color: "#e5eeff"
+            fontWeight: 800, fontSize: 22, textAlign: "center", marginBottom: 23, letterSpacing: "0.01em", color: "#e5eeff"
           }}>Категории</div>
 
           {/* Список категорий */}
@@ -433,13 +464,13 @@ const App = () => {
         </div>
       )}
 
-      {/* ----- Страница категории ----- */}
+      {/* -------- Страница категории -------- */}
       {activeCategory && (
         <div style={{
           width: "100%",
           maxWidth: mainBlockWidth,
           margin: "0 auto",
-          marginTop: isMobile ? 12 : 24
+          marginTop: isMobile ? 18 : 28
         }}>
           {/* Кнопка назад */}
           <button
@@ -447,14 +478,14 @@ const App = () => {
             style={{
               display: "block",
               width: "100%",
-              background: "rgba(55,90,170,0.17)",
+              background: "#283762",
               color: ACCENT,
               border: "none",
               borderRadius: 13,
               fontWeight: 800,
               fontSize: isMobile ? 15.2 : 16,
               padding: "13px 0",
-              marginBottom: isMobile ? 14 : 20,
+              marginBottom: isMobile ? 16 : 23,
               cursor: "pointer",
               boxShadow: "0 1.5px 10px #3ca4ff0b",
               transition: ".16s"
@@ -464,8 +495,8 @@ const App = () => {
           <div style={{
             display: "flex",
             overflowX: "auto",
-            gap: 9,
-            marginBottom: 18,
+            gap: 10,
+            marginBottom: 19,
             paddingBottom: 2,
             paddingLeft: 1,
             scrollbarWidth: "thin"
@@ -475,11 +506,11 @@ const App = () => {
                 key={brand}
                 onClick={() => setActiveBrand(brand === activeBrand ? null : brand)}
                 style={{
-                  background: brand === activeBrand ? ACCENT : "rgba(31,38,50,0.69)",
-                  color: brand === activeBrand ? "#fff" : "#b2bedd",
+                  background: brand === activeBrand ? ACCENT : "#283762",
+                  color: brand === activeBrand ? "#fff" : "#c5d6ef",
                   border: "none",
                   borderRadius: 11,
-                  padding: "8px 17px",
+                  padding: "8px 19px",
                   fontWeight: 700,
                   fontSize: isMobile ? 13 : 14,
                   cursor: "pointer",
@@ -500,7 +531,7 @@ const App = () => {
               padding: "12px 15px",
               borderRadius: 12,
               border: `1.2px solid ${BORDER}`,
-              background: "rgba(28,36,53,0.95)",
+              background: "#20294a",
               color: "#fff",
               fontSize: 16,
               fontWeight: 600,
@@ -529,7 +560,7 @@ const App = () => {
         </div>
       )}
 
-      {/* ---- Корзина ---- */}
+      {/* -------- Корзина -------- */}
       {showCart && (
         <div
           style={{
@@ -645,7 +676,7 @@ const App = () => {
         </div>
       )}
 
-      <div style={{ height: 25 }} />
+      <div style={{ height: 23 }} />
     </div>
   );
 };
