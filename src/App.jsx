@@ -1,56 +1,69 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 // ====== Анимированный фон ======
 function AnimatedBg() {
+  const canvasRef = useRef(null);
+
   useEffect(() => {
     let animId;
-    const canvas = document.getElementById("smoke-bg");
+    const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     let w = window.innerWidth, h = window.innerHeight;
-    canvas.width = w; canvas.height = h;
+    canvas.width = w;
+    canvas.height = h;
     const resize = () => {
-      w = window.innerWidth; h = window.innerHeight;
-      canvas.width = w; canvas.height = h;
+      w = window.innerWidth;
+      h = window.innerHeight;
+      canvas.width = w;
+      canvas.height = h;
     };
     window.addEventListener("resize", resize);
+
     const blobs = [
-      { x: w*0.2, y: h*0.32, r: 260, dx: 0.13, dy: 0.09, color: "#212c43" },
-      { x: w*0.7, y: h*0.15, r: 270, dx: -0.09, dy: 0.12, color: "#192035" },
-      { x: w*0.44, y: h*0.79, r: 230, dx: 0.09, dy: -0.11, color: "#1c243d" },
-      { x: w*0.87, y: h*0.71, r: 180, dx: -0.12, dy: 0.07, color: "#2a354b" },
+      { x: w * 0.2, y: h * 0.32, r: 260, dx: 0.13, dy: 0.09, color: "#212c43" },
+      { x: w * 0.7, y: h * 0.15, r: 270, dx: -0.09, dy: 0.12, color: "#192035" },
+      { x: w * 0.44, y: h * 0.79, r: 230, dx: 0.09, dy: -0.11, color: "#1c243d" },
+      { x: w * 0.87, y: h * 0.71, r: 180, dx: -0.12, dy: 0.07, color: "#2a354b" },
     ];
     function draw() {
-      ctx.clearRect(0,0,w,h);
+      ctx.clearRect(0, 0, w, h);
       for (const b of blobs) {
-        const g = ctx.createRadialGradient(b.x, b.y, b.r*0.32, b.x, b.y, b.r);
+        const g = ctx.createRadialGradient(b.x, b.y, b.r * 0.32, b.x, b.y, b.r);
         g.addColorStop(0, b.color);
         g.addColorStop(1, b.color);
         ctx.beginPath();
-        ctx.arc(b.x, b.y, b.r, 0, 2*Math.PI);
+        ctx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);
         ctx.fillStyle = g;
         ctx.globalAlpha = 1;
         ctx.fill();
         ctx.globalAlpha = 1;
         b.x += b.dx;
         b.y += b.dy;
-        if (b.x < -b.r || b.x > w+b.r) b.dx *= -1;
-        if (b.y < -b.r || b.y > h+b.r) b.dy *= -1;
+        if (b.x < -b.r || b.x > w + b.r) b.dx *= -1;
+        if (b.y < -b.r || b.y > h + b.r) b.dy *= -1;
       }
       animId = requestAnimationFrame(draw);
     }
     draw();
-    return () => { cancelAnimationFrame(animId); window.removeEventListener("resize", resize); }
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", resize);
+    };
   }, []);
+
   return (
     <canvas
-      id="smoke-bg"
+      ref={canvasRef}
       style={{
         position: "fixed",
-        top: 0, left: 0, zIndex: -1,
-        width: "100vw", height: "100vh",
-        pointerEvents: "none"
+        top: 0,
+        left: 0,
+        zIndex: -1,
+        width: "100vw",
+        height: "100vh",
+        pointerEvents: "none",
       }}
     />
   );
@@ -498,88 +511,81 @@ const App = () => {
       
 
       {/* -------- Страница категории -------- */}
-
-
-
-
       {activeCategory && (
-     
-                  <div
-  style={{
-    maxWidth: "480px", // или сколько тебе нужно (например 360px, 400px и т.п.)
-    margin: "32px auto 0 auto",
-    padding: "15px",
-    borderRadius: "16px",
-    background: "#1c2333",
-    boxShadow: "0 2px 12px rgba(0,0,0,0.06)"
-  }}
->
-
-
-     <div style={{
-          width: "100%",
-          maxWidth: mainBlockWidth,
-          margin: "0 auto",
-          marginTop: isMobile ? 15 : 22
-        }}>
-          {/* Кнопка назад */}
-          <button
-            onClick={() => { setActiveCategory(null); setActiveBrand(null); setSearch(""); }}
-            style={{
-              display: "block",
-              width: "100%",
-              background: "#283762",
-              color: ACCENT,
-              border: "none",
-              borderRadius: 13,
-              fontWeight: 800,
-              fontSize: isMobile ? 15 : 16,
-              padding: "11px 0",
-              marginBottom: isMobile ? 13 : 19,
-              cursor: "pointer",
-              boxShadow: "0 1.5px 10px #3ca4ff0b",
-              transition: ".16s"
-            }}>← К категориям</button>
-
-          {/* Подкатегории брендов */}
+        <div
+          style={{
+            maxWidth: "480px",
+            margin: "32px auto 0 auto",
+            padding: "15px",
+            borderRadius: "16px",
+            background: "#1c2333",
+            boxShadow: "0 2px 12px rgba(0,0,0,0.06)"
+          }}
+        >
           <div style={{
-            display: "flex",
-            overflowX: "auto",
-            gap: 0,
-            marginBottom: 15,
-            paddingBottom: 2,
-            paddingLeft: 1,
-            scrollbarWidth: "thin"
+            width: "100%",
+            maxWidth: mainBlockWidth,
+            margin: "0 auto",
+            marginTop: isMobile ? 15 : 22
           }}>
-            {CATEGORIES.find(c => c.name === activeCategory).brands.map(brand =>
-              <BrandButton
-                key={brand}
-                name={brand}
-                active={brand === activeBrand}
-                onClick={() => setActiveBrand(brand === activeBrand ? null : brand)}
-              />
-            )}
-          </div>
+            {/* Кнопка назад */}
+            <button
+              onClick={() => { setActiveCategory(null); setActiveBrand(null); setSearch(""); }}
+              style={{
+                display: "block",
+                width: "100%",
+                background: "#283762",
+                color: ACCENT,
+                border: "none",
+                borderRadius: 13,
+                fontWeight: 800,
+                fontSize: isMobile ? 15 : 16,
+                padding: "11px 0",
+                marginBottom: isMobile ? 13 : 19,
+                cursor: "pointer",
+                boxShadow: "0 1.5px 10px #3ca4ff0b",
+                transition: ".16s"
+              }}>← К категориям</button>
 
-          {/* Поиск */}
-          <input
-            placeholder="Поиск товаров"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            style={{
-              width: "100%",
-              padding: "11px 14px",
-              borderRadius: 11,
-              border: `1.2px solid ${BORDER}`,
-              background: "#20294a",
-              color: "#fff",
-              fontSize: 15,
-              fontWeight: 600,
-              outline: "none",
-              marginBottom: 16,
-              boxSizing: "border-box"
-            }}
-          />
+            {/* Подкатегории брендов */}
+            <div style={{
+              display: "flex",
+              overflowX: "auto",
+              gap: 0,
+              marginBottom: 15,
+              paddingBottom: 2,
+              paddingLeft: 1,
+              scrollbarWidth: "thin"
+            }}>
+              {CATEGORIES.find(c => c.name === activeCategory).brands.map(brand =>
+                <BrandButton
+                  key={brand}
+                  name={brand}
+                  active={brand === activeBrand}
+                  onClick={() => setActiveBrand(brand === activeBrand ? null : brand)}
+                />
+              )}
+            </div>
+
+            {/* Поиск */}
+            <input
+              placeholder="Поиск товаров"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "11px 14px",
+                borderRadius: 11,
+                border: `1.2px solid ${BORDER}`,
+                background: "#20294a",
+                color: "#fff",
+                fontSize: 15,
+                fontWeight: 600,
+                outline: "none",
+                marginBottom: 16,
+                boxSizing: "border-box"
+              }}
+            />
           </div>
 
           {/* Товары */}
