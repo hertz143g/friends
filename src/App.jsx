@@ -1,26 +1,38 @@
 import React, { useState, useEffect } from "react";
 
-// --- Категории (с эмодзи, названия и количество товаров) ---
+// ---- Категории и товары ----
 const CATEGORIES = [
   {
     name: "Безопасный Интернет",
     emoji: "🛡️",
-    products: [ { name: "VPN PRO" }, { name: "VPN LITE" }, { name: "Adblock" }, { name: "Proxy" }, { name: "Антивирус" } ]
+    products: [
+      { name: "VPN PRO", desc: "Высокая скорость" },
+      { name: "VPN LITE", desc: "Для браузера" },
+      { name: "Adblock", desc: "Блокировка рекламы" },
+      { name: "Proxy", desc: "Анонимность" },
+      { name: "Антивирус", desc: "Для Windows" }
+    ]
   },
   {
     name: "Steam",
     emoji: "🎮",
-    products: [ { name: "Steam Gift" }, { name: "Steam Key" }, { name: "Скидки Steam" }, { name: "Steam Wallet" }, { name: "Steam аккаунт" } ]
+    products: [
+      { name: "Steam Gift" },
+      { name: "Steam Key" },
+      { name: "Скидки Steam" },
+      { name: "Steam Wallet" },
+      { name: "Steam аккаунт" }
+    ]
   },
   {
     name: "Игровые сервисы",
     emoji: "🕹️",
-    products: Array.from({ length: 146 }, (_, i) => ({ name: `Game Service ${i+1}` }))
+    products: Array.from({ length: 7 }, (_, i) => ({ name: `Game Service ${i+1}` }))
   },
   {
     name: "Сервисы",
     emoji: "💡",
-    products: Array.from({ length: 18 }, (_, i) => ({ name: `Сервис ${i+1}` }))
+    products: Array.from({ length: 5 }, (_, i) => ({ name: `Сервис ${i+1}` }))
   },
   {
     name: "Marvel Rivals",
@@ -30,7 +42,7 @@ const CATEGORIES = [
   {
     name: "PUBG",
     emoji: "🔫",
-    products: Array.from({ length: 19 }, (_, i) => ({ name: `PUBG товар ${i+1}` }))
+    products: Array.from({ length: 3 }, (_, i) => ({ name: `PUBG товар ${i+1}` }))
   },
   {
     name: "AXUAI (ИИ)",
@@ -39,35 +51,33 @@ const CATEGORIES = [
   }
 ];
 
-const ACCENT = "#fff";
 const BG = "radial-gradient(115% 80% at 50% 20%, #22243c 80%, #161723 100%)";
-const CARD = "rgba(30,34,54,0.98)";
+const CARD = "rgba(33,35,55,0.93)";
 const SHADOW = "0 2px 22px #1b143928, 0 1.5px 6px #3f299d14";
+const ACCENT = "#fff";
 
-const App = () => {
+// ---- App ----
+export default function App() {
   const [selectedCat, setSelectedCat] = useState(null);
   const [search, setSearch] = useState("");
   const [vw, setVw] = useState(window.innerWidth);
 
   useEffect(() => {
-    const f = () => setVw(window.innerWidth);
-    window.addEventListener("resize", f);
-    return () => window.removeEventListener("resize", f);
+    const onResize = () => setVw(window.innerWidth);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
   }, []);
   const isMobile = vw < 600;
 
-  // --- Категории, отфильтрованные по поиску
+  // --- Категории по поиску
   const filteredCategories = CATEGORIES.filter(cat =>
     cat.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  // --- Товары, отфильтрованные по поиску (если уже внутри категории)
+  // --- Товары по поиску
   const filteredProducts = selectedCat
     ? selectedCat.products.filter(prod => prod.name.toLowerCase().includes(search.toLowerCase()))
     : [];
-
-  // --- Возврат к категориям
-  const goBack = () => { setSelectedCat(null); setSearch(""); };
 
   return (
     <div style={{
@@ -75,26 +85,28 @@ const App = () => {
       background: BG,
       color: ACCENT,
       fontFamily: "Inter, system-ui, sans-serif",
-      padding: isMobile ? "22px 0 0 0" : "34px 0 0 0"
+      padding: isMobile ? "24px 0 0 0" : "44px 0 0 0"
     }}>
       <div style={{
-        maxWidth: 400,
+        maxWidth: 410,
         margin: "0 auto",
-        padding: isMobile ? "0 6px" : "0 18px"
+        padding: isMobile ? "0 8px" : "0 18px"
       }}>
-        {/* Заголовок + поиск */}
+
+        {/* ----------- Категории ----------- */}
         {!selectedCat && (
           <>
             <div style={{
               fontWeight: 800,
-              fontSize: isMobile ? 22 : 27,
+              fontSize: isMobile ? 23 : 27,
               letterSpacing: "0.01em",
               marginBottom: 18
             }}>Категории</div>
+
             <div style={{
-              background: "rgba(33,35,53,0.92)",
-              borderRadius: 15,
-              marginBottom: 25,
+              background: "rgba(33,35,53,0.93)",
+              borderRadius: 16,
+              marginBottom: 27,
               padding: isMobile ? "10px 13px" : "13px 17px",
               display: "flex",
               alignItems: "center",
@@ -126,70 +138,70 @@ const App = () => {
                   }}>✕</button>
               )}
             </div>
+
+            {/* ---- Сетка категорий ---- */}
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: isMobile ? "1fr 1fr" : "1fr 1fr 1fr",
+              gap: isMobile ? 17 : 24
+            }}>
+              {(search.trim() === "" ? CATEGORIES : filteredCategories).map(cat => (
+                <button
+                  key={cat.name}
+                  onClick={() => { setSelectedCat(cat); setSearch(""); }}
+                  style={{
+                    background: CARD,
+                    borderRadius: 16,
+                    boxShadow: SHADOW,
+                    border: "none",
+                    padding: isMobile ? "17px 7px 14px 7px" : "25px 10px 17px 10px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    transition: "box-shadow .15s, transform .13s"
+                  }}
+                >
+                  <span style={{
+                    fontSize: isMobile ? 32 : 39,
+                    marginBottom: 7
+                  }}>{cat.emoji}</span>
+                  <span style={{
+                    fontWeight: 700,
+                    fontSize: isMobile ? 14.2 : 16.4,
+                    marginBottom: 3,
+                    color: "#fff",
+                    textAlign: "center"
+                  }}>{cat.name}</span>
+                  <span style={{
+                    color: "#b8bece",
+                    fontSize: isMobile ? 12.5 : 14.2,
+                    fontWeight: 500
+                  }}>{cat.products.length} товаров</span>
+                </button>
+              ))}
+            </div>
           </>
         )}
 
-        {/* --- Сетка категорий --- */}
-        {!selectedCat && (
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: isMobile ? "1fr 1fr" : "1fr 1fr 1fr",
-            gap: isMobile ? 17 : 24
-          }}>
-            {(search.trim() === "" ? CATEGORIES : filteredCategories).map((cat, idx) => (
-              <button
-                key={cat.name}
-                onClick={() => { setSelectedCat(cat); setSearch(""); }}
-                style={{
-                  background: CARD,
-                  borderRadius: 15,
-                  boxShadow: SHADOW,
-                  border: "none",
-                  padding: isMobile ? "16px 5px 13px 5px" : "22px 8px 18px 8px",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  transition: "box-shadow .17s, transform .17s",
-                  cursor: "pointer"
-                }}
-              >
-                <span style={{
-                  fontSize: isMobile ? 30 : 38,
-                  marginBottom: 7
-                }}>{cat.emoji}</span>
-                <span style={{
-                  fontWeight: 700,
-                  fontSize: isMobile ? 14.2 : 16.4,
-                  marginBottom: 3,
-                  color: "#fff"
-                }}>{cat.name}</span>
-                <span style={{
-                  color: "#b8bece",
-                  fontSize: isMobile ? 13.2 : 14.2,
-                  fontWeight: 500
-                }}>{cat.products.length} товаров</span>
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* --- Окно товаров категории --- */}
+        {/* ----------- Товары категории ----------- */}
         {selectedCat && (
           <>
             <div style={{
               display: "flex",
               alignItems: "center",
-              marginBottom: 14
+              marginBottom: 18,
+              marginTop: isMobile ? 6 : 10
             }}>
-              <button onClick={goBack} style={{
+              <button onClick={() => { setSelectedCat(null); setSearch(""); }} style={{
                 background: "rgba(39,41,60,0.88)",
                 border: "none",
-                borderRadius: 10,
+                borderRadius: 11,
                 marginRight: 12,
                 cursor: "pointer",
                 fontSize: isMobile ? 18 : 22,
                 color: "#fff",
-                padding: isMobile ? "7px 12px" : "9px 15px",
+                padding: isMobile ? "7px 13px" : "11px 17px",
                 boxShadow: SHADOW,
                 transition: ".15s"
               }}>←</button>
@@ -201,7 +213,7 @@ const App = () => {
             </div>
 
             <div style={{
-              background: "rgba(34,36,60,0.93)",
+              background: "rgba(34,36,60,0.96)",
               borderRadius: 13,
               marginBottom: 17,
               padding: isMobile ? "10px 13px" : "13px 17px",
@@ -236,10 +248,11 @@ const App = () => {
               )}
             </div>
 
+            {/* ---- Список товаров ---- */}
             <div style={{
               display: "flex",
               flexDirection: "column",
-              gap: isMobile ? 13 : 15
+              gap: isMobile ? 13 : 17
             }}>
               {filteredProducts.length === 0
                 ? <div style={{
@@ -260,6 +273,11 @@ const App = () => {
                     fontSize: isMobile ? 15 : 17
                   }}>
                     {prod.name}
+                    {prod.desc && (
+                      <span style={{ color: "#b8bece", fontWeight: 400, fontSize: isMobile ? 12 : 13, marginLeft: 8 }}>
+                        — {prod.desc}
+                      </span>
+                    )}
                   </div>
                 ))
               }
@@ -267,10 +285,8 @@ const App = () => {
           </>
         )}
 
-        <div style={{ height: 32 }} />
+        <div style={{ height: 36 }} />
       </div>
     </div>
   );
-};
-
-export default App;
+}
