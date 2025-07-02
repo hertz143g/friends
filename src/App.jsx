@@ -96,13 +96,15 @@ const SECTIONS = [
   { name: "Главная" },
   { name: "Смартфоны", products: PHONES },
   { name: "Телевизоры", products: TVS },
-  { name: "Компьютеры", products: MACS },
-  { name: "Б/у", products: USED },
-  { name: "Планшеты", products: [] },
-  { name: "Наушники", products: [] },
-  { name: "Аксессуары", products: [] },
-  { name: "Для дома", products: [] },
+  { name: "Планшеты", products: TABLETS },
+  { name: "Компьютеры и ноутбуки", products: MACS },
+  { name: "Наушники и аксессуары", products: HEADPHONES },
+  { name: "Часы и браслеты", products: WATCHES },
+  { name: "Игрушки", products: TOYS },           // Вот они!
+  { name: "Б/у устройства", products: USED },
+  { name: "Для дома", products: HOME },
 ];
+
 
 
 function getColumns(vw) {
