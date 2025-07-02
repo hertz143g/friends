@@ -96,16 +96,9 @@ const SECTIONS = [
   { name: "Главная" },
   { name: "Смартфоны", products: PHONES },
   { name: "Телевизоры", products: TVS },
-  { name: "Планшеты", products: TABLETS },
-  { name: "Компьютеры и ноутбуки", products: MACS },
-  { name: "Наушники и аксессуары", products: HEADPHONES },
-  { name: "Часы и браслеты", products: WATCHES },
-  { name: "Игрушки", products: TOYS },           // Вот они!
-  { name: "Б/у устройства", products: USED },
-  { name: "Для дома", products: HOME },
+  { name: "Компьютеры", products: MACS },
+  { name: "Б/у", products: USED },
 ];
-
-
 
 function getColumns(vw) {
   if (vw > 1024) return "repeat(3, 1fr)";
