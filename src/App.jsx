@@ -60,14 +60,14 @@ function AnimatedBg() {
 // ====== Данные ======
 const ACCENT = "#3ca4ff";
 const BG = "#181e28";
-const CARD = "rgba(31,38,50,0.72)";
+const CARD = "rgba(31,38,50,1)"; // ← нет затемнения!
 const BORDER = "rgba(120,160,220,0.14)";
 const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
 const TELEGRAM_LINK = "https://t.me/forfriendsstore";
 const PHONE = "+7(926)591-21-65";
 const ADDRESS = "Клин, ул. Победы, д. 9, «Ок’ей»";
 const TV_PLACEHOLDER = "https://tech-iq.ru/upload/iblock/324/ixntoljx6r6lclbh3pfr0ve261z3ocn2.webp";
-const PHONE_PLACEHOLDER = "data:image/svg+xml,%3Csvg width='90' height='90' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='90' height='90' rx='16' fill='%2323292f'/%3E%3Cpath d='M45 29c-6.627 0-12 5.373-12 12 0 4.418 2.99 8.166 7.092 10.338C40.613 51.736 41 52.859 41 54v2a2 2 0 1 0 4 0v-2c0-1.141.387-2.264 1.908-2.662C54.01 49.166 57 45.418 57 41c0-6.627-5.373-12-12-12zm0 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8z' fill='%23668899'/%3E%3C/svg%3E";
+const PHONE_PLACEHOLDER = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Smartphone_icon_-_Noun_Project_883.png/64px-Smartphone_icon_-_Noun_Project_883.png";
 
 const CATEGORIES = [
   { name: "Смартфоны", emoji: "📱", brands: ["iPhone", "Samsung S22/23", "Samsung S24/S25", "Samsung A / наушники / часы", "Xiaomi", "Redmi", "Poco", "OnePlus", "Google Pixel"] },
@@ -82,99 +82,103 @@ const CATEGORIES = [
 
 const PRODUCTS = {
   "Смартфоны": [
-    { id: 1, name: "iPhone 15 Pro", brand: "iPhone", price: 115000 },
-    { id: 2, name: "Galaxy S24 Ultra", brand: "Samsung S24/S25", price: 98000 },
-    { id: 3, name: "Xiaomi Redmi Note 13", brand: "Xiaomi", price: 34000 },
-    // ...добавь под свои бренды!
+    { id: 1, name: "iPhone 15 Pro 128GB Серый", brand: "iPhone", price: 115000, img: PHONE_PLACEHOLDER },
+    { id: 2, name: "Galaxy S24 Ultra 256GB", brand: "Samsung S24/S25", price: 98000, img: PHONE_PLACEHOLDER },
+    { id: 3, name: "Xiaomi Redmi Note 13 Pro", brand: "Xiaomi", price: 34000, img: PHONE_PLACEHOLDER },
   ],
   "Часы": [
-    { id: 4, name: "Apple Watch Series 9", brand: "Apple Watch", price: 37000 },
-    { id: 5, name: "Casio G-SHOCK", brand: "Casio G-SHOCK", price: 8900 },
-    { id: 6, name: "Garmin Forerunner", brand: "Garmin", price: 28500 }
+    { id: 4, name: "Apple Watch Series 9", brand: "Apple Watch", price: 37000, img: PHONE_PLACEHOLDER },
+    { id: 5, name: "Casio G-SHOCK", brand: "Casio G-SHOCK", price: 8900, img: PHONE_PLACEHOLDER },
+    { id: 6, name: "Garmin Forerunner", brand: "Garmin", price: 28500, img: PHONE_PLACEHOLDER }
   ],
   "Компьютеры и планшеты": [
-    { id: 7, name: "MacBook Air 15", brand: "MacBook", price: 127000 },
-    { id: 8, name: "iMac 24", brand: "iMac", price: 159000 },
-    { id: 9, name: "iPad Pro 11", brand: "iPad", price: 99000 }
+    { id: 7, name: "MacBook Air 15 2024", brand: "MacBook", price: 127000, img: PHONE_PLACEHOLDER },
+    { id: 8, name: "iMac 24\" 2024", brand: "iMac", price: 159000, img: PHONE_PLACEHOLDER },
+    { id: 9, name: "iPad Pro 11\" 2024", brand: "iPad", price: 99000, img: PHONE_PLACEHOLDER }
   ],
   "Аудио": [
-    { id: 10, name: "AirPods Pro 2", brand: "AirPods", price: 25900 },
-    { id: 11, name: "Marshall Emberton", brand: "Marshall", price: 18500 },
-    { id: 12, name: "Sony WH-1000XM5", brand: "Аксессуары", price: 29900 }
+    { id: 10, name: "AirPods Pro 2", brand: "AirPods", price: 25900, img: PHONE_PLACEHOLDER },
+    { id: 11, name: "Marshall Emberton II", brand: "Marshall", price: 18500, img: PHONE_PLACEHOLDER },
+    { id: 12, name: "Sony WH-1000XM5", brand: "Аксессуары", price: 29900, img: PHONE_PLACEHOLDER }
   ],
   "Телевизоры": [
-    { id: 13, name: "Xiaomi TV A32", brand: "Телевизоры", price: 16000 },
-    { id: 14, name: "Samsung 4K Crystal", brand: "Телевизоры", price: 37000 }
+    { id: 13, name: "Xiaomi TV A32", brand: "Телевизоры", price: 16000, img: TV_PLACEHOLDER },
+    { id: 14, name: "Samsung 4K Crystal", brand: "Телевизоры", price: 37000, img: TV_PLACEHOLDER }
   ],
   "Игровые приставки": [
-    { id: 15, name: "PlayStation 5", brand: "Sony Ps5", price: 68900 },
-    { id: 16, name: "Xbox Series X", brand: "Xbox", price: 64800 }
+    { id: 15, name: "PlayStation 5", brand: "Sony Ps5", price: 68900, img: PHONE_PLACEHOLDER },
+    { id: 16, name: "Xbox Series X", brand: "Xbox", price: 64800, img: PHONE_PLACEHOLDER }
   ],
   "Игрушки": [
-    { id: 17, name: "Labubu Pirate", brand: "Игрушки Labubu", price: 3300 }
+    { id: 17, name: "Labubu Pirate", brand: "Игрушки Labubu", price: 3300, img: PHONE_PLACEHOLDER }
   ],
   "Электроника": [
-    { id: 18, name: "Apple TV 4K", brand: "Apple TV", price: 25900 },
-    { id: 19, name: "GoPro Hero", brand: "GoPro", price: 38500 }
+    { id: 18, name: "Apple TV 4K", brand: "Apple TV", price: 25900, img: PHONE_PLACEHOLDER },
+    { id: 19, name: "GoPro Hero", brand: "GoPro", price: 38500, img: PHONE_PLACEHOLDER }
   ]
 };
 
 const mainBlockWidth = 430;
 
 // ====== Компонент категории ======
-function CategoryCard({ cat, onClick, active }) {
+function CategoryCard({ cat, onClick }) {
   return (
     <motion.div
-      whileHover={{ scale: 1.025 }}
+      whileHover={{ scale: 1.032 }}
       onClick={onClick}
       style={{
         display: "flex",
         alignItems: "center",
-        gap: 18,
-        padding: "18px 20px",
+        gap: 19,
+        padding: "16px 20px",
         marginBottom: 15,
-        background: active ? "rgba(50,125,255,0.16)" : "rgba(31,38,50,0.90)",
-        borderRadius: 17,
+        background: "rgba(31,38,50,0.96)",
+        borderRadius: 15,
         cursor: "pointer",
-        border: active ? `2px solid ${ACCENT}` : `1.2px solid ${BORDER}`,
+        border: `1.2px solid ${BORDER}`,
         fontWeight: 800,
-        fontSize: 18,
+        fontSize: 19,
         color: "#fff",
-        boxShadow: active ? "0 2px 18px #3ca4ff22" : "0 1.5px 7px #17224126",
-        transition: "all .17s"
+        boxShadow: "0 1.5px 7px #1722412a",
+        transition: "all .18s"
       }}
     >
-      <span style={{ fontSize: 28, marginRight: 8 }}>{cat.emoji}</span>
+      <span style={{ fontSize: 27, marginRight: 7 }}>{cat.emoji}</span>
       <span>{cat.name}</span>
     </motion.div>
   );
 }
 
-// ====== Компонент товара ======
+// ====== Карточка товара (старый стиль, фото слева, бренд сверху, название жирным) ======
 function ProductCard({ product, qty, onPlus, onMinus }) {
   return (
-    <div
+    <motion.div
+      whileHover={{ scale: 1.012 }}
       style={{
-        background: "rgba(31,38,50,0.94)",
+        background: CARD,
         border: `1.2px solid ${BORDER}`,
         borderRadius: 13,
-        boxShadow: "0 3px 12px #1d1f2860",
-        padding: "18px 13px",
-        marginBottom: 10,
+        boxShadow: "0 3px 11px #1d1f2834",
+        padding: "13px 9px",
+        marginBottom: 13,
         display: "flex",
         alignItems: "center",
-        gap: 14,
-        minHeight: 90
+        gap: 15,
+        minHeight: 95
       }}
     >
-      <div style={{
-        width: 62, height: 62, borderRadius: 12, background: "#212942",
-        display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32, fontWeight: 700, color: ACCENT
-      }}>{product.name[0]}</div>
+      <img
+        src={product.img}
+        alt={product.name}
+        style={{
+          width: 64, height: 64, borderRadius: 11, background: "#212942",
+          objectFit: "cover", flexShrink: 0
+        }}
+      />
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontWeight: 900, fontSize: 18, color: "#fff", marginBottom: 6, textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>{product.name}</div>
-        <div style={{ fontSize: 14, color: "#b6cafc", fontWeight: 700, marginBottom: 4 }}>{product.brand}</div>
-        <div style={{ fontWeight: 700, color: ACCENT, fontSize: 15 }}>{product.price} ₽</div>
+        <div style={{ fontWeight: 700, color: "#b1d2ff", fontSize: 13, marginBottom: 5, textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>{product.brand}</div>
+        <div style={{ fontWeight: 900, fontSize: 17, color: "#fff", marginBottom: 5, textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>{product.name}</div>
+        <div style={{ fontWeight: 800, color: ACCENT, fontSize: 15 }}>{product.price} ₽</div>
       </div>
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 5 }}>
         {qty === 0 ? (
@@ -186,28 +190,26 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
               border: "none",
               borderRadius: 8,
               fontWeight: 800,
-              padding: "6px 15px",
-              fontSize: 15,
+              padding: "5px 13px",
+              fontSize: 16,
               cursor: "pointer"
             }}
           >+</button>
         ) : (
-          <>
-            <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-              <button onClick={onMinus} style={{
-                background: "#23344e", color: "#fff", border: "none", borderRadius: 8,
-                fontWeight: 800, fontSize: 15, width: 28, height: 28, cursor: "pointer"
-              }}>–</button>
-              <span style={{ fontWeight: 700, color: "#fff", fontSize: 15 }}>{qty}</span>
-              <button onClick={onPlus} style={{
-                background: ACCENT, color: "#fff", border: "none", borderRadius: 8,
-                fontWeight: 800, fontSize: 15, width: 28, height: 28, cursor: "pointer"
-              }}>+</button>
-            </div>
-          </>
+          <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+            <button onClick={onMinus} style={{
+              background: "#23344e", color: "#fff", border: "none", borderRadius: 8,
+              fontWeight: 800, fontSize: 15, width: 26, height: 26, cursor: "pointer"
+            }}>–</button>
+            <span style={{ fontWeight: 700, color: "#fff", fontSize: 15 }}>{qty}</span>
+            <button onClick={onPlus} style={{
+              background: ACCENT, color: "#fff", border: "none", borderRadius: 8,
+              fontWeight: 800, fontSize: 15, width: 26, height: 26, cursor: "pointer"
+            }}>+</button>
+          </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -282,7 +284,7 @@ const App = () => {
       {/* -------- Хедер -------- */}
       <header style={{
         textAlign: "center",
-        padding: `${isMobile ? 30 : 50}px 0 0 0`,
+        padding: `${isMobile ? 32 : 48}px 0 0 0`,
         position: "relative",
         zIndex: 2
       }}>
@@ -332,13 +334,13 @@ const App = () => {
                   transition={{ type: "spring", stiffness: 350, damping: 12 }}
                   style={{
                     position: "absolute",
-                    top: -9,
-                    right: -13,
+                    top: -10,
+                    right: -15,
                     background: ACCENT,
                     color: "#fff",
                     borderRadius: "50%",
-                    padding: "2.5px 8px",
-                    fontSize: 12,
+                    padding: "3px 9px",
+                    fontSize: 13,
                     fontWeight: 700,
                     boxShadow: "0 2px 8px #1d7ad5c0"
                   }}
@@ -352,7 +354,7 @@ const App = () => {
         <div style={{
           width: "100%",
           maxWidth: mainBlockWidth,
-          margin: "24px auto 0 auto",
+          margin: "18px auto 0 auto",
           height: 1.5,
           background: "rgba(255,255,255,0.13)",
           borderRadius: 2
@@ -365,7 +367,7 @@ const App = () => {
           width: "100%",
           maxWidth: mainBlockWidth,
           margin: "0 auto",
-          marginTop: isMobile ? 16 : 30,
+          marginTop: isMobile ? 18 : 32,
           zIndex: 2,
           position: "relative"
         }}>
@@ -377,9 +379,9 @@ const App = () => {
             style={{
               background: CARD,
               borderRadius: 18,
-              padding: isMobile ? "20px 12px 14px 12px" : "30px 25px",
+              padding: isMobile ? "19px 12px 13px 12px" : "29px 25px",
               boxShadow: "0 3px 24px #12192b13",
-              marginBottom: isMobile ? 19 : 30,
+              marginBottom: isMobile ? 19 : 32,
               border: `1.3px solid ${BORDER}`
             }}>
             <div style={{ fontWeight: 800, fontSize: isMobile ? 16 : 18, marginBottom: 8 }}>
@@ -425,7 +427,6 @@ const App = () => {
             <CategoryCard
               key={cat.name}
               cat={cat}
-              active={false}
               onClick={() => { setActiveCategory(cat.name); setActiveBrand(null); setSearch(""); }}
             />
           )}
@@ -438,7 +439,7 @@ const App = () => {
           width: "100%",
           maxWidth: mainBlockWidth,
           margin: "0 auto",
-          marginTop: isMobile ? 12 : 26
+          marginTop: isMobile ? 12 : 24
         }}>
           {/* Кнопка назад */}
           <button
@@ -453,7 +454,7 @@ const App = () => {
               fontWeight: 800,
               fontSize: isMobile ? 15.2 : 16,
               padding: "13px 0",
-              marginBottom: isMobile ? 13 : 19,
+              marginBottom: isMobile ? 14 : 20,
               cursor: "pointer",
               boxShadow: "0 1.5px 10px #3ca4ff0b",
               transition: ".16s"
@@ -528,13 +529,13 @@ const App = () => {
         </div>
       )}
 
-      {/* Корзина */}
+      {/* ---- Корзина ---- */}
       {showCart && (
         <div
           style={{
             position: "fixed",
             inset: 0,
-            background: "#000b",
+            background: "#000a",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
