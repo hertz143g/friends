@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// ---------- Премиальный анимированный фон ----------
+// ======= АНИМИРОВАННЫЙ ФОН =======
 function AnimatedBg() {
   useEffect(() => {
     let animId;
@@ -57,11 +57,12 @@ function AnimatedBg() {
   );
 }
 
-// ------------ Данные ------------
+// ======= КОНСТАНТЫ =======
 const ACCENT = "#3ca4ff";
 const BG = "#181e28";
 const CARD = "rgba(31,38,50,0.70)";
 const BORDER = "rgba(120,160,220,0.13)";
+const MAIN_BLOCK_MAX_WIDTH = 420;
 const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
 const TELEGRAM_LINK = "https://t.me/forfriendsstore";
 const PHONE = "+7(926)591-21-65";
@@ -153,8 +154,11 @@ const App = () => {
   }, [activeSection]);
 
   const isMobile = vw < 550;
-  // ---------- Все блоки одной ширины ----------
-  const mainBlockWidth = isMobile ? "calc(100vw - 16px)" : "420px";
+  const blockStyle = {
+    width: "100%",
+    maxWidth: MAIN_BLOCK_MAX_WIDTH,
+    margin: "0 auto",
+  };
   const gapY = isMobile ? 25 : 32;
 
   const cartTotalCount = cart.reduce((a, b) => a + b.qty, 0);
@@ -230,7 +234,7 @@ const App = () => {
     >
       <AnimatedBg />
 
-      <header style={{ textAlign: "center", padding: "18px 0 0 0", position: "relative", zIndex: 2 }}>
+      <header style={{ textAlign: "center", padding: "18px 0 0 0", position: "relative", zIndex: 2, ...blockStyle }}>
         <img
           src={logoUrl}
           alt="logo"
@@ -253,7 +257,7 @@ const App = () => {
           style={{
             position: "absolute",
             top: 18,
-            right: 20,
+            right: 0,
             background: "transparent",
             border: "none",
             cursor: "pointer",
@@ -290,7 +294,6 @@ const App = () => {
         </motion.button>
         <div style={{
           width: "100%",
-          maxWidth: mainBlockWidth,
           margin: "22px auto 0 auto",
           height: 1,
           background: "rgba(255,255,255,0.14)",
@@ -299,9 +302,7 @@ const App = () => {
       </header>
 
       {/* Категории */}
-      <div style={{
-        display: "flex", justifyContent: "center", gap: 11, margin: "44px 0 16px 0", flexWrap: "wrap", zIndex: 2, position: "relative"
-      }}>
+      <div style={{ ...blockStyle, display: "flex", justifyContent: "center", gap: 11, margin: "44px auto 16px auto", flexWrap: "wrap", zIndex: 2, position: "relative" }}>
         {SECTIONS.map((section, idx) => (
           <button
             key={section.name}
@@ -328,16 +329,13 @@ const App = () => {
       {/* Главная страница */}
       {activeSection === 0 && (
         <div style={{
-          maxWidth: mainBlockWidth,
-          margin: "0 auto",
-          width: "100%",
-          padding: 0,
+          ...blockStyle,
           display: "flex",
           flexDirection: "column",
           gap: gapY,
           zIndex: 2,
           position: "relative",
-          alignItems: "center" // Центрируем всё по центру
+          alignItems: "center"
         }}>
           {/* Карусель */}
           <motion.div
@@ -345,7 +343,7 @@ const App = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.6, type: "spring" }}
             style={{
-              width: "100%",
+              ...blockStyle,
               background: CARD,
               borderRadius: 23,
               padding: isMobile ? "14px 7px 22px 7px" : "28px 26px",
@@ -442,6 +440,7 @@ const App = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.18, duration: 0.6, type: "spring" }}
             style={{
+              ...blockStyle,
               background: CARD,
               borderRadius: 20,
               boxShadow: "0 2px 12px #1a1f2e22",
@@ -455,7 +454,6 @@ const App = () => {
               lineHeight: 1.42,
               border: `1.4px solid ${BORDER}`,
               backdropFilter: "blur(10px)",
-              width: "100%" // Одинаковая ширина
             }}>
             Добро пожаловать в <span style={{ color: ACCENT, fontWeight: 800 }}>4Friends Store</span>!
             <br />
@@ -471,11 +469,11 @@ const App = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.24, duration: 0.5, type: "spring" }}
             style={{
+              ...blockStyle,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               gap: 10,
-              margin: "0 auto",
               background: ACCENT,
               color: "#fff",
               padding: isMobile ? "13px 20px" : "16px 34px",
@@ -487,9 +485,7 @@ const App = () => {
               border: "none",
               transition: ".18s",
               letterSpacing: "0.05em",
-              outline: "none",
-              width: "100%", // ширина блока!
-              maxWidth: "100%"
+              outline: "none"
             }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" height={isMobile ? 22 : 26} width={isMobile ? 22 : 26} viewBox="0 0 24 24" style={{ marginRight: 8, flexShrink: 0 }}>
@@ -505,6 +501,7 @@ const App = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.5, type: "spring" }}
             style={{
+              ...blockStyle,
               background: CARD,
               borderRadius: 17,
               padding: isMobile ? "21px 11px" : "28px 24px",
@@ -517,7 +514,6 @@ const App = () => {
               fontSize: isMobile ? 15.2 : 16.7,
               border: `1.3px solid ${BORDER}`,
               backdropFilter: "blur(7px)",
-              width: "100%" // одинаковая ширина
             }}>
             <div style={{ fontWeight: 800, fontSize: isMobile ? 15.7 : 18, letterSpacing: "0.01em", color: ACCENT, marginBottom: 2 }}>
               Контакты магазина
@@ -537,7 +533,7 @@ const App = () => {
         </div>
       )}
 
-      {/* Каталог (остальное не меняется) */}
+      {/* Каталог */}
       {activeSection !== 0 && (
         <div
           style={{
