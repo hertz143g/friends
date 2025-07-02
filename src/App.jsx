@@ -498,8 +498,25 @@ const App = () => {
       
 
       {/* -------- Страница категории -------- */}
+
+
+
+
       {activeCategory && (
-        <div style={{
+     
+                  <div
+  style={{
+    maxWidth: "480px", // или сколько тебе нужно (например 360px, 400px и т.п.)
+    margin: "32px auto 0 auto",
+    padding: "15px",
+    borderRadius: "16px",
+    background: "#1c2333",
+    boxShadow: "0 2px 12px rgba(0,0,0,0.06)"
+  }}
+>
+
+
+     <div style={{
           width: "100%",
           maxWidth: mainBlockWidth,
           margin: "0 auto",
@@ -545,16 +562,6 @@ const App = () => {
           </div>
 
           {/* Поиск */}
-                  <div
-  style={{
-    maxWidth: "480px", // или сколько тебе нужно (например 360px, 400px и т.п.)
-    margin: "32px auto 0 auto",
-    padding: "15px",
-    borderRadius: "16px",
-    background: "#1c2333",
-    boxShadow: "0 2px 12px rgba(0,0,0,0.06)"
-  }}
->
           <input
             placeholder="Поиск товаров"
             value={search}
