@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 // ---------- Анимированный фон ----------
@@ -73,7 +73,6 @@ const PHONES = [
   { id: 101, brand: "Apple", name: "iPhone 15 Pro 128GB Серый", price: 115000, img: PHONE_PLACEHOLDER, desc: "A17 Pro, 3 камеры, iOS" },
   { id: 102, brand: "Samsung", name: "Samsung Galaxy S24 Ultra 256GB Черный", price: 98000, img: PHONE_PLACEHOLDER, desc: "Snapdragon 8 Gen3, AMOLED" },
   { id: 103, brand: "Xiaomi", name: "Xiaomi Redmi Note 13 Pro 512GB Синий", price: 34000, img: PHONE_PLACEHOLDER, desc: "512ГБ, 200Мп камера" },
-  // Добавь ещё по желанию
 ];
 
 const WATCHES = [
@@ -116,7 +115,6 @@ const CAROUSEL_PRODUCTS = [
   PHONES[0], TVS[0], MACS[0], WATCHES[0], ACCESSORIES[0],
 ];
 
-// ----------- Группы разделов -----------
 const SECTIONS = [
   { name: "Главная" },
   { name: "Смартфоны", products: PHONES },
@@ -128,8 +126,6 @@ const SECTIONS = [
   { name: "Игрушки", products: TOYS },
   { name: "Б/у", products: USED },
 ];
-
-// -------------------------------
 
 function getColumns(vw) {
   if (vw > 1024) return "repeat(3, 1fr)";
@@ -146,6 +142,8 @@ const App = () => {
   const [columns, setColumns] = useState(getColumns(window.innerWidth));
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [vw, setVw] = useState(window.innerWidth);
+  const [search, setSearch] = useState("");
+  const categoryListRef = useRef();
 
   useEffect(() => {
     const onResize = () => {
@@ -162,6 +160,13 @@ const App = () => {
       setCarouselIndex(idx => (idx + 1) % CAROUSEL_PRODUCTS.length);
     }, 3400);
     return () => clearInterval(timer);
+  }, [activeSection]);
+
+  useEffect(() => {
+    if (categoryListRef.current) {
+      const btn = categoryListRef.current.querySelector(".category-btn-active");
+      if (btn) btn.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
+    }
   }, [activeSection]);
 
   // cart utils
@@ -206,35 +211,37 @@ const App = () => {
     setCarouselIndex((carouselIndex + 1) % CAROUSEL_PRODUCTS.length);
   }
   function prevCarousel() {
-    setCarouselIndex(
-      (carouselIndex - 1 + CAROUSEL_PRODUCTS.length) % CAROUSEL_PRODUCTS.length
-    );
+    setCarouselIndex((carouselIndex - 1 + CAROUSEL_PRODUCTS.length) % CAROUSEL_PRODUCTS.length);
   }
   function onImgError(e) {
     e.target.src = PHONE_PLACEHOLDER;
   }
 
-  // --- Mobile detection
   const isMobile = vw < 600;
-
-  // --- Стили главной для мобилы
   const mainBlockWidth = isMobile ? "98vw" : "420px";
   const gapY = isMobile ? 19 : 32;
+
+  // --- Получить товары текущего раздела и применить поиск
+  const sectionProducts = SECTIONS[activeSection]?.products || [];
+  const filteredProducts = search.trim().length === 0
+    ? sectionProducts
+    : sectionProducts.filter(
+        p =>
+          p.brand.toLowerCase().includes(search.toLowerCase()) ||
+          p.name.toLowerCase().includes(search.toLowerCase()) ||
+          (p.desc && p.desc.toLowerCase().includes(search.toLowerCase()))
+      );
 
   return (
     <div
       style={{
         minHeight: "100vh",
         width: "100vw",
-        maxWidth: "100vw",
         background: BG,
         color: "#fff",
-        margin: 0,
-        padding: 0,
-        boxSizing: "border-box",
         fontFamily: "system-ui,sans-serif",
+        position: "relative",
         overflowX: "hidden",
-        position: "relative"
       }}
     >
       <AnimatedBg />
@@ -313,31 +320,116 @@ const App = () => {
         }}></div>
       </header>
 
-      {/* ---------- Категории ---------- */}
-      <div style={{
-        display: "flex", justifyContent: isMobile ? "flex-start" : "center", gap: 9, margin: isMobile ? "18px 5px 12px 5px" : "40px 0 16px 0", flexWrap: "wrap", zIndex: 2, position: "relative", overflowX: isMobile ? "auto" : "unset"
-      }}>
+      {/* ---------- КАТЕГОРИИ: bubble bar ---------- */}
+      <div
+        ref={categoryListRef}
+        style={{
+          display: "flex",
+          gap: isMobile ? 7 : 14,
+          margin: isMobile ? "16px 2px 12px 2px" : "40px 0 18px 0",
+          padding: isMobile ? "2px 0 2px 0" : "6px 0",
+          overflowX: "auto",
+          WebkitOverflowScrolling: "touch",
+          position: "relative",
+          zIndex: 2,
+          scrollbarWidth: "none"
+        }}
+      >
         {SECTIONS.map((section, idx) => (
-          <button
+          <motion.button
             key={section.name}
-            onClick={() => setActiveSection(idx)}
+            onClick={() => { setActiveSection(idx); setSearch(""); }}
+            className={idx === activeSection ? "category-btn-active" : ""}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
             style={{
-              background: idx === activeSection ? ACCENT : "rgba(255,255,255,0.04)",
-              color: idx === activeSection ? "#fff" : "#b5bddb",
+              background: idx === activeSection
+                ? `linear-gradient(100deg, ${ACCENT} 60%, #6ed0ff 100%)`
+                : "rgba(255,255,255,0.04)",
+              color: idx === activeSection ? "#fff" : "#a2b3d7",
               border: "none",
-              borderRadius: 11,
-              padding: isMobile ? "7px 11px" : "8px 16px",
-              fontWeight: 700,
-              fontSize: isMobile ? 13 : 15,
+              borderRadius: 19,
+              padding: isMobile ? "11px 19px" : "13px 23px",
+              fontWeight: 800,
+              fontSize: isMobile ? 14.2 : 16.5,
               cursor: "pointer",
-              boxShadow: idx === activeSection ? "0 2px 10px #2d70ff33" : "none",
-              transition: "0.15s",
-              letterSpacing: "0.01em"
+              boxShadow: idx === activeSection
+                ? "0 4px 18px #41a2ff22, 0 1.5px 7px #99ddff36"
+                : "0 2px 6px #141a2d07",
+              transition: "background 0.15s, color 0.13s",
+              letterSpacing: "0.01em",
+              outline: "none",
+              marginBottom: 2,
+              borderBottom: idx === activeSection ? `3.5px solid #fff6` : "none",
+              whiteSpace: "nowrap",
+              position: "relative"
             }}
           >
             {section.name}
-          </button>
+            {idx === activeSection && (
+              <motion.div
+                layoutId="active-cat-bubble"
+                style={{
+                  position: "absolute",
+                  left: 0, top: 0, right: 0, bottom: 0,
+                  borderRadius: 19,
+                  pointerEvents: "none",
+                  boxShadow: "0 2px 16px #4ccaff33",
+                  zIndex: -1,
+                }}
+                transition={{ type: "spring", stiffness: 340, damping: 30 }}
+              />
+            )}
+          </motion.button>
         ))}
+      </div>
+
+      {/* ----------- Поиск ----------- */}
+      <div style={{
+        width: "100%",
+        maxWidth: isMobile ? "96vw" : 600,
+        margin: isMobile ? "0 auto 13px auto" : "0 auto 26px auto",
+        padding: "0 6px",
+        display: activeSection === 0 ? "none" : "block",
+        position: "relative",
+        zIndex: 5,
+      }}>
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          background: "rgba(29,37,51,0.97)",
+          borderRadius: 11,
+          border: `1.2px solid ${BORDER}`,
+          boxShadow: "0 2px 8px #141a2d08",
+          padding: isMobile ? "8px 10px" : "11px 16px"
+        }}>
+          <svg width={isMobile ? 18 : 21} height={isMobile ? 18 : 21} fill="#b0d7ff" style={{ marginRight: 7 }}>
+            <path d="M20.71 19.29l-4.388-4.387A7.936 7.936 0 0016 9a8 8 0 10-8 8 7.936 7.936 0 005.903-2.677l4.387 4.388a1 1 0 101.414-1.414zM4 9a5 5 0 115 5 5.006 5.006 0 01-5-5z"/>
+          </svg>
+          <input
+            type="text"
+            placeholder="Поиск по товарам..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            style={{
+              width: "100%",
+              background: "transparent",
+              border: "none",
+              outline: "none",
+              color: "#fff",
+              fontSize: isMobile ? 15 : 17,
+              fontWeight: 500,
+              letterSpacing: ".01em",
+            }}
+          />
+          {search && (
+            <button onClick={() => setSearch("")}
+              style={{
+                background: "none", border: "none", color: "#91caf7",
+                fontSize: isMobile ? 16 : 19, cursor: "pointer", marginLeft: 3
+              }}>✕</button>
+          )}
+        </div>
       </div>
 
       {/* ---------- Главная ---------- */}
@@ -566,7 +658,18 @@ const App = () => {
           }}
         >
           <AnimatePresence mode="wait">
-            {(SECTIONS[activeSection]?.products || []).map((product, i) => {
+            {filteredProducts.length === 0 ? (
+              <div style={{
+                gridColumn: "1 / -1",
+                color: "#aad6ff",
+                textAlign: "center",
+                fontWeight: 700,
+                fontSize: isMobile ? 15 : 19,
+                padding: "40px 0"
+              }}>
+                Ничего не найдено 😢
+              </div>
+            ) : filteredProducts.map((product, i) => {
               const qty = getQtyInCart(product.id);
               return (
                 <motion.div
