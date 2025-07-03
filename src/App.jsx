@@ -95,7 +95,7 @@ const TELEGRAM_LINK = "https://t.me/forfriendsstore";
 const PHONE = "+7(926)591-21-65";
 const ADDRESS = "Клин, ул. Победы, д. 9, «Ок’ей»";
 const TV_PLACEHOLDER = "https://tech-iq.ru/upload/iblock/324/ixntoljx6r6lclbh3pfr0ve261z3ocn2.webp";
-const PHONE_PLACEHOLDER = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Smartphone_icon_-_Noun_Project_883.png/64px-Smartphone_icon_-_Noun_Project_883.png";
+const PHONE_PLACEHOLDER = "https://raw.githubusercontent.com/hdpngworld/HPW/main/uploads/65038654434d0-iPhone%2015%20Pro%20Natural%20titanium%20png.png";
 
 const CATEGORIES = [
   { name: "Смартфоны", emoji: "📱", brands: ["iPhone", "Samsung S22/23", "Samsung S24/S25", "Samsung A / наушники / часы", "Xiaomi", "Redmi", "Poco", "OnePlus", "Google Pixel"] },
