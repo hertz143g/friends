@@ -110,28 +110,41 @@ const CATEGORIES = [
 
 const PRODUCTS = {
   "Смартфоны": [
-    { id: 1, name: "iPhone 15 Pro 128GB Серый", brand: "iPhone", price: 115000, img: PHONE_PLACEHOLDER, desc: "Флагман Apple 2024 года. Быстрее и мощнее, чем когда-либо." },
-    { id: 2, name: "Galaxy S24 Ultra 256GB", brand: "Samsung S24/S25", price: 98000, img: PHONE_PLACEHOLDER, desc: "Ультра камера, ультра экран. Выбор для Android-гиков." },
-    { id: 3, name: "Xiaomi Redmi Note 13 Pro", brand: "Xiaomi", price: 34000, img: PHONE_PLACEHOLDER, desc: "Баланс цены и производительности." },
+    { id: 1, name: "iPhone 15 Pro 128GB Серый", brand: "iPhone", price: 115000, img: PHONE_PLACEHOLDER },
+    { id: 2, name: "Galaxy S24 Ultra 256GB", brand: "Samsung S24/S25", price: 98000, img: PHONE_PLACEHOLDER },
+    { id: 3, name: "Xiaomi Redmi Note 13 Pro", brand: "Xiaomi", price: 34000, img: PHONE_PLACEHOLDER },
   ],
   "Часы": [
-    { id: 4, name: "Apple Watch Series 9", brand: "Apple Watch", price: 37000, img: PHONE_PLACEHOLDER, desc: "Ваш идеальный фитнес-помощник и стильный аксессуар." },
-    { id: 5, name: "Casio G-SHOCK", brand: "Casio G-SHOCK", price: 8900, img: PHONE_PLACEHOLDER, desc: "Легендарная ударопрочность." },
-    { id: 6, name: "Garmin Forerunner", brand: "Garmin", price: 28500, img: PHONE_PLACEHOLDER, desc: "Для спорта и активной жизни." }
+    { id: 4, name: "Apple Watch Series 9", brand: "Apple Watch", price: 37000, img: PHONE_PLACEHOLDER },
+    { id: 5, name: "Casio G-SHOCK", brand: "Casio G-SHOCK", price: 8900, img: PHONE_PLACEHOLDER },
+    { id: 6, name: "Garmin Forerunner", brand: "Garmin", price: 28500, img: PHONE_PLACEHOLDER }
   ],
   "Компьютеры и планшеты": [
-    { id: 7, name: "MacBook Air 15 2024", brand: "MacBook", price: 127000, img: PHONE_PLACEHOLDER, desc: "Лёгкий и мощный ноутбук для работы и творчества." },
-    { id: 8, name: "iMac 24\" 2024", brand: "iMac", price: 159000, img: PHONE_PLACEHOLDER, desc: "Стильный моноблок для дома и офиса." },
-    { id: 9, name: "iPad Pro 11\" 2024", brand: "iPad", price: 99000, img: PHONE_PLACEHOLDER, desc: "Лучший планшет для творчества." }
+    { id: 7, name: "MacBook Air 15 2024", brand: "MacBook", price: 127000, img: PHONE_PLACEHOLDER },
+    { id: 8, name: "iMac 24\" 2024", brand: "iMac", price: 159000, img: PHONE_PLACEHOLDER },
+    { id: 9, name: "iPad Pro 11\" 2024", brand: "iPad", price: 99000, img: PHONE_PLACEHOLDER }
   ],
   "Аудио": [
-    { id: 10, name: "AirPods Pro 2", brand: "AirPods", price: 25900, img: PHONE_PLACEHOLDER, desc: "Лучшие наушники Apple." },
-    { id: 11, name: "Marshall Emberton II", brand: "Marshall", price: 18500, img: PHONE_PLACEHOLDER, desc: "Компактная колонка, громкий звук." },
-    { id: 12, name: "Sony WH-1000XM5", brand: "Аксессуары", price: 29900, img: PHONE_PLACEHOLDER, desc: "Топовые Bluetooth-наушники с шумоподавлением." }
+    { id: 10, name: "AirPods Pro 2", brand: "AirPods", price: 25900, img: PHONE_PLACEHOLDER },
+    { id: 11, name: "Marshall Emberton II", brand: "Marshall", price: 18500, img: PHONE_PLACEHOLDER },
+    { id: 12, name: "Sony WH-1000XM5", brand: "Аксессуары", price: 29900, img: PHONE_PLACEHOLDER }
   ],
-  // ... остальные категории по аналогии
+  "Телевизоры": [
+    { id: 13, name: "Xiaomi TV A32", brand: "Телевизоры", price: 16000, img: TV_PLACEHOLDER },
+    { id: 14, name: "Samsung 4K Crystal", brand: "Телевизоры", price: 37000, img: TV_PLACEHOLDER }
+  ],
+  "Игровые приставки": [
+    { id: 15, name: "PlayStation 5", brand: "Sony Ps5", price: 68900, img: PHONE_PLACEHOLDER },
+    { id: 16, name: "Xbox Series X", brand: "Xbox", price: 64800, img: PHONE_PLACEHOLDER }
+  ],
+  "Игрушки": [
+    { id: 17, name: "Labubu Pirate", brand: "Игрушки Labubu", price: 3300, img: PHONE_PLACEHOLDER }
+  ],
+  "Электроника": [
+    { id: 18, name: "Apple TV 4K", brand: "Apple TV", price: 25900, img: PHONE_PLACEHOLDER },
+    { id: 19, name: "GoPro Hero", brand: "GoPro", price: 38500, img: PHONE_PLACEHOLDER }
+  ]
 };
-
 
 const mainBlockWidth = 430;
 
