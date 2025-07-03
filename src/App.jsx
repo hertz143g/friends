@@ -110,7 +110,7 @@ const CATEGORIES = [
 
 const PRODUCTS = {
   "Смартфоны": [
-    { id: 1, name: "iPhone 15 Pro 128GB Серый", brand: "iPhone", price: 115000, img: PHONE_PLACEHOLDER },
+    { id: 1, name: "iPhone 15 Pro 128GB Серый", brand: "iPhone", desc: "Лучшие наушники Apple", price: 115000, img: PHONE_PLACEHOLDER },
     { id: 2, name: "Galaxy S24 Ultra 256GB", brand: "Samsung S24/S25", price: 98000, img: PHONE_PLACEHOLDER },
     { id: 3, name: "Xiaomi Redmi Note 13 Pro", brand: "Xiaomi", price: 34000, img: PHONE_PLACEHOLDER },
   ],
