@@ -6,89 +6,90 @@ function AnimatedBg() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
-    
-
-    let animationId;
+    let animId;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
-    let w = window.innerWidth, h = window.innerHeight;
+    let dpr = window.devicePixelRatio || 1;
+    let w = window.innerWidth;
+    let h = window.innerHeight;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = w + "px";
+    canvas.style.height = h + "px";
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
 
-    function resize() {
+    const resize = () => {
       w = window.innerWidth;
       h = window.innerHeight;
-      canvas.width = w;
-      canvas.height = h;
-    }
-    resize();
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = w + "px";
+      canvas.style.height = h + "px";
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(dpr, dpr);
+    };
     window.addEventListener("resize", resize);
 
-    // particles
-    const PARTICLE_NUM = 220;
+    // === particles ===
+    const PARTICLE_COUNT = w < 600 ? 60 : 110;
+    const SPEED = w < 600 ? 0.6 : 1.1;
     const particles = [];
-    for (let i = 0; i < PARTICLE_NUM; i++) {
-      const size = Math.random() * 2.3 + 1.6;
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
       particles.push({
         x: Math.random() * w,
         y: Math.random() * h,
-        r: size,
-        dx: (Math.random() - 0.5) * 0.57,
-        dy: (Math.random() - 0.5) * 0.57,
-        color: `rgba(77,172,255,${Math.random() * 0.13 + 0.09})`
+        r: 1.7 + Math.random() * 2.2,
+        dx: (Math.random() - 0.5) * SPEED * (0.8 + Math.random()*0.6),
+        dy: (Math.random() - 0.5) * SPEED * (0.8 + Math.random()*0.6),
+        opacity: 0.22 + Math.random() * 0.19
       });
     }
 
     function draw() {
-      // фон с градиентом
-      const grad = ctx.createLinearGradient(0, 0, w, h);
-      grad.addColorStop(0, "#192035");
-      grad.addColorStop(1, "#23293b");
-      ctx.fillStyle = grad;
+      // Заливаем фон как у сайта:
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = "#181e28";
       ctx.fillRect(0, 0, w, h);
 
-      // particles
-      for (let p of particles) {
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, 2 * Math.PI);
-        ctx.fillStyle = p.color;
-        ctx.shadowColor = "#3ca4ff";
-        ctx.shadowBlur = 7;
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(120,180,255,${p.opacity})`;
+        ctx.shadowColor = "#3980f8";
+        ctx.shadowBlur = 13;
         ctx.fill();
         ctx.shadowBlur = 0;
-
-        // движение
         p.x += p.dx;
         p.y += p.dy;
-        if (p.x < -10) p.x = w + 10;
-        if (p.x > w + 10) p.x = -10;
-        if (p.y < -10) p.y = h + 10;
-        if (p.y > h + 10) p.y = -10;
+        if (p.x < 0 || p.x > w) p.dx *= -1;
+        if (p.y < 0 || p.y > h) p.dy *= -1;
       }
-      animationId = requestAnimationFrame(draw);
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const p1 = particles[i], p2 = particles[j];
+          const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+          if (dist < 80) {
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(70,170,255,${0.11 - dist/700})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      }
+      animId = requestAnimationFrame(draw);
     }
     draw();
 
     return () => {
-      cancelAnimationFrame(animationId);
+      cancelAnimationFrame(animId);
       window.removeEventListener("resize", resize);
     };
   }, []);
-
-  // на мобиле просто фон
-  if (window.innerWidth < 540)
-    return (
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100vw",
-          height: "100vh",
-          zIndex: -1,
-          background: "linear-gradient(135deg, #192035 0%, #23293b 100%)",
-        }}
-      />
-    );
 
   return (
     <canvas
@@ -101,10 +102,12 @@ function AnimatedBg() {
         width: "100vw",
         height: "100vh",
         pointerEvents: "none",
+        background: "#181e28"
       }}
     />
   );
 }
+
 
 // ====== Данные ======
 const ACCENT = "#3ca4ff";
