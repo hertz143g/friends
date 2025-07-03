@@ -98,7 +98,7 @@ const TV_PLACEHOLDER = "https://tech-iq.ru/upload/iblock/324/ixntoljx6r6lclbh3pf
 const PHONE_PLACEHOLDER = "https://raw.githubusercontent.com/hdpngworld/HPW/main/uploads/65038654434d0-iPhone%2015%20Pro%20Natural%20titanium%20png.png";
 
 const CATEGORIES = [
-  { name: "Смартфоны", emoji: "📱", brands: ["iPhone", "Samsung S22/23", "Samsung S24/S25", "Samsung A / наушники / часы", "Xiaomi", "Redmi", "Poco", "OnePlus", "Google Pixel"] },
+  { name: "Смартфоны", emoji: "📱", brands: ["Apple", "Samsung S22/23", "Samsung S24/S25", "Samsung A / наушники / часы", "Xiaomi", "Redmi", "Poco", "OnePlus", "Google Pixel"] },
   { name: "Часы", emoji: "⌚", brands: ["Apple Watch", "Casio G-SHOCK", "Garmin"] },
   { name: "Компьютеры и планшеты", emoji: "💻", brands: ["MacBook", "iMac", "iPad"] },
   { name: "Аудио", emoji: "🎧", brands: ["AirPods", "AirPods в разборе", "Аксессуары", "Колонки", "Marshall"] },
@@ -110,7 +110,7 @@ const CATEGORIES = [
 
 const PRODUCTS = {
   "Смартфоны": [
-    { id: 1, name: "iPhone 15 Pro 128GB Серый", brand: "iPhone", price: 115000, img: PHONE_PLACEHOLDER },
+    { id: 1, name: "iPhone 15 Pro 128GB Серый", brand: "Apple", price: 115000, img: PHONE_PLACEHOLDER },
     { id: 2, name: "Galaxy S24 Ultra 256GB", brand: "Samsung S24/S25", price: 98000, img: PHONE_PLACEHOLDER },
     { id: 3, name: "Xiaomi Redmi Note 13 Pro", brand: "Xiaomi", price: 34000, img: PHONE_PLACEHOLDER },
   ],
@@ -171,9 +171,8 @@ function BrandButton({ name, active, onClick }) {
   );
 }
 
-// ====== КАРТОЧКА ТОВАРА (НОВАЯ) ======
+// ====== Карточка товара (фото больше, текст меньше) ======
 function ProductCard({ product, qty, onPlus, onMinus }) {
-  // Анимация на кнопку
   const [addAnim, setAddAnim] = useState(false);
 
   const handlePlus = () => {
@@ -190,107 +189,107 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
 
   return (
     <motion.div
-      whileHover={{ scale: 1.018 }}
+      whileHover={{ scale: 1.022 }}
       style={{
         background: CARD,
         borderRadius: 28,
         boxShadow: "0 8px 32px #20293a33",
-        padding: "36px 30px 33px 30px",
-        margin: "0 auto 29px auto",
+        padding: "28px 18px 22px 18px",
+        margin: "0 auto 26px auto",
         maxWidth: 390,
-        minWidth: 240,
+        minWidth: 230,
         display: "flex",
         flexDirection: "column",
         alignItems: "center"
       }}
     >
       <div style={{
-        width: 96, height: 96, background: "#222b3d",
-        borderRadius: 18, display: "flex",
+        width: 140, height: 140, background: "#222b3d",
+        borderRadius: 25, display: "flex",
         alignItems: "center", justifyContent: "center",
-        marginBottom: 18, boxShadow: "0 2px 16px #1e2b4730"
+        marginBottom: 12, boxShadow: "0 2px 16px #1e2b4730"
       }}>
         <img
           src={product.img}
           alt={product.name}
           style={{
-            width: 72, height: 72, objectFit: "contain", borderRadius: 12
+            width: 120, height: 120, objectFit: "contain", borderRadius: 16
           }}
           onError={e => { e.target.src = "https://img.icons8.com/ios-filled/100/cccccc/no-image.png"; }}
         />
       </div>
       <div style={{
-        fontWeight: 800,
-        fontSize: 20,
+        fontWeight: 700,
+        fontSize: 15,
         color: "#fff",
-        marginBottom: 5,
+        marginBottom: 2,
         textAlign: "center",
         letterSpacing: "0.01em",
         lineHeight: 1.18
       }}>{product.name}</div>
       <div style={{
         fontWeight: 400,
-        fontSize: 15,
+        fontSize: 12,
         color: "#a9b8ce",
-        marginBottom: 14,
+        marginBottom: 9,
         textAlign: "center",
-        lineHeight: 1.22
+        lineHeight: 1.18
       }}>{product.brand}</div>
       <div style={{
         fontWeight: 800,
-        fontSize: 24,
+        fontSize: 19,
         color: ACCENT,
-        marginBottom: 20,
+        marginBottom: 14,
         textAlign: "center",
-        letterSpacing: "0.03em",
+        letterSpacing: "0.01em",
       }}>
         {product.price.toLocaleString()} <span style={{
-          fontWeight: 700, fontSize: 20, color: "#a9cfff"
+          fontWeight: 600, fontSize: 15, color: "#a9cfff"
         }}>₽</span>
       </div>
       {qty === 0 ? (
         <motion.button
           onClick={handlePlus}
-          animate={addAnim ? { scale: [1, 1.09, 0.96, 1] } : { scale: 1 }}
-          transition={{ duration: 0.36, times: [0, 0.42, 0.8, 1], type: "spring" }}
+          animate={addAnim ? { scale: [1, 1.08, 0.97, 1] } : { scale: 1 }}
+          transition={{ duration: 0.36, times: [0, 0.4, 0.8, 1], type: "spring" }}
           style={{
             background: ACCENT,
             color: "#fff",
             border: "none",
-            borderRadius: 22,
-            fontWeight: 700,
-            fontSize: 18,
-            padding: "14px 0",
+            borderRadius: 19,
+            fontWeight: 600,
+            fontSize: 15,
+            padding: "11px 0",
             cursor: "pointer",
             width: "100%",
             outline: "none",
             boxShadow: "0 2px 12px #3ca4ff27",
             transition: ".17s"
           }}
-        >Добавить в корзину</motion.button>
+        >В корзину</motion.button>
       ) : (
         <div style={{
           display: "flex", alignItems: "center", justifyContent: "center",
-          background: ACCENT, borderRadius: 22, width: "100%",
-          minHeight: 48, marginTop: 3
+          background: ACCENT, borderRadius: 19, width: "100%",
+          minHeight: 38, marginTop: 3
         }}>
           <button onClick={onMinus}
             style={{
               background: "none", border: "none", color: "#fff",
-              fontSize: 23, fontWeight: 800, padding: "8px 22px 8px 16px",
-              cursor: "pointer", borderRadius: 11
+              fontSize: 18, fontWeight: 700, padding: "6px 16px 6px 11px",
+              cursor: "pointer", borderRadius: 8
             }}>–</button>
           <div style={{
-            color: "#fff", minWidth: 28, textAlign: "center",
-            fontWeight: 800, fontSize: 19
+            color: "#fff", minWidth: 22, textAlign: "center",
+            fontWeight: 800, fontSize: 14
           }}>
             {qty}
           </div>
           <button onClick={onPlus}
             style={{
               background: "none", border: "none", color: "#fff",
-              fontSize: 23, fontWeight: 800, padding: "8px 16px 8px 22px",
-              cursor: "pointer", borderRadius: 11
+              fontSize: 18, fontWeight: 700, padding: "6px 11px 6px 16px",
+              cursor: "pointer", borderRadius: 8
             }}>+</button>
         </div>
       )}
