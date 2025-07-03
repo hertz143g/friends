@@ -1,85 +1,54 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Particles from "react-tsparticles";
+import { loadFull } from "tsparticles";
 
-// ====== Анимированный фон (Canvas отключается на мобиле) ======
+// ====== Новый анимированный фон (Particles) ======
 function AnimatedBg() {
-  const canvasRef = useRef(null);
-
-  useEffect(() => {
-    if (window.innerWidth < 540) return;
-    let animId;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    let w = window.innerWidth, h = window.innerHeight;
-    canvas.width = w;
-    canvas.height = h;
-    const resize = () => {
-      w = window.innerWidth;
-      h = window.innerHeight;
-      canvas.width = w;
-      canvas.height = h;
-    };
-    window.addEventListener("resize", resize);
-
-    const blobs = [
-      { x: w * 0.2, y: h * 0.32, r: 260, dx: 0.13, dy: 0.09, color: "#212c43" },
-      { x: w * 0.7, y: h * 0.15, r: 270, dx: -0.09, dy: 0.12, color: "#192035" },
-      { x: w * 0.44, y: h * 0.79, r: 230, dx: 0.09, dy: -0.11, color: "#1c243d" },
-      { x: w * 0.87, y: h * 0.71, r: 180, dx: -0.12, dy: 0.07, color: "#2a354b" },
-    ];
-    function draw() {
-      ctx.clearRect(0, 0, w, h);
-      for (const b of blobs) {
-        const g = ctx.createRadialGradient(b.x, b.y, b.r * 0.32, b.x, b.y, b.r);
-        g.addColorStop(0, b.color);
-        g.addColorStop(1, b.color);
-        ctx.beginPath();
-        ctx.arc(b.x, b.y, b.r, 0, 2 * Math.PI);
-        ctx.fillStyle = g;
-        ctx.globalAlpha = 1;
-        ctx.fill();
-        ctx.globalAlpha = 1;
-        b.x += b.dx;
-        b.y += b.dy;
-        if (b.x < -b.r || b.x > w + b.r) b.dx *= -1;
-        if (b.y < -b.r || b.y > h + b.r) b.dy *= -1;
-      }
-      animId = requestAnimationFrame(draw);
-    }
-    draw();
-    return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener("resize", resize);
-    };
-  }, []);
-
-  if (window.innerWidth < 540)
-    return (
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100vw",
-          height: "100vh",
-          zIndex: -1,
-          background: "linear-gradient(135deg, #192035 0%, #23293b 100%)",
-        }}
-      />
-    );
+  // particles.js на мобиле тоже работает
+  const particlesInit = async (engine) => { await loadFull(engine); };
 
   return (
-    <canvas
-      ref={canvasRef}
+    <Particles
+      id="tsparticles"
+      init={particlesInit}
       style={{
         position: "fixed",
-        top: 0,
-        left: 0,
-        zIndex: -1,
-        width: "100vw",
-        height: "100vh",
-        pointerEvents: "none",
+        top: 0, left: 0, width: "100vw", height: "100vh", zIndex: -1
+      }}
+      options={{
+        fullScreen: { enable: false },
+        background: { color: { value: "#181e28" } },
+        fpsLimit: 60,
+        interactivity: {
+          events: { onHover: { enable: false }, resize: true },
+        },
+        particles: {
+          color: { value: "#3ca4ff" },
+          links: {
+            color: "#3ca4ff99",
+            distance: 160,
+            enable: true,
+            opacity: 0.23,
+            width: 1.1
+          },
+          move: {
+            direction: "none",
+            enable: true,
+            outModes: { default: "bounce" },
+            random: false,
+            speed: 1.2,
+            straight: false
+          },
+          number: {
+            density: { enable: true, area: 750 },
+            value: 38
+          },
+          opacity: { value: 0.34 },
+          shape: { type: "circle" },
+          size: { value: { min: 1.2, max: 4.2 } }
+        },
+        detectRetina: true
       }}
     />
   );
