@@ -176,142 +176,128 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
   // Для анимации кнопки "В корзину"
   const [addAnim, setAddAnim] = useState(false);
 
-  // Запускаем анимацию при клике
   const handlePlus = () => {
     setAddAnim(true);
     onPlus();
   };
 
-  // Сбрасываем флаг через 320ms
   useEffect(() => {
     if (addAnim) {
-      const t = setTimeout(() => setAddAnim(false), 320);
+      const t = setTimeout(() => setAddAnim(false), 350);
       return () => clearTimeout(t);
     }
   }, [addAnim]);
 
   return (
     <motion.div
-      whileHover={{ scale: 1.012 }}
+      whileHover={{ scale: 1.018 }}
       style={{
         background: CARD,
-        border: `1.2px solid ${BORDER}`,
-        borderRadius: 18,
-        boxShadow: "0 5px 16px #1d1f2822",
-        padding: "18px 12px 15px 12px",
-        marginBottom: 17,
+        borderRadius: 28,
+        boxShadow: "0 8px 32px #20293a33",
+        padding: "36px 30px 33px 30px",
+        margin: "0 auto 29px auto",
+        maxWidth: 390,
+        minWidth: 240,
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        minHeight: 190,
-        position: "relative",
-        maxWidth: 350,
-        margin: "0 auto 17px auto"
+        alignItems: "center"
       }}
     >
-      <img
-        src={product.img}
-        alt={product.name}
-        style={{
-          width: 60, height: 60, borderRadius: 13, background: "#212942",
-          objectFit: "cover", marginBottom: 8
-        }}
-      />
-      <div style={{ width: "100%", textAlign: "center" }}>
-        <div style={{
-          fontWeight: 400,
-          color: "#b1d2ff",
-          fontSize: 12,
-          marginBottom: 2,
-          fontFamily: "system-ui,sans-serif"
-        }}>{product.brand}</div>
-        <div style={{
-          fontWeight: 500,
-          fontSize: 14.5,
-          color: "#fff",
-          marginBottom: 4,
-          minHeight: 14,
-          fontFamily: "system-ui,sans-serif"
-        }}>{product.name}</div>
-        <div style={{
-          fontWeight: 700,
-          color: ACCENT,
-          fontSize: 16,
-          marginBottom: 9,
-          fontFamily: "system-ui,sans-serif"
-        }}>{product.price.toLocaleString()} ₽</div>
-        {qty === 0 ? (
-          <motion.button
-            onClick={handlePlus}
-            animate={addAnim ? { scale: [1, 1.09, 0.97, 1] } : { scale: 1 }}
-            transition={{ duration: 0.32, times: [0, 0.4, 0.7, 1], type: "spring" }}
-            style={{
-              background: ACCENT,
-              color: "#fff",
-              border: "none",
-              borderRadius: 8,
-              fontWeight: 700,
-              padding: "9px 0",
-              fontSize: 15,
-              cursor: "pointer",
-              width: "100%",
-              marginTop: 4,
-              fontFamily: "system-ui,sans-serif",
-              outline: "none"
-            }}
-          >В корзину</motion.button>
-        ) : (
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "100%",
-            gap: 7,
-            background: ACCENT,
-            borderRadius: 8,
-            marginTop: 3,
-            minHeight: 36 // Чтобы не прыгала высота
-          }}>
-            <button onClick={onMinus}
-              style={{
-                background: "none",
-                border: "none",
-                color: "#fff",
-                fontSize: 18,
-                fontWeight: 900,
-                padding: "7px 10px",
-                cursor: "pointer",
-                borderRadius: 6,
-                fontFamily: "system-ui,sans-serif"
-              }}>–</button>
-            <div style={{
-              color: "#fff",
-              minWidth: 21,
-              textAlign: "center",
-              fontWeight: 800,
-              fontSize: 15,
-              fontFamily: "system-ui,sans-serif"
-            }}>
-              {qty}
-            </div>
-            <button onClick={onPlus}
-              style={{
-                background: "none",
-                border: "none",
-                color: "#fff",
-                fontSize: 18,
-                fontWeight: 900,
-                padding: "7px 10px",
-                cursor: "pointer",
-                borderRadius: 6,
-                fontFamily: "system-ui,sans-serif"
-              }}>+</button>
-          </div>
-        )}
+      <div style={{
+        width: 96, height: 96, background: "#222b3d",
+        borderRadius: 18, display: "flex",
+        alignItems: "center", justifyContent: "center",
+        marginBottom: 18, boxShadow: "0 2px 16px #1e2b4730"
+      }}>
+        <img
+          src={product.img}
+          alt={product.name}
+          style={{
+            width: 72, height: 72, objectFit: "contain", borderRadius: 12
+          }}
+          onError={e => { e.target.src = "https://img.icons8.com/ios-filled/100/cccccc/no-image.png"; }}
+        />
       </div>
+      <div style={{
+        fontWeight: 800,
+        fontSize: 20,
+        color: "#fff",
+        marginBottom: 5,
+        textAlign: "center",
+        letterSpacing: "0.01em",
+        lineHeight: 1.18
+      }}>{product.name}</div>
+      <div style={{
+        fontWeight: 400,
+        fontSize: 15,
+        color: "#a9b8ce",
+        marginBottom: 14,
+        textAlign: "center",
+        lineHeight: 1.22
+      }}>{product.desc || " "}</div>
+      <div style={{
+        fontWeight: 800,
+        fontSize: 24,
+        color: ACCENT,
+        marginBottom: 20,
+        textAlign: "center",
+        letterSpacing: "0.03em",
+      }}>
+        {product.price.toLocaleString()} <span style={{
+          fontWeight: 700, fontSize: 20, color: "#a9cfff"
+        }}>₽</span>
+      </div>
+      {qty === 0 ? (
+        <motion.button
+          onClick={handlePlus}
+          animate={addAnim ? { scale: [1, 1.09, 0.96, 1] } : { scale: 1 }}
+          transition={{ duration: 0.36, times: [0, 0.42, 0.8, 1], type: "spring" }}
+          style={{
+            background: ACCENT,
+            color: "#fff",
+            border: "none",
+            borderRadius: 22,
+            fontWeight: 700,
+            fontSize: 18,
+            padding: "14px 0",
+            cursor: "pointer",
+            width: "100%",
+            outline: "none",
+            boxShadow: "0 2px 12px #3ca4ff27",
+            transition: ".17s"
+          }}
+        >Добавить в корзину</motion.button>
+      ) : (
+        <div style={{
+          display: "flex", alignItems: "center", justifyContent: "center",
+          background: ACCENT, borderRadius: 22, width: "100%",
+          minHeight: 48, marginTop: 3
+        }}>
+          <button onClick={onMinus}
+            style={{
+              background: "none", border: "none", color: "#fff",
+              fontSize: 23, fontWeight: 800, padding: "8px 22px 8px 16px",
+              cursor: "pointer", borderRadius: 11
+            }}>–</button>
+          <div style={{
+            color: "#fff", minWidth: 28, textAlign: "center",
+            fontWeight: 800, fontSize: 19
+          }}>
+            {qty}
+          </div>
+          <button onClick={onPlus}
+            style={{
+              background: "none", border: "none", color: "#fff",
+              fontSize: 23, fontWeight: 800, padding: "8px 16px 8px 22px",
+              cursor: "pointer", borderRadius: 11
+            }}>+</button>
+        </div>
+      )}
     </motion.div>
   );
 }
+
 
 // ====== Основной компонент ======
 const App = () => {
