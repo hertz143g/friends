@@ -1,90 +1,94 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// ====== Анимированный фон с партиклами (работает и на мобиле) ======
+// ====== Анимированный фон с particles ======
 function AnimatedBg() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
-    let animId;
+    
+
+    let animationId;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     let w = window.innerWidth, h = window.innerHeight;
-    canvas.width = w;
-    canvas.height = h;
 
-    const resize = () => {
+    function resize() {
       w = window.innerWidth;
       h = window.innerHeight;
       canvas.width = w;
       canvas.height = h;
-    };
+    }
+    resize();
     window.addEventListener("resize", resize);
 
-    // === Генерируем частицы ===
-    const PARTICLE_COUNT = w < 600 ? 60 : 110; // Больше точек на десктопе
-    const SPEED = w < 600 ? 0.6 : 1.1;        // Чуть медленнее на мобиле
+    // particles
+    const PARTICLE_NUM = 220;
     const particles = [];
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
+    for (let i = 0; i < PARTICLE_NUM; i++) {
+      const size = Math.random() * 2.3 + 1.6;
       particles.push({
         x: Math.random() * w,
         y: Math.random() * h,
-        r: 1.7 + Math.random() * 2.2,
-        dx: (Math.random() - 0.5) * SPEED * (0.8 + Math.random()*0.6),
-        dy: (Math.random() - 0.5) * SPEED * (0.8 + Math.random()*0.6),
-        opacity: 0.22 + Math.random() * 0.19
+        r: size,
+        dx: (Math.random() - 0.5) * 0.57,
+        dy: (Math.random() - 0.5) * 0.57,
+        color: `rgba(77,172,255,${Math.random() * 0.13 + 0.09})`
       });
     }
 
     function draw() {
-      ctx.clearRect(0, 0, w, h);
+      // фон с градиентом
+      const grad = ctx.createLinearGradient(0, 0, w, h);
+      grad.addColorStop(0, "#192035");
+      grad.addColorStop(1, "#23293b");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, w, h);
 
-      // Точки
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
+      // particles
+      for (let p of particles) {
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(120,180,255,${p.opacity})`;
-        ctx.shadowColor = "#3980f8";
-        ctx.shadowBlur = 13;
+        ctx.arc(p.x, p.y, p.r, 0, 2 * Math.PI);
+        ctx.fillStyle = p.color;
+        ctx.shadowColor = "#3ca4ff";
+        ctx.shadowBlur = 7;
         ctx.fill();
         ctx.shadowBlur = 0;
 
-        // Move
+        // движение
         p.x += p.dx;
         p.y += p.dy;
-
-        // Bounce
-        if (p.x < 0 || p.x > w) p.dx *= -1;
-        if (p.y < 0 || p.y > h) p.dy *= -1;
+        if (p.x < -10) p.x = w + 10;
+        if (p.x > w + 10) p.x = -10;
+        if (p.y < -10) p.y = h + 10;
+        if (p.y > h + 10) p.y = -10;
       }
-
-      // Линии между близкими точками
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const p1 = particles[i], p2 = particles[j];
-          const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
-          if (dist < 80) {
-            ctx.beginPath();
-            ctx.moveTo(p1.x, p1.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(70,170,255,${0.11 - dist/700})`;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          }
-        }
-      }
-
-      animId = requestAnimationFrame(draw);
+      animationId = requestAnimationFrame(draw);
     }
     draw();
 
     return () => {
-      cancelAnimationFrame(animId);
+      cancelAnimationFrame(animationId);
       window.removeEventListener("resize", resize);
     };
   }, []);
+
+  // на мобиле просто фон
+  if (window.innerWidth < 540)
+    return (
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          zIndex: -1,
+          background: "linear-gradient(135deg, #192035 0%, #23293b 100%)",
+        }}
+      />
+    );
 
   return (
     <canvas
@@ -96,12 +100,11 @@ function AnimatedBg() {
         zIndex: -1,
         width: "100vw",
         height: "100vh",
-        pointerEvents: "none"
+        pointerEvents: "none",
       }}
     />
   );
 }
-
 
 // ====== Данные ======
 const ACCENT = "#3ca4ff";
