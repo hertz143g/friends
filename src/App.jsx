@@ -32,8 +32,8 @@ function AnimatedBg() {
         x: Math.random() * w,
         y: Math.random() * h,
         r: size,
-        dx: (Math.random() - 0.5) * 0.19,
-        dy: (Math.random() - 0.5) * 0.19,
+        dx: (Math.random() - 0.5) * 0.57,
+        dy: (Math.random() - 0.5) * 0.57,
         color: `rgba(77,172,255,${Math.random() * 0.13 + 0.09})`
       });
     }
