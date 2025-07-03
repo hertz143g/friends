@@ -110,13 +110,43 @@ const CATEGORIES = [
 
 const PRODUCTS = {
   "Смартфоны": [
-    { id: 1, name: "iPhone 15 Pro 128GB Серый", brand: "iPhone", price: 115000, img: PHONE_PLACEHOLDER, description: "Флагман 2024" },
-    { id: 2, name: "Galaxy S24 Ultra 256GB", brand: "Samsung S24/S25", price: 98000, img: PHONE_PLACEHOLDER, description: "Лучший Android" },
-    { id: 3, name: "Xiaomi Redmi Note 13 Pro", brand: "Xiaomi", price: 34000, img: PHONE_PLACEHOLDER, description: "Топ за свои" },
+    { id: 1, name: "iPhone 15 Pro 128GB Серый", brand: "iPhone", price: 115000, img: PHONE_PLACEHOLDER },
+    { id: 2, name: "Galaxy S24 Ultra 256GB", brand: "Samsung S24/S25", price: 98000, img: PHONE_PLACEHOLDER },
+    { id: 3, name: "Xiaomi Redmi Note 13 Pro", brand: "Xiaomi", price: 34000, img: PHONE_PLACEHOLDER },
   ],
-  // остальные товары — по аналогии
-  // ...
+  "Часы": [
+    { id: 4, name: "Apple Watch Series 9", brand: "Apple Watch", price: 37000, img: PHONE_PLACEHOLDER },
+    { id: 5, name: "Casio G-SHOCK", brand: "Casio G-SHOCK", price: 8900, img: PHONE_PLACEHOLDER },
+    { id: 6, name: "Garmin Forerunner", brand: "Garmin", price: 28500, img: PHONE_PLACEHOLDER }
+  ],
+  "Компьютеры и планшеты": [
+    { id: 7, name: "MacBook Air 15 2024", brand: "MacBook", price: 127000, img: PHONE_PLACEHOLDER },
+    { id: 8, name: "iMac 24\" 2024", brand: "iMac", price: 159000, img: PHONE_PLACEHOLDER },
+    { id: 9, name: "iPad Pro 11\" 2024", brand: "iPad", price: 99000, img: PHONE_PLACEHOLDER }
+  ],
+  "Аудио": [
+    { id: 10, name: "AirPods Pro 2", brand: "AirPods", price: 25900, img: PHONE_PLACEHOLDER },
+    { id: 11, name: "Marshall Emberton II", brand: "Marshall", price: 18500, img: PHONE_PLACEHOLDER },
+    { id: 12, name: "Sony WH-1000XM5", brand: "Аксессуары", price: 29900, img: PHONE_PLACEHOLDER }
+  ],
+  "Телевизоры": [
+    { id: 13, name: "Xiaomi TV A32", brand: "Телевизоры", price: 16000, img: TV_PLACEHOLDER },
+    { id: 14, name: "Samsung 4K Crystal", brand: "Телевизоры", price: 37000, img: TV_PLACEHOLDER }
+  ],
+  "Игровые приставки": [
+    { id: 15, name: "PlayStation 5", brand: "Sony Ps5", price: 68900, img: PHONE_PLACEHOLDER },
+    { id: 16, name: "Xbox Series X", brand: "Xbox", price: 64800, img: PHONE_PLACEHOLDER }
+  ],
+  "Игрушки": [
+    { id: 17, name: "Labubu Pirate", brand: "Игрушки Labubu", price: 3300, img: PHONE_PLACEHOLDER }
+  ],
+  "Электроника": [
+    { id: 18, name: "Apple TV 4K", brand: "Apple TV", price: 25900, img: PHONE_PLACEHOLDER },
+    { id: 19, name: "GoPro Hero", brand: "GoPro", price: 38500, img: PHONE_PLACEHOLDER }
+  ]
 };
+
+const mainBlockWidth = 430;
 
 // ====== Кнопка бренда ======
 function BrandButton({ name, active, onClick }) {
@@ -152,6 +182,7 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
     onPlus();
   };
 
+  // Сбрасываем флаг через 320ms
   useEffect(() => {
     if (addAnim) {
       const t = setTimeout(() => setAddAnim(false), 320);
@@ -161,156 +192,126 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
 
   return (
     <motion.div
+      whileHover={{ scale: 1.012 }}
       style={{
         background: CARD,
-        borderRadius: 25,
-        boxShadow: "0 6px 32px #0008",
-        padding: "30px 22px 25px 22px",
-        width: 300,
-        minHeight: 380,
+        border: `1.2px solid ${BORDER}`,
+        borderRadius: 18,
+        boxShadow: "0 5px 16px #1d1f2822",
+        padding: "18px 12px 15px 12px",
+        marginBottom: 17,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        minHeight: 190,
         position: "relative",
-        margin: "0 auto 20px auto"
+        maxWidth: 350,
+        margin: "0 auto 17px auto"
       }}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ type: "spring", duration: 0.44 }}
     >
       <img
         src={product.img}
         alt={product.name}
         style={{
-          width: 110,
-          height: 110,
-          objectFit: "contain",
-          marginBottom: 12,
-          userSelect: "none",
+          width: 60, height: 60, borderRadius: 13, background: "#212942",
+          objectFit: "cover", marginBottom: 8
         }}
-        draggable={false}
       />
-      <div style={{
-        color: "#fff",
-        fontSize: 15,
-        fontWeight: 700,
-        marginBottom: 2,
-        textAlign: "center",
-        lineHeight: 1.18,
-        minHeight: 18
-      }}>
-        {product.name}
-      </div>
-      {product.description && (
+      <div style={{ width: "100%", textAlign: "center" }}>
         <div style={{
-          color: "#bfc7d7",
-          fontSize: 13,
-          marginBottom: 17,
-          textAlign: "center",
-          lineHeight: 1.21,
-          minHeight: 17
-        }}>
-          {product.description}
-        </div>
-      )}
-      <div style={{
-        color: ACCENT,
-        fontSize: 23,
-        fontWeight: 900,
-        letterSpacing: "-0.5px",
-        marginBottom: 22,
-        textShadow: "0 1px 9px #162b4326",
-        textAlign: "center"
-      }}>
-        {product.price.toLocaleString()} <span style={{
-          fontSize: 15,
+          fontWeight: 400,
+          color: "#b1d2ff",
+          fontSize: 12,
+          marginBottom: 2,
+          fontFamily: "system-ui,sans-serif"
+        }}>{product.brand}</div>
+        <div style={{
+          fontWeight: 500,
+          fontSize: 14.5,
+          color: "#fff",
+          marginBottom: 4,
+          minHeight: 14,
+          fontFamily: "system-ui,sans-serif"
+        }}>{product.name}</div>
+        <div style={{
           fontWeight: 700,
-          color: "#b4dafd"
-        }}>₽</span>
-      </div>
-      {qty === 0 ? (
-        <motion.button
-          onClick={handlePlus}
-          animate={addAnim ? { scale: [1, 1.12, 0.97, 1] } : { scale: 1 }}
-          transition={{ duration: 0.32, times: [0, 0.4, 0.7, 1], type: "spring" }}
-          style={{
+          color: ACCENT,
+          fontSize: 16,
+          marginBottom: 9,
+          fontFamily: "system-ui,sans-serif"
+        }}>{product.price.toLocaleString()} ₽</div>
+        {qty === 0 ? (
+          <motion.button
+            onClick={handlePlus}
+            animate={addAnim ? { scale: [1, 1.09, 0.97, 1] } : { scale: 1 }}
+            transition={{ duration: 0.32, times: [0, 0.4, 0.7, 1], type: "spring" }}
+            style={{
+              background: ACCENT,
+              color: "#fff",
+              border: "none",
+              borderRadius: 8,
+              fontWeight: 700,
+              padding: "9px 0",
+              fontSize: 15,
+              cursor: "pointer",
+              width: "100%",
+              marginTop: 4,
+              fontFamily: "system-ui,sans-serif",
+              outline: "none"
+            }}
+          >В корзину</motion.button>
+        ) : (
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             width: "100%",
+            gap: 7,
             background: ACCENT,
-            color: "#fff",
-            fontWeight: 800,
-            fontSize: 17,
-            border: "none",
-            borderRadius: 18,
-            padding: "12px 0",
-            marginTop: "auto",
-            cursor: "pointer",
-            letterSpacing: "0.1px",
-            boxShadow: "0 3px 18px #2689ff36",
-            outline: "none",
-            transition: ".17s"
-          }}
-        >
-          В корзину
-        </motion.button>
-      ) : (
-        <div style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 8,
-          width: "100%",
-          background: ACCENT,
-          borderRadius: 15,
-          marginTop: 3,
-          minHeight: 40
-        }}>
-          <button onClick={onMinus}
-            style={{
-              background: "none",
-              border: "none",
-              color: "#fff",
-              fontSize: 22,
-              fontWeight: 900,
-              width: 36, height: 36,
-              borderRadius: "50%",
-              cursor: "pointer",
-              fontFamily: "inherit"
-            }}>–</button>
-          <span style={{
-            color: "#fff",
-            minWidth: 23,
-            textAlign: "center",
-            fontWeight: 900,
-            fontSize: 17
+            borderRadius: 8,
+            marginTop: 3,
+            minHeight: 36 // Чтобы не прыгала высота
           }}>
-            {qty}
-          </span>
-          <button onClick={onPlus}
-            style={{
-              background: "none",
-              border: "none",
+            <button onClick={onMinus}
+              style={{
+                background: "none",
+                border: "none",
+                color: "#fff",
+                fontSize: 18,
+                fontWeight: 900,
+                padding: "7px 10px",
+                cursor: "pointer",
+                borderRadius: 6,
+                fontFamily: "system-ui,sans-serif"
+              }}>–</button>
+            <div style={{
               color: "#fff",
-              fontSize: 22,
-              fontWeight: 900,
-              width: 36, height: 36,
-              borderRadius: "50%",
-              cursor: "pointer",
-              fontFamily: "inherit"
-            }}>+</button>
-        </div>
-      )}
+              minWidth: 21,
+              textAlign: "center",
+              fontWeight: 800,
+              fontSize: 15,
+              fontFamily: "system-ui,sans-serif"
+            }}>
+              {qty}
+            </div>
+            <button onClick={onPlus}
+              style={{
+                background: "none",
+                border: "none",
+                color: "#fff",
+                fontSize: 18,
+                fontWeight: 900,
+                padding: "7px 10px",
+                cursor: "pointer",
+                borderRadius: 6,
+                fontFamily: "system-ui,sans-serif"
+              }}>+</button>
+          </div>
+        )}
+      </div>
     </motion.div>
   );
 }
-
-// ========== Основной компонент и всё остальное — не менялось ==========
-// (Дальше копируй свой код из предыдущего сообщения, выше все остальное без изменений.)
-
-// ... твой App, BrandButton, AnimatedBg и прочее ...
-
-// Просто замени компонент ProductCard на этот новый!
-// Если хочешь, могу сюда вставить прямо весь App с этим ProductCard (дай знать).
-
 
 // ====== Основной компонент ======
 const App = () => {
