@@ -171,9 +171,9 @@ function BrandButton({ name, active, onClick }) {
   );
 }
 
-// ====== Карточка товара ======
+// ====== КАРТОЧКА ТОВАРА (НОВАЯ) ======
 function ProductCard({ product, qty, onPlus, onMinus }) {
-  // Для анимации кнопки "В корзину"
+  // Анимация на кнопку
   const [addAnim, setAddAnim] = useState(false);
 
   const handlePlus = () => {
@@ -235,7 +235,7 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
         marginBottom: 14,
         textAlign: "center",
         lineHeight: 1.22
-      }}>{product.desc || " "}</div>
+      }}>{product.brand}</div>
       <div style={{
         fontWeight: 800,
         fontSize: 24,
@@ -298,7 +298,6 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
   );
 }
 
-
 // ====== Основной компонент ======
 const App = () => {
   const [activeCategory, setActiveCategory] = useState(null);
@@ -315,12 +314,10 @@ const App = () => {
   }, []);
   const isMobile = vw < 600;
 
-  // Скроллить наверх при смене страницы
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [activeCategory, showCart]);
 
-  // Корзина
   const cartTotalCount = cart.reduce((a, b) => a + b.qty, 0);
   const getQtyInCart = (id) => cart.find(i => i.id === id)?.qty || 0;
   const addToCart = (id) => setCart(prev => {
@@ -343,7 +340,6 @@ const App = () => {
   };
   const total = cart.reduce((sum, item) => (getProduct(item.id)?.price || 0) * item.qty + sum, 0);
 
-  // Фильтрация товаров
   let shownProducts = [];
   if (activeCategory) {
     shownProducts = PRODUCTS[activeCategory] || [];
