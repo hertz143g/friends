@@ -6,7 +6,6 @@ function AnimatedBg() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
-    // Отключаем canvas-анимацию для мобильных (можешь подогнать ширину под свои нужды)
     if (window.innerWidth < 540) return;
     let animId;
     const canvas = canvasRef.current;
@@ -55,7 +54,6 @@ function AnimatedBg() {
     };
   }, []);
 
-  // Если мобильный — просто статичный фон
   if (window.innerWidth < 540)
     return (
       <div
@@ -177,96 +175,131 @@ function BrandButton({ name, active, onClick }) {
 function ProductCard({ product, qty, onPlus, onMinus }) {
   return (
     <motion.div
-      whileHover={{ scale: 1.012 }}
+      whileHover={{ scale: 1.01 }}
       style={{
-        background: CARD,
-        border: `1.2px solid ${BORDER}`,
-        borderRadius: 15,
-        boxShadow: "0 5px 16px #1d1f2822",
-        padding: "13px 10px 15px 10px",
-        marginBottom: 15,
+        background: "#23293b",
+        border: "none",
+        borderRadius: 60,
+        boxShadow: "0 5px 22px #181e281c",
+        padding: "32px 18px 28px 18px",
+        marginBottom: 23,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        minHeight: 180,
-        position: "relative",
-        maxWidth: 350,
-        margin: "0 auto 17px auto"
+        minHeight: 380,
+        maxWidth: 400,
+        margin: "0 auto 25px auto"
       }}
     >
-      <img
-        src={product.img}
-        alt={product.name}
+      <div
         style={{
-          width: 62, height: 62, borderRadius: 10, background: "#212942",
-          objectFit: "cover", marginBottom: 6
+          width: 310,
+          height: 230,
+          background: "#fff",
+          borderRadius: 55,
+          marginBottom: 20,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          overflow: "hidden"
         }}
-      />
-      <div style={{ width: "100%", textAlign: "center" }}>
-        <div style={{ fontWeight: 700, color: "#b1d2ff", fontSize: 11.5, marginBottom: 2, minHeight: 14 }}>{product.brand}</div>
-        <div style={{ fontWeight: 900, fontSize: 15.5, color: "#fff", marginBottom: 5, minHeight: 16 }}>{product.name}</div>
-        <div style={{ fontWeight: 800, color: ACCENT, fontSize: 14.5, marginBottom: 7 }}>{product.price} ₽</div>
-        {qty === 0 ? (
-          <button
-            onClick={onPlus}
-            style={{
-              background: ACCENT,
-              color: "#fff",
-              border: "none",
-              borderRadius: 8,
-              fontWeight: 800,
-              padding: "11px 0",
-              fontSize: 15,
-              cursor: "pointer",
-              width: "100%",
-              marginTop: 2
-            }}
-          >В корзину</button>
-        ) : (
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "100%",
-            gap: 7,
-            background: ACCENT,
-            borderRadius: 8,
-            marginTop: 3
-          }}>
-            <button onClick={onMinus}
-              style={{
-                background: "none",
-                border: "none",
-                color: "#fff",
-                fontSize: 20,
-                fontWeight: 900,
-                padding: "6px 10px",
-                cursor: "pointer",
-                borderRadius: 6
-              }}>–</button>
-            <div style={{
-              color: "#fff",
-              minWidth: 21,
-              textAlign: "center",
-              fontWeight: 900,
-              fontSize: 14
-            }}>
-              {qty}
-            </div>
-            <button onClick={onPlus}
-              style={{
-                background: "none",
-                border: "none",
-                color: "#fff",
-                fontSize: 20,
-                fontWeight: 900,
-                padding: "6px 10px",
-                cursor: "pointer",
-                borderRadius: 6
-              }}>+</button>
-          </div>
-        )}
+      >
+        <img
+          src={product.img}
+          alt={product.name}
+          style={{
+            width: 150,
+            height: 150,
+            objectFit: "contain",
+            borderRadius: 35,
+            background: "#fff"
+          }}
+        />
       </div>
+      <div style={{
+        fontWeight: 800,
+        fontSize: 28,
+        color: "#fff",
+        marginBottom: 7,
+        textAlign: "center",
+        letterSpacing: "0.02em"
+      }}>
+        {product.name}
+      </div>
+      <div style={{
+        fontWeight: 700,
+        fontSize: 22,
+        color: "#3ca4ff",
+        marginBottom: 18,
+        textAlign: "center",
+        letterSpacing: "0.01em"
+      }}>
+        {product.price.toLocaleString()} ₽
+      </div>
+      {qty === 0 ? (
+        <button
+          onClick={onPlus}
+          style={{
+            width: "95%",
+            background: "#3ca4ff",
+            color: "#fff",
+            border: "none",
+            borderRadius: 35,
+            fontWeight: 900,
+            fontSize: 24,
+            padding: "13px 0",
+            cursor: "pointer",
+            marginTop: 6,
+            boxShadow: "0 2px 14px #3ca4ff44"
+          }}
+        >В корзину</button>
+      ) : (
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "95%",
+          gap: 13,
+          background: "#3ca4ff",
+          borderRadius: 35,
+          marginTop: 8,
+          padding: "6px 0"
+        }}>
+          <button onClick={onMinus}
+            style={{
+              background: "none",
+              border: "none",
+              color: "#fff",
+              fontSize: 30,
+              fontWeight: 900,
+              padding: "7px 18px 7px 16px",
+              cursor: "pointer",
+              borderRadius: 16,
+              outline: "none"
+            }}>–</button>
+          <div style={{
+            color: "#fff",
+            minWidth: 35,
+            textAlign: "center",
+            fontWeight: 900,
+            fontSize: 23
+          }}>
+            {qty}
+          </div>
+          <button onClick={onPlus}
+            style={{
+              background: "none",
+              border: "none",
+              color: "#fff",
+              fontSize: 30,
+              fontWeight: 900,
+              padding: "7px 16px 7px 18px",
+              cursor: "pointer",
+              borderRadius: 16,
+              outline: "none"
+            }}>+</button>
+        </div>
+      )}
     </motion.div>
   );
 }
