@@ -24,7 +24,7 @@ function AnimatedBg() {
     window.addEventListener("resize", resize);
 
     // particles
-    const PARTICLE_NUM = 120;
+    const PARTICLE_NUM = 220;
     const particles = [];
     for (let i = 0; i < PARTICLE_NUM; i++) {
       const size = Math.random() * 2.3 + 1.6;
