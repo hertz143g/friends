@@ -6,7 +6,7 @@ function AnimatedBg() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
-    if (window.innerWidth < 540) return;
+    
 
     let animationId;
     const canvas = canvasRef.current;
