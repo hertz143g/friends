@@ -599,14 +599,15 @@ const App = () => {
                   paddingLeft: 1,
                   scrollbarWidth: "thin"
                 }}>
-                  {CATEGORIES.find(c => c.name === activeCategory).brands.map(brand =>
-                    <BrandButton
-                      key={brand}
-                      name={brand}
-                      active={brand === activeBrand}
-                      onClick={() => setActiveBrand(brand === activeBrand ? null : brand)}
-                    />
-                  )}
+                  {(CATEGORIES.find(c => c.name === activeCategory)?.brands || []).map(brand =>
+                  <BrandButton
+    key={brand}
+    name={brand}
+    active={brand === activeBrand}
+    onClick={() => setActiveBrand(brand === activeBrand ? null : brand)}
+  />
+)}
+
                 </div>
                 <input
                   placeholder="Поиск товаров"
@@ -772,8 +773,3 @@ const App = () => {
 };
 
 export default App;
-
-console.log("ВСЕ ТОВАРЫ:", products);
-console.log("Выбрана категория:", activeCategory);
-console.log("Выбран бренд:", activeBrand);
-console.log("SHOWN:", shownProducts);
