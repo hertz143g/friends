@@ -1,21 +1,194 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Shop from "./Shop";            // твой магазин
-import AdminPanel from "./adminpanel"; // твоя админка
 
-function App() {
+// URL CSV Google Sheets
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSRtT-9yQsf2f0mY01Hkcg_711efC99-ZBqzhO_j8nUJWcP3HCZFzXTGCkEKXtqL8FF4IHmFUM_34TM/pub?output=csv";
+
+const ACCENT = "#3ca4ff";
+const CARD = "#23293b";
+const BORDER = "#27395a";
+const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
+const TELEGRAM_LINK = "https://t.me/forfriendsstore";
+const PHONE = "+7(926)591-21-65";
+const ADDRESS = "Клин, ул. Победы, д. 9, «Ок’ей»";
+const PHONE_PLACEHOLDER = "https://raw.githubusercontent.com/hdpngworld/HPW/main/uploads/65038654434d0-iPhone%2015%20Pro%20Natural%20titanium%20png.png";
+const mainBlockWidth = 430;
+
+const CATEGORIES = [
+  { name: "Смартфоны", emoji: "📱", brands: ["Apple", "Samsung S22/23", "Samsung S24/S25", "Samsung A / наушники / часы", "Xiaomi", "Redmi", "Poco", "OnePlus", "Google Pixel"] },
+  { name: "Часы", emoji: "⌚", brands: ["Apple Watch", "Casio G-SHOCK", "Garmin"] },
+  { name: "Компьютеры и планшеты", emoji: "💻", brands: ["MacBook", "iMac", "iPad"] },
+  { name: "Аудио", emoji: "🎧", brands: ["AirPods", "AirPods в разборе", "Аксессуары", "Колонки", "Marshall"] },
+  { name: "Телевизоры", emoji: "📺", brands: ["Телевизоры", "Электросамокаты"] },
+  { name: "Игровые приставки", emoji: "🎮", brands: ["Xbox", "Sony Ps5"] },
+  { name: "Игрушки", emoji: "🧸", brands: ["Игрушки Labubu"] },
+  { name: "Электроника", emoji: "🔌", brands: ["Apple TV", "GoPro", "Dyson", "Пылесос"] },
+];
+
+function parseCSV(text) {
+  const [headerLine, ...lines] = text.split("\n");
+  const headers = headerLine.split(",").map(x => x.trim().toLowerCase());
+  return lines
+    .map(line => {
+      const cells = line.split(",").map(x => x.trim());
+      if (cells.length < 3) return null;
+      const item = {};
+      headers.forEach((h, i) => item[h] = cells[i] || "");
+      return item;
+    })
+    .filter(Boolean);
+}
+
+// Brand button
+function BrandButton({ name, active, onClick }) {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Shop />} />
-        <Route path="/admin" element={<AdminPanel />} />
-      </Routes>
-    </Router>
+    <button
+      onClick={onClick}
+      style={{
+        background: active ? ACCENT : "#283762",
+        color: active ? "#fff" : "#bcd7ff",
+        border: "none",
+        borderRadius: 11,
+        padding: "7px 15px",
+        fontWeight: 700,
+        fontSize: 14,
+        cursor: "pointer",
+        marginRight: 9,
+        marginBottom: 6,
+        whiteSpace: "nowrap",
+        transition: "background .14s"
+      }}
+    >{name}</button>
   );
 }
 
-// ====== Анимированный фон с particles ======
+// Product Card
+function ProductCard({ product, qty, onPlus, onMinus }) {
+  const [addAnim, setAddAnim] = useState(false);
+
+  const handlePlus = () => {
+    setAddAnim(true);
+    onPlus();
+  };
+
+  useEffect(() => {
+    if (addAnim) {
+      const t = setTimeout(() => setAddAnim(false), 350);
+      return () => clearTimeout(t);
+    }
+  }, [addAnim]);
+
+  return (
+    <motion.div
+      whileHover={{ scale: 1.022 }}
+      style={{
+        background: CARD,
+        borderRadius: 28,
+        boxShadow: "0 8px 32px #20293a33",
+        padding: "28px 18px 22px 18px",
+        margin: "0 auto 26px auto",
+        maxWidth: 390,
+        minWidth: 230,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center"
+      }}
+    >
+      <div style={{
+        width: 140, height: 140, background: "#222b3d",
+        borderRadius: 25, display: "flex",
+        alignItems: "center", justifyContent: "center",
+        marginBottom: 12, boxShadow: "0 2px 16px #1e2b4730"
+      }}>
+        <img
+          src={product.img || PHONE_PLACEHOLDER}
+          alt={product.name}
+          style={{
+            width: 120, height: 120, objectFit: "contain", borderRadius: 16
+          }}
+          onError={e => { e.target.src = PHONE_PLACEHOLDER; }}
+        />
+      </div>
+      <div style={{
+        fontWeight: 700,
+        fontSize: 15,
+        color: "#fff",
+        marginBottom: 2,
+        textAlign: "center",
+        letterSpacing: "0.01em",
+        lineHeight: 1.18
+      }}>{product.name}</div>
+      <div style={{
+        fontWeight: 400,
+        fontSize: 12,
+        color: "#a9b8ce",
+        marginBottom: 9,
+        textAlign: "center",
+        lineHeight: 1.18
+      }}>{product.brand}</div>
+      <div style={{
+        fontWeight: 800,
+        fontSize: 19,
+        color: ACCENT,
+        marginBottom: 14,
+        textAlign: "center",
+        letterSpacing: "0.01em",
+      }}>
+        {Number(product.price).toLocaleString()} <span style={{
+          fontWeight: 600, fontSize: 15, color: "#a9cfff"
+        }}>₽</span>
+      </div>
+      {qty === 0 ? (
+        <motion.button
+          onClick={handlePlus}
+          animate={addAnim ? { scale: [1, 1.08, 0.97, 1] } : { scale: 1 }}
+          transition={{ duration: 0.36, times: [0, 0.4, 0.8, 1], type: "spring" }}
+          style={{
+            background: ACCENT,
+            color: "#fff",
+            border: "none",
+            borderRadius: 19,
+            fontWeight: 600,
+            fontSize: 15,
+            padding: "11px 0",
+            cursor: "pointer",
+            width: "100%",
+            outline: "none",
+            boxShadow: "0 2px 12px #3ca4ff27",
+            transition: ".17s"
+          }}
+        >В корзину</motion.button>
+      ) : (
+        <div style={{
+          display: "flex", alignItems: "center", justifyContent: "center",
+          background: ACCENT, borderRadius: 19, width: "100%",
+          minHeight: 38, marginTop: 3
+        }}>
+          <button onClick={onMinus}
+            style={{
+              background: "none", border: "none", color: "#fff",
+              fontSize: 18, fontWeight: 700, padding: "6px 16px 6px 11px",
+              cursor: "pointer", borderRadius: 8
+            }}>–</button>
+          <div style={{
+            color: "#fff", minWidth: 22, textAlign: "center",
+            fontWeight: 800, fontSize: 14
+          }}>
+            {qty}
+          </div>
+          <button onClick={onPlus}
+            style={{
+              background: "none", border: "none", color: "#fff",
+              fontSize: 18, fontWeight: 700, padding: "6px 11px 6px 16px",
+              cursor: "pointer", borderRadius: 8
+            }}>+</button>
+        </div>
+      )}
+    </motion.div>
+  );
+}
+
+// Анимированный фон — ОСТАВЛЯЕМ как было
 function AnimatedBg() {
   const canvasRef = useRef(null);
 
@@ -46,7 +219,6 @@ function AnimatedBg() {
     };
     window.addEventListener("resize", resize);
 
-    // === particles ===
     const PARTICLE_COUNT = w < 600 ? 60 : 110;
     const SPEED = w < 600 ? 0.6 : 1.1;
     const particles = [];
@@ -62,7 +234,6 @@ function AnimatedBg() {
     }
 
     function draw() {
-      // Заливаем фон как у сайта:
       ctx.clearRect(0, 0, w, h);
       ctx.fillStyle = "#181e28";
       ctx.fillRect(0, 0, w, h);
@@ -122,221 +293,9 @@ function AnimatedBg() {
   );
 }
 
-
-// ====== Данные ======
-const ACCENT = "#3ca4ff";
-const BG = "#181e28";
-const CARD = "#23293b";
-const BORDER = "#27395a";
-const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
-const TELEGRAM_LINK = "https://t.me/forfriendsstore";
-const PHONE = "+7(926)591-21-65";
-const ADDRESS = "Клин, ул. Победы, д. 9, «Ок’ей»";
-const TV_PLACEHOLDER = "https://tech-iq.ru/upload/iblock/324/ixntoljx6r6lclbh3pfr0ve261z3ocn2.webp";
-const PHONE_PLACEHOLDER = "https://raw.githubusercontent.com/hdpngworld/HPW/main/uploads/65038654434d0-iPhone%2015%20Pro%20Natural%20titanium%20png.png";
-
-const CATEGORIES = [
-  { name: "Смартфоны", emoji: "📱", brands: ["Apple", "Samsung S22/23", "Samsung S24/S25", "Samsung A / наушники / часы", "Xiaomi", "Redmi", "Poco", "OnePlus", "Google Pixel"] },
-  { name: "Часы", emoji: "⌚", brands: ["Apple Watch", "Casio G-SHOCK", "Garmin"] },
-  { name: "Компьютеры и планшеты", emoji: "💻", brands: ["MacBook", "iMac", "iPad"] },
-  { name: "Аудио", emoji: "🎧", brands: ["AirPods", "AirPods в разборе", "Аксессуары", "Колонки", "Marshall"] },
-  { name: "Телевизоры", emoji: "📺", brands: ["Телевизоры", "Электросамокаты"] },
-  { name: "Игровые приставки", emoji: "🎮", brands: ["Xbox", "Sony Ps5"] },
-  { name: "Игрушки", emoji: "🧸", brands: ["Игрушки Labubu"] },
-  { name: "Электроника", emoji: "🔌", brands: ["Apple TV", "GoPro", "Dyson", "Пылесос"] },
-];
-
-const PRODUCTS = {
-  "Смартфоны": [
-    { id: 1, name: "iPhone 15 Pro 128GB Серый", brand: "Apple", price: 115000, img: PHONE_PLACEHOLDER },
-    { id: 2, name: "Galaxy S24 Ultra 256GB", brand: "Samsung S24/S25", price: 98000, img: PHONE_PLACEHOLDER },
-    { id: 3, name: "Xiaomi Redmi Note 13 Pro", brand: "Xiaomi", price: 34000, img: PHONE_PLACEHOLDER },
-  ],
-  "Часы": [
-    { id: 4, name: "Apple Watch Series 9", brand: "Apple Watch", price: 37000, img: PHONE_PLACEHOLDER },
-    { id: 5, name: "Casio G-SHOCK", brand: "Casio G-SHOCK", price: 8900, img: PHONE_PLACEHOLDER },
-    { id: 6, name: "Garmin Forerunner", brand: "Garmin", price: 28500, img: PHONE_PLACEHOLDER }
-  ],
-  "Компьютеры и планшеты": [
-    { id: 7, name: "MacBook Air 15 2024", brand: "MacBook", price: 127000, img: PHONE_PLACEHOLDER },
-    { id: 8, name: "iMac 24\" 2024", brand: "iMac", price: 159000, img: PHONE_PLACEHOLDER },
-    { id: 9, name: "iPad Pro 11\" 2024", brand: "iPad", price: 99000, img: PHONE_PLACEHOLDER }
-  ],
-  "Аудио": [
-    { id: 10, name: "AirPods Pro 2", brand: "AirPods", price: 25900, img: PHONE_PLACEHOLDER },
-    { id: 11, name: "Marshall Emberton II", brand: "Marshall", price: 18500, img: PHONE_PLACEHOLDER },
-    { id: 12, name: "Sony WH-1000XM5", brand: "Аксессуары", price: 29900, img: PHONE_PLACEHOLDER }
-  ],
-  "Телевизоры": [
-    { id: 13, name: "Xiaomi TV A32", brand: "Телевизоры", price: 16000, img: TV_PLACEHOLDER },
-    { id: 14, name: "Samsung 4K Crystal", brand: "Телевизоры", price: 37000, img: TV_PLACEHOLDER }
-  ],
-  "Игровые приставки": [
-    { id: 15, name: "PlayStation 5", brand: "Sony Ps5", price: 68900, img: PHONE_PLACEHOLDER },
-    { id: 16, name: "Xbox Series X", brand: "Xbox", price: 64800, img: PHONE_PLACEHOLDER }
-  ],
-  "Игрушки": [
-    { id: 17, name: "Labubu Pirate", brand: "Игрушки Labubu", price: 3300, img: PHONE_PLACEHOLDER }
-  ],
-  "Электроника": [
-    { id: 18, name: "Apple TV 4K", brand: "Apple TV", price: 25900, img: PHONE_PLACEHOLDER },
-    { id: 19, name: "GoPro Hero", brand: "GoPro", price: 38500, img: PHONE_PLACEHOLDER }
-  ]
-};
-
-const mainBlockWidth = 430;
-
-// ====== Кнопка бренда ======
-function BrandButton({ name, active, onClick }) {
-  return (
-    <button
-      onClick={onClick}
-      style={{
-        background: active ? ACCENT : "#283762",
-        color: active ? "#fff" : "#bcd7ff",
-        border: "none",
-        borderRadius: 11,
-        padding: "7px 15px",
-        fontWeight: 700,
-        fontSize: 14,
-        cursor: "pointer",
-        marginRight: 9,
-        marginBottom: 6,
-        whiteSpace: "nowrap",
-        transition: "background .14s"
-      }}
-    >{name}</button>
-  );
-}
-
-// ====== Карточка товара ======
-function ProductCard({ product, qty, onPlus, onMinus }) {
-  const [addAnim, setAddAnim] = useState(false);
-
-  const handlePlus = () => {
-    setAddAnim(true);
-    onPlus();
-  };
-
-  useEffect(() => {
-    if (addAnim) {
-      const t = setTimeout(() => setAddAnim(false), 350);
-      return () => clearTimeout(t);
-    }
-  }, [addAnim]);
-
-  return (
-    <motion.div
-      whileHover={{ scale: 1.022 }}
-      style={{
-        background: CARD,
-        borderRadius: 28,
-        boxShadow: "0 8px 32px #20293a33",
-        padding: "28px 18px 22px 18px",
-        margin: "0 auto 26px auto",
-        maxWidth: 390,
-        minWidth: 230,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center"
-      }}
-    >
-      <div style={{
-        width: 140, height: 140, background: "#222b3d",
-        borderRadius: 25, display: "flex",
-        alignItems: "center", justifyContent: "center",
-        marginBottom: 12, boxShadow: "0 2px 16px #1e2b4730"
-      }}>
-        <img
-          src={product.img}
-          alt={product.name}
-          style={{
-            width: 120, height: 120, objectFit: "contain", borderRadius: 16
-          }}
-          onError={e => { e.target.src = "https://img.icons8.com/ios-filled/100/cccccc/no-image.png"; }}
-        />
-      </div>
-      <div style={{
-        fontWeight: 700,
-        fontSize: 15,
-        color: "#fff",
-        marginBottom: 2,
-        textAlign: "center",
-        letterSpacing: "0.01em",
-        lineHeight: 1.18
-      }}>{product.name}</div>
-      <div style={{
-        fontWeight: 400,
-        fontSize: 12,
-        color: "#a9b8ce",
-        marginBottom: 9,
-        textAlign: "center",
-        lineHeight: 1.18
-      }}>{product.brand}</div>
-      <div style={{
-        fontWeight: 800,
-        fontSize: 19,
-        color: ACCENT,
-        marginBottom: 14,
-        textAlign: "center",
-        letterSpacing: "0.01em",
-      }}>
-        {product.price.toLocaleString()} <span style={{
-          fontWeight: 600, fontSize: 15, color: "#a9cfff"
-        }}>₽</span>
-      </div>
-      {qty === 0 ? (
-        <motion.button
-          onClick={handlePlus}
-          animate={addAnim ? { scale: [1, 1.08, 0.97, 1] } : { scale: 1 }}
-          transition={{ duration: 0.36, times: [0, 0.4, 0.8, 1], type: "spring" }}
-          style={{
-            background: ACCENT,
-            color: "#fff",
-            border: "none",
-            borderRadius: 19,
-            fontWeight: 600,
-            fontSize: 15,
-            padding: "11px 0",
-            cursor: "pointer",
-            width: "100%",
-            outline: "none",
-            boxShadow: "0 2px 12px #3ca4ff27",
-            transition: ".17s"
-          }}
-        >В корзину</motion.button>
-      ) : (
-        <div style={{
-          display: "flex", alignItems: "center", justifyContent: "center",
-          background: ACCENT, borderRadius: 19, width: "100%",
-          minHeight: 38, marginTop: 3
-        }}>
-          <button onClick={onMinus}
-            style={{
-              background: "none", border: "none", color: "#fff",
-              fontSize: 18, fontWeight: 700, padding: "6px 16px 6px 11px",
-              cursor: "pointer", borderRadius: 8
-            }}>–</button>
-          <div style={{
-            color: "#fff", minWidth: 22, textAlign: "center",
-            fontWeight: 800, fontSize: 14
-          }}>
-            {qty}
-          </div>
-          <button onClick={onPlus}
-            style={{
-              background: "none", border: "none", color: "#fff",
-              fontSize: 18, fontWeight: 700, padding: "6px 11px 6px 16px",
-              cursor: "pointer", borderRadius: 8
-            }}>+</button>
-        </div>
-      )}
-    </motion.div>
-  );
-}
-
 // ====== Основной компонент ======
 const App = () => {
+  const [products, setProducts] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null);
   const [activeBrand, setActiveBrand] = useState(null);
   const [search, setSearch] = useState("");
@@ -355,35 +314,37 @@ const App = () => {
     window.scrollTo(0, 0);
   }, [activeCategory, showCart]);
 
+  // Загрузка товаров из Google Sheets через fetch
+  useEffect(() => {
+    fetch(CSV_URL)
+      .then(res => res.text())
+      .then(text => setProducts(parseCSV(text)));
+  }, []);
+
   const cartTotalCount = cart.reduce((a, b) => a + b.qty, 0);
-  const getQtyInCart = (id) => cart.find(i => i.id === id)?.qty || 0;
+  const getQtyInCart = (id) => cart.find(i => String(i.id) === String(id))?.qty || 0;
   const addToCart = (id) => setCart(prev => {
-    const found = prev.find(i => i.id === id);
-    if (found) return prev.map(i => i.id === id ? { ...i, qty: i.qty + 1 } : i);
+    const found = prev.find(i => String(i.id) === String(id));
+    if (found) return prev.map(i => String(i.id) === String(id) ? { ...i, qty: i.qty + 1 } : i);
     return [...prev, { id, qty: 1 }];
   });
   const removeOneFromCart = (id) => setCart(prev => {
-    const found = prev.find(i => i.id === id);
+    const found = prev.find(i => String(i.id) === String(id));
     if (!found) return prev;
-    if (found.qty === 1) return prev.filter(i => i.id !== id);
-    return prev.map(i => i.id === id ? { ...i, qty: i.qty - 1 } : i);
+    if (found.qty === 1) return prev.filter(i => String(i.id) !== String(id));
+    return prev.map(i => String(i.id) === String(id) ? { ...i, qty: i.qty - 1 } : i);
   });
-  const getProduct = (id) => {
-    for (let cat in PRODUCTS) {
-      const found = PRODUCTS[cat].find(p => p.id === id);
-      if (found) return found;
-    }
-    return null;
-  };
-  const total = cart.reduce((sum, item) => (getProduct(item.id)?.price || 0) * item.qty + sum, 0);
+  const getProduct = (id) => products.find(p => String(p.id) === String(id));
+  const total = cart.reduce((sum, item) => (Number(getProduct(item.id)?.price) || 0) * item.qty + sum, 0);
 
   let shownProducts = [];
   if (activeCategory) {
-    shownProducts = PRODUCTS[activeCategory] || [];
+    shownProducts = products.filter(p => p.category === activeCategory);
     if (activeBrand) shownProducts = shownProducts.filter(p => p.brand === activeBrand);
     if (search.trim()) {
       shownProducts = shownProducts.filter(
-        p => p.name.toLowerCase().includes(search.toLowerCase()) || p.brand.toLowerCase().includes(search.toLowerCase())
+        p => (p.name && p.name.toLowerCase().includes(search.toLowerCase())) ||
+          (p.brand && p.brand.toLowerCase().includes(search.toLowerCase()))
       );
     }
   }
@@ -393,7 +354,6 @@ const App = () => {
       style={{
         minHeight: "100vh",
         width: "100vw",
-        // background: BG, // НЕ НУЖНО! particles canvas сам отрисует фон
         color: "#fff",
         margin: 0,
         padding: 0,
@@ -405,7 +365,7 @@ const App = () => {
     >
       <AnimatedBg />
 
-      {/* -------- Хедер -------- */}
+      {/* ----- Хедер ----- */}
       <header style={{
         textAlign: "center",
         padding: `${isMobile ? 32 : 48}px 0 0 0`,
@@ -485,7 +445,6 @@ const App = () => {
         }}></div>
       </header>
 
-      {/* -------- Плавные fade-переходы между страницами -------- */}
       <AnimatePresence>
         {!activeCategory && !showCart && (
           <motion.div
@@ -495,7 +454,6 @@ const App = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.13, type: "tween", ease: "easeInOut" }}
           >
-            {/* -------- Главная (категории) -------- */}
             <div
               style={{
                 maxWidth: "480px",
@@ -514,7 +472,6 @@ const App = () => {
                 zIndex: 2,
                 position: "relative"
               }}>
-                {/* Инфо-блок */}
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -565,7 +522,6 @@ const App = () => {
                   fontWeight: 800, fontSize: 20, textAlign: "center", marginBottom: 18, letterSpacing: "0.01em", color: "#e5eeff"
                 }}>Категории</div>
               </div>
-              {/* Список категорий */}
               <div style={{
                 display: "flex",
                 flexDirection: "column",
@@ -609,7 +565,6 @@ const App = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.13, type: "tween", ease: "easeInOut" }}
           >
-            {/* -------- Страница категории -------- */}
             <div
               style={{
                 maxWidth: "480px",
@@ -626,7 +581,6 @@ const App = () => {
                 margin: "0 auto",
                 marginTop: isMobile ? 15 : 22
               }}>
-                {/* Кнопка назад */}
                 <button
                   onClick={() => { setActiveCategory(null); setActiveBrand(null); setSearch(""); }}
                   style={{
@@ -644,8 +598,6 @@ const App = () => {
                     boxShadow: "0 1.5px 10px #3ca4ff0b",
                     transition: ".16s"
                   }}>← К категориям</button>
-
-                {/* Подкатегории брендов */}
                 <div style={{
                   display: "flex",
                   overflowX: "auto",
@@ -664,8 +616,6 @@ const App = () => {
                     />
                   )}
                 </div>
-
-                {/* Поиск */}
                 <input
                   placeholder="Поиск товаров"
                   value={search}
@@ -685,8 +635,6 @@ const App = () => {
                   }}
                 />
               </div>
-
-              {/* Товары */}
               {shownProducts.length === 0 && (
                 <div style={{ color: "#bcc5db", fontSize: 16, textAlign: "center", margin: "32px 0 55px 0", fontWeight: 700 }}>
                   Нет товаров в этой категории.
@@ -766,7 +714,7 @@ const App = () => {
                           <div style={{ color: "#999", fontSize: isMobile ? 10 : 13, marginBottom: 2 }}>Кол-во: <b>{item.qty}</b></div>
                         </div>
                         <div style={{ textAlign: "right", minWidth: 58 }}>
-                          <span style={{ fontWeight: 800, fontSize: isMobile ? 11 : 16, color: "#fff" }}>{product.price * item.qty} ₽</span>
+                          <span style={{ fontWeight: 800, fontSize: isMobile ? 11 : 16, color: "#fff" }}>{Number(product.price) * item.qty} ₽</span>
                           <button
                             style={{
                               display: "block",
@@ -779,7 +727,7 @@ const App = () => {
                               padding: 0,
                               fontWeight: 700,
                             }}
-                            onClick={() => setCart(prev => prev.filter(i => i.id !== item.id))}
+                            onClick={() => setCart(prev => prev.filter(i => String(i.id) !== String(item.id)))}
                           >
                             Удалить
                           </button>
@@ -810,7 +758,7 @@ const App = () => {
                             .map((item) => {
                               const p = getProduct(item.id);
                               return p
-                                ? `${p.brand} ${p.name} x${item.qty} — ${p.price * item.qty}₽`
+                                ? `${p.brand} ${p.name} x${item.qty} — ${Number(p.price) * item.qty}₽`
                                 : "";
                             })
                             .join("\n") +
@@ -826,7 +774,6 @@ const App = () => {
           </motion.div>
         )}
       </AnimatePresence>
-
       <div style={{ height: 18 }} />
     </div>
   );
