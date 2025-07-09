@@ -432,50 +432,50 @@ const App = () => {
   />
 
   {/* Кнопка корзины справа */}
-  <motion.button
-    animate={cartTotalCount > 0 ? { scale: [1, 1.13, 0.95, 1] } : { scale: 1 }}
-    transition={{ duration: 0.23, type: "spring" }}
-    onClick={() => setShowCart(true)}
-    style={{
-      background: "transparent",
-      border: "none",
-      cursor: "pointer",
-      outline: "none",
-      width: isMobile ? 58 : 72,
-      height: isMobile ? 58 : 72,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      position: "relative",
-    }}
-    aria-label="Открыть корзину"
-  >
-    <svg width={isMobile ? 27 : 31} height={isMobile ? 27 : 31} viewBox="0 0 24 24" fill={ACCENT}>
-      <path d="M7 18c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm10 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm2-3H7.42l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H6.21l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H5.42l-.94-2H2V4h2l3.6 7.59-1.35 2.44C5.16 14.37 5.92 16 7.22 16H19c.553 0 1-.447 1-1s-.447-1-1-1z" />
-    </svg>
-    {cartTotalCount > 0 && (
-      <motion.span
-        key={cartTotalCount}
-        initial={{ scale: 0.5, opacity: 0, y: -12 }}
-        animate={{ scale: 1, opacity: 1, y: 0 }}
-        transition={{ type: "spring", stiffness: 350, damping: 12 }}
-        style={{
-          position: "absolute",
-          top: 6,
-          right: 12,
-          background: ACCENT,
-          color: "#fff",
-          borderRadius: "50%",
-          padding: "2.5px 8px",
-          fontSize: 13,
-          fontWeight: 700,
-          boxShadow: "0 2px 8px #1d7ad5c0",
-        }}
-      >
-        {cartTotalCount}
-      </motion.span>
-    )}
-  </motion.button>
+<motion.button
+  animate={cartTotalCount > 0 ? { scale: [1, 1.13, 0.95, 1] } : { scale: 1 }}
+  transition={{ duration: 0.23, type: "spring" }}
+  onClick={() => setShowCart(true)}
+  style={{
+    background: "transparent",
+    border: "none",
+    cursor: "pointer",
+    outline: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
+    padding: isMobile ? "10px" : "12px", // добавь немного padding для удобства клика
+  }}
+  aria-label="Открыть корзину"
+>
+  <svg width={isMobile ? 27 : 31} height={isMobile ? 27 : 31} viewBox="0 0 24 24" fill={ACCENT}>
+    <path d="M7 18c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm10 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm2-3H7.42l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H6.21l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H5.42l-.94-2H2V4h2l3.6 7.59-1.35 2.44C5.16 14.37 5.92 16 7.22 16H19c.553 0 1-.447 1-1s-.447-1-1-1z" />
+  </svg>
+  {cartTotalCount > 0 && (
+    <motion.span
+      key={cartTotalCount}
+      initial={{ scale: 0.5, opacity: 0, y: -12 }}
+      animate={{ scale: 1, opacity: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 350, damping: 12 }}
+      style={{
+        position: "absolute",
+        top: 6,
+        right: 6,
+        background: ACCENT,
+        color: "#fff",
+        borderRadius: "50%",
+        padding: "2.5px 8px",
+        fontSize: 13,
+        fontWeight: 700,
+        boxShadow: "0 2px 8px #1d7ad5c0",
+      }}
+    >
+      {cartTotalCount}
+    </motion.span>
+  )}
+</motion.button>
+
 </header>
 
 
