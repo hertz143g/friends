@@ -773,22 +773,41 @@ const App = () => {
                     Итого: {total} ₽
                   </div>
                   <button
-                    style={{
-                      width: "100%",
-                      marginTop: 10,
-                      background: ACCENT,
-                      color: "#fff",
-                      padding: isMobile ? "9px 0" : "13px 0",
-                      borderRadius: 8,
-                      border: "none",
-                      fontWeight: 800,
-                      fontSize: isMobile ? 12.5 : 15.5,
-                      cursor: "pointer",
-                    }}
-                    onClick={sendOrderToTelegram}
-                  >
-                    Оформить заказ
-                  </button>
+  style={{
+    width: "100%",
+    marginTop: 10,
+    background: ACCENT,
+    color: "#fff",
+    padding: isMobile ? "9px 0" : "13px 0",
+    borderRadius: 8,
+    border: "none",
+    fontWeight: 800,
+    fontSize: isMobile ? 12.5 : 15.5,
+    cursor: "pointer",
+  }}
+  onClick={() => {
+    const message =
+      "Ваш заказ:\n" +
+      cart
+        .map((item) => {
+          const p = getProduct(item.id);
+          return p
+            ? `${p.brand} ${p.name} x${item.qty} — ${Number(p.price) * item.qty}₽`
+            : "";
+        })
+        .join("\n") +
+      `\n\nИтого: ${total} ₽`;
+
+    const encodedMessage = encodeURIComponent(message);
+    const telegramUsername = "manager_username"; // замените на имя менеджера без @
+
+    const telegramLink = `https://t.me/${frsr4fs}?text=${encodedMessage}`;
+    window.open(telegramLink, "_blank");
+  }}
+>
+  Оформить заказ
+</button>
+
                 </>
               )}
             </div>
