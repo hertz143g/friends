@@ -14,9 +14,9 @@ const mainBlockWidth = 430;
 
 const CATEGORIES = [
   { name: "Смартфоны", emoji: "📱", brands: ["Apple", "Samsung", "Xiaomi", "Redmi", "Poco", "OnePlus", "Google Pixel"] },
-  { name: "Часы", emoji: "⌚", brands: ["Apple Watch", "Casio G-SHOCK", "Garmin", "Samsung"] },
+  { name: "Часы", emoji: "⌚", brands: ["Apple", "Casio", "Garmin", "Samsung"] },
   { name: "Компьютеры и планшеты", emoji: "💻", brands: ["MacBook", "iMac", "iPad"] },
-  { name: "Аудио", emoji: "🎧", brands: ["AirPods", "AirPods в разборе", "Аксессуары", "Колонки", "Marshall"] },
+  { name: "Аудио", emoji: "🎧", brands: ["Apple", "Аксессуары", "Колонки", "Marshall"] },
   { name: "Телевизоры", emoji: "📺", brands: ["Телевизоры", "Электросамокаты"] },
   { name: "Игровые приставки", emoji: "🎮", brands: ["Xbox", "Sony Ps5"] },
   { name: "Игрушки", emoji: "🧸", brands: ["Игрушки Labubu"] },
@@ -311,7 +311,7 @@ const App = () => {
       const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
       setProducts(parsed.data.map(prod => ({
         ...prod,
-        price: Number(prod.price || 0),
+        price: Number((prod.price || "").replace(/[^\d]/g, "")) || 0,
         id: prod.id?.toString() || Math.random().toString(36).slice(2)
       })));
     } catch (e) {
