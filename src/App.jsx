@@ -799,9 +799,9 @@ const App = () => {
       `\n\nИтого: ${total} ₽`;
 
     const encodedMessage = encodeURIComponent(message);
-    const telegramUsername = "manager_username"; // замените на имя менеджера без @
-
-    const telegramLink = `https://t.me/${frsr4fs}?text=${encodedMessage}`;
+    const telegramUsername = "frsr4fs"
+    ; 
+    const telegramLink = `https://t.me/${telegramUsername}?text=${encodedMessage}`;
     window.open(telegramLink, "_blank");
   }}
 >
