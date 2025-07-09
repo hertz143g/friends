@@ -792,16 +792,16 @@ const App = () => {
       ...cart.map((item) => {
         const p = getProduct(item.id);
         return p
-          ? `${p.brand} ${p.name} x${item.qty} — ${Number(p.price) * item.qty} ₽`
+          ? `${p.brand} ${p.name} x${item.qty}`
           : "";
       }),
       "",
-      `Итого: ${total} ₽`
+      `Итого товаров: ${cart.reduce((sum, item) => sum + item.qty, 0)}`
     ];
 
     const message = messageLines.join("\n");
     const encodedMessage = encodeURIComponent(message);
-    const telegramUsername = "frsr4fs"; // замените на ник менеджера без @
+    const telegramUsername = "frsr4fs"; // поменяй на ник менеджера без @
 
     const telegramLink = `https://t.me/${telegramUsername}?text=${encodedMessage}`;
     window.open(telegramLink, "_blank");
@@ -809,6 +809,7 @@ const App = () => {
 >
   Оформить заказ
 </button>
+
 
 
                 </>
