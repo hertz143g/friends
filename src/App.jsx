@@ -411,33 +411,6 @@ const App = () => {
         maxWidth: mainBlockWidth,
         margin: "0 auto"
       }}>
-        {/* Кнопка обновления */}
-        <button
-          onClick={fetchProducts}
-          aria-label="Обновить товары"
-          style={{
-            width: 38,
-            height: 38,
-            borderRadius: "50%",
-            background: ACCENT,
-            border: "none",
-            cursor: "pointer",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            boxShadow: "0 0 12px #3ca4ff99",
-            padding: 0
-          }}
-          title="Обновить товары"
-        >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="1 4 1 10 7 10"></polyline>
-            <polyline points="23 20 23 14 17 14"></polyline>
-            <path d="M20.49 9A9 9 0 0 0 5.21 15.36L1 10"></path>
-            <path d="M3.51 15A9 9 0 0 0 18.79 8.64L23 14"></path>
-          </svg>
-        </button>
-
         {/* Логотип */}
         <img
           src={logoUrl}
@@ -648,7 +621,7 @@ const App = () => {
                     cursor: "pointer",
                     boxShadow: "0 1.5px 10px #3ca4ff0b",
                     transition: ".16s"
-                  }}>←</button>
+                  }}>← К категориям</button>
                 <div style={{
                   display: "flex",
                   overflowX: "auto",
