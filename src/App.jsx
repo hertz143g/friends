@@ -1,5 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Shop from "./Shop";            // твой магазин
+import AdminPanel from "./adminpanel"; // твоя админка
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Shop />} />
+        <Route path="/admin" element={<AdminPanel />} />
+      </Routes>
+    </Router>
+  );
+}
 
 // ====== Анимированный фон с particles ======
 function AnimatedBg() {
