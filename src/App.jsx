@@ -24,28 +24,6 @@ const CATEGORIES = [
   { name: "Электроника", emoji: "🔌", brands: ["Apple TV", "GoPro", "Dyson", "Пылесос"] },
 ];
 
-function normalize(str) {
-  return (str || "").trim().toLowerCase();
-}
-
-let shownProducts = [];
-if (activeCategory) {
-  shownProducts = products.filter(
-    p => normalize(p.category) === normalize(activeCategory)
-  );
-  if (activeBrand) {
-    shownProducts = shownProducts.filter(
-      p => normalize(p.brand) === normalize(activeBrand)
-    );
-  }
-  if (search.trim()) {
-    shownProducts = shownProducts.filter(
-      p =>
-        (p.name && normalize(p.name).includes(normalize(search))) ||
-        (p.brand && normalize(p.brand).includes(normalize(search)))
-    );
-  }
-}
 
 
 function BrandButton({ name, active, onClick }) {
