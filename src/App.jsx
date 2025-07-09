@@ -276,140 +276,7 @@ function AnimatedBg() {
 
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSRtT-9yQsf2f0mY01Hkcg_711efC99-ZBqzhO_j8nUJWcP3HCZFzXTGCkEKXtqL8FF4IHmFUM_34TM/pub?output=csv";
 
-function AdminPanel({ onClose, onAddProduct }) {
-  const [formData, setFormData] = useState({
-    id: "",
-    name: "",
-    brand: "",
-    category: "",
-    price: "",
-    img: ""
-  });
-
-  const handleChange = (e) => {
-    setFormData({...formData, [e.target.name]: e.target.value});
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!formData.name || !formData.price || !formData.category || !formData.brand) {
-      alert("Пожалуйста, заполните обязательные поля: имя, категория, бренд, цена");
-      return;
-    }
-
-    try {
-      const res = await fetch("https://script.google.com/macros/s/AKfycbxqSo2iM2z7sK7eQZRKmRFcNmlxXfGJmnb21x9tAOtvnFlk-Jb_ntNG0usJLczDJUi_Fw/exec", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const result = await res.json();
-      if (result.success) {
-        alert("Товар добавлен успешно!");
-        onAddProduct();
-        onClose();
-      } else {
-        alert("Ошибка при добавлении товара");
-      }
-    } catch (err) {
-      alert("Ошибка сети или сервера");
-    }
-  };
-
-  return (
-    <motion.div
-      initial={{opacity: 0, scale: 0.95}}
-      animate={{opacity: 1, scale: 1}}
-      exit={{opacity: 0, scale: 0.95}}
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(0,0,0,0.7)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 9999,
-        padding: 20,
-      }}
-      onClick={onClose}
-    >
-      <form
-        onClick={e => e.stopPropagation()}
-        onSubmit={handleSubmit}
-        style={{
-          background: CARD,
-          borderRadius: 12,
-          padding: 24,
-          maxWidth: 400,
-          width: "100%",
-          color: "#fff",
-          display: "flex",
-          flexDirection: "column",
-          gap: 12
-        }}
-      >
-        <h2 style={{marginBottom: 12, color: ACCENT}}>Админка: Добавить товар</h2>
-
-        <input
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          placeholder="Название"
-          style={inputStyle}
-          required
-        />
-        <input
-          name="brand"
-          value={formData.brand}
-          onChange={handleChange}
-          placeholder="Бренд"
-          style={inputStyle}
-          required
-        />
-        <input
-          name="category"
-          value={formData.category}
-          onChange={handleChange}
-          placeholder="Категория"
-          style={inputStyle}
-          required
-        />
-        <input
-          name="price"
-          value={formData.price}
-          onChange={handleChange}
-          placeholder="Цена"
-          type="number"
-          style={inputStyle}
-          required
-        />
-        <input
-          name="img"
-          value={formData.img}
-          onChange={handleChange}
-          placeholder="Ссылка на картинку"
-          style={inputStyle}
-        />
-        <button type="submit" style={{background: ACCENT, color: "#fff", border: "none", padding: "12px", borderRadius: 8, cursor: "pointer"}}>
-          Добавить товар
-        </button>
-        <button type="button" onClick={onClose} style={{background: "#555", color: "#ccc", border: "none", padding: "8px", borderRadius: 8, cursor: "pointer"}}>
-          Закрыть
-        </button>
-      </form>
-    </motion.div>
-  );
-}
-
-const inputStyle = {
-  padding: "10px",
-  borderRadius: "8px",
-  border: "none",
-  outline: "none",
-  fontSize: "15px",
-};
+const TELEGRAM_BOT_API = "https://script.google.com/macros/s/ВАШ_АППС_СКРИПТ_ID/exec";
 
 const App = () => {
   const [products, setProducts] = useState([]);
@@ -419,24 +286,9 @@ const App = () => {
   const [cart, setCart] = useState([]);
   const [showCart, setShowCart] = useState(false);
   const [vw, setVw] = useState(window.innerWidth);
-  const [adminMode, setAdminMode] = useState(false);
-  const [logoClickCount, setLogoClickCount] = useState(0);
 
-  // Вынесем fetch для повторного вызова после добавления товара
-  const fetchProducts = async () => {
-    const res = await fetch(CSV_URL);
-    const text = await res.text();
-    const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
-    setProducts(parsed.data.map(prod => ({
-      ...prod,
-      price: Number(prod.price || 0),
-      id: prod.id?.toString() || Math.random().toString(36).slice(2)
-    })));
-  };
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const handleResize = () => setVw(window.innerWidth);
@@ -449,17 +301,29 @@ const App = () => {
     window.scrollTo(0, 0);
   }, [activeCategory, showCart]);
 
-  // Логика кликов по логотипу для открытия админки
-  const handleLogoClick = () => {
-    setLogoClickCount(count => {
-      const newCount = count + 1;
-      if (newCount >= 10) {
-        setAdminMode(true);
-        return 0;
-      }
-      return newCount;
-    });
+  // Загрузка товаров
+  const fetchProducts = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(CSV_URL);
+      const text = await res.text();
+      const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
+      setProducts(parsed.data.map(prod => ({
+        ...prod,
+        price: Number(prod.price || 0),
+        id: prod.id?.toString() || Math.random().toString(36).slice(2)
+      })));
+    } catch (e) {
+      setError("Ошибка загрузки товаров");
+    } finally {
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   const cartTotalCount = cart.reduce((a, b) => a + b.qty, 0);
   const getQtyInCart = (id) => cart.find(i => String(i.id) === String(id))?.qty || 0;
@@ -489,6 +353,35 @@ const App = () => {
     }
   }
 
+  // Отправка заказа в Telegram через Apps Script
+  const sendOrderToTelegram = async () => {
+    if (cart.length === 0) {
+      alert("Корзина пуста");
+      return;
+    }
+    const message = cart.map(item => {
+      const p = getProduct(item.id);
+      return p ? `${p.brand} ${p.name} x${item.qty} — ${Number(p.price) * item.qty} ₽` : "";
+    }).join("\n") + `\n\nИтого: ${total} ₽`;
+
+    try {
+      const res = await fetch(TELEGRAM_BOT_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message })
+      });
+      if (res.ok) {
+        alert("Заказ отправлен в Telegram!");
+        setCart([]);
+        setShowCart(false);
+      } else {
+        alert("Ошибка отправки заказа");
+      }
+    } catch (e) {
+      alert("Ошибка сети при отправке заказа");
+    }
+  };
+
   return (
     <div
       style={{
@@ -503,7 +396,6 @@ const App = () => {
         position: "relative"
       }}
     >
-
       <AnimatedBg />
 
       {/* ----- Хедер ----- */}
@@ -511,81 +403,98 @@ const App = () => {
         textAlign: "center",
         padding: `${isMobile ? 32 : 48}px 0 0 0`,
         position: "relative",
-        zIndex: 2
+        zIndex: 2,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 12,
+        maxWidth: mainBlockWidth,
+        margin: "0 auto"
       }}>
-        <div style={{
-          position: "relative",
-          maxWidth: mainBlockWidth,
-          margin: "0 auto"
-        }}>
-          <img
-            src={logoUrl}
-            alt="logo"
-            style={{
-              width: isMobile ? 58 : 72,
-              height: isMobile ? 58 : 72,
-              objectFit: "cover",
-              borderRadius: "50%",
-              border: `2.5px solid ${ACCENT}`,
-              background: "#fff",
-              margin: "0 auto",
-              display: "block",
-              boxShadow: "0 0 16px #0006",
-              cursor: "pointer"
-            }}
-            onClick={handleLogoClick}
-          />
-          <motion.button
-            animate={cartTotalCount > 0 ? { scale: [1, 1.13, 0.95, 1] } : { scale: 1 }}
-            transition={{ duration: 0.23, type: "spring" }}
-            onClick={() => setShowCart(true)}
-            style={{
-              position: "absolute",
-              right: 0,
-              top: isMobile ? 9 : 17,
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              outline: "none"
-            }}
-          >
-            <span style={{ position: "relative" }}>
-              <svg width={isMobile ? 27 : 31} height={isMobile ? 27 : 31} viewBox="0 0 24 24" fill={ACCENT}>
-                <path d="M7 18c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm10 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm2-3H7.42l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H6.21l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H5.42l-.94-2H2V4h2l3.6 7.59-1.35 2.44C5.16 14.37 5.92 16 7.22 16H19c.553 0 1-.447 1-1s-.447-1-1-1z" />
-              </svg>
-              {cartTotalCount > 0 && (
-                <motion.span
-                  key={cartTotalCount}
-                  initial={{ scale: 0.5, opacity: 0, y: -12 }}
-                  animate={{ scale: 1, opacity: 1, y: 0 }}
-                  transition={{ type: "spring", stiffness: 350, damping: 12 }}
-                  style={{
-                    position: "absolute",
-                    top: -9,
-                    right: -13,
-                    background: ACCENT,
-                    color: "#fff",
-                    borderRadius: "50%",
-                    padding: "2.5px 8px",
-                    fontSize: 13,
-                    fontWeight: 700,
-                    boxShadow: "0 2px 8px #1d7ad5c0"
-                  }}
-                >
-                  {cartTotalCount}
-                </motion.span>
-              )}
-            </span>
-          </motion.button>
-        </div>
-        <div style={{
-          width: "100%",
-          maxWidth: mainBlockWidth,
-          margin: "17px auto 0 auto",
-          height: 2,
-          background: "rgba(255,255,255,0.14)",
-          borderRadius: 2
-        }}></div>
+        {/* Кнопка обновления */}
+        <button
+          onClick={fetchProducts}
+          aria-label="Обновить товары"
+          style={{
+            width: 38,
+            height: 38,
+            borderRadius: "50%",
+            background: ACCENT,
+            border: "none",
+            cursor: "pointer",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            boxShadow: "0 0 12px #3ca4ff99",
+            padding: 0
+          }}
+          title="Обновить товары"
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="1 4 1 10 7 10"></polyline>
+            <polyline points="23 20 23 14 17 14"></polyline>
+            <path d="M20.49 9A9 9 0 0 0 5.21 15.36L1 10"></path>
+            <path d="M3.51 15A9 9 0 0 0 18.79 8.64L23 14"></path>
+          </svg>
+        </button>
+
+        {/* Логотип */}
+        <img
+          src={logoUrl}
+          alt="logo"
+          style={{
+            width: isMobile ? 58 : 72,
+            height: isMobile ? 58 : 72,
+            objectFit: "cover",
+            borderRadius: "50%",
+            border: `2.5px solid ${ACCENT}`,
+            background: "#fff",
+            boxShadow: "0 0 16px #0006"
+          }}
+        />
+
+        {/* Кнопка корзины */}
+        <motion.button
+          animate={cartTotalCount > 0 ? { scale: [1, 1.13, 0.95, 1] } : { scale: 1 }}
+          transition={{ duration: 0.23, type: "spring" }}
+          onClick={() => setShowCart(true)}
+          style={{
+            position: "relative",
+            background: "transparent",
+            border: "none",
+            cursor: "pointer",
+            outline: "none"
+          }}
+          aria-label="Открыть корзину"
+        >
+          <span style={{ position: "relative" }}>
+            <svg width={isMobile ? 27 : 31} height={isMobile ? 27 : 31} viewBox="0 0 24 24" fill={ACCENT}>
+              <path d="M7 18c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm10 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm2-3H7.42l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H6.21l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H5.42l-.94-2H2V4h2l3.6 7.59-1.35 2.44C5.16 14.37 5.92 16 7.22 16H19c.553 0 1-.447 1-1s-.447-1-1-1z" />
+            </svg>
+            {cartTotalCount > 0 && (
+              <motion.span
+                key={cartTotalCount}
+                initial={{ scale: 0.5, opacity: 0, y: -12 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                transition={{ type: "spring", stiffness: 350, damping: 12 }}
+                style={{
+                  position: "absolute",
+                  top: -9,
+                  right: -13,
+                  background: ACCENT,
+                  color: "#fff",
+                  borderRadius: "50%",
+                  padding: "2.5px 8px",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  boxShadow: "0 2px 8px #1d7ad5c0"
+                }}
+              >
+                {cartTotalCount}
+              </motion.span>
+            )}
+          </span>
+        </motion.button>
       </header>
 
       <AnimatePresence>
@@ -596,13 +505,12 @@ const App = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.13, type: "tween", ease: "easeInOut" }}
+            style={{ maxWidth: 480, margin: "32px auto 0" }}
           >
             <div
               style={{
-                maxWidth: "480px",
-                margin: "32px auto 0 auto",
-                padding: "24px",
-                borderRadius: "16px",
+                padding: 24,
+                borderRadius: 16,
                 background: "#1c2333",
                 boxShadow: "0 2px 12px rgba(0,0,0,0.06)"
               }}
@@ -740,7 +648,7 @@ const App = () => {
                     cursor: "pointer",
                     boxShadow: "0 1.5px 10px #3ca4ff0b",
                     transition: ".16s"
-                  }}>← К категориям</button>
+                  }}>←</button>
                 <div style={{
                   display: "flex",
                   overflowX: "auto",
@@ -894,20 +802,7 @@ const App = () => {
                       fontSize: isMobile ? 12.5 : 15.5,
                       cursor: "pointer",
                     }}
-                    onClick={() => {
-                      alert(
-                        "Ваш заказ:\n" +
-                          cart
-                            .map((item) => {
-                              const p = getProduct(item.id);
-                              return p
-                                ? `${p.brand} ${p.name} x${item.qty} — ${Number(p.price) * item.qty}₽`
-                                : "";
-                            })
-                            .join("\n") +
-                          `\n\nИтого: ${total} ₽`
-                      );
-                    }}
+                    onClick={sendOrderToTelegram}
                   >
                     Оформить заказ
                   </button>
@@ -916,18 +811,8 @@ const App = () => {
             </div>
           </motion.div>
         )}
-
-        {/* Админка */}
-        <AnimatePresence>
-          {adminMode && (
-            <AdminPanel
-              onClose={() => setAdminMode(false)}
-              onAddProduct={() => fetchProducts()}
-            />
-          )}
-        </AnimatePresence>
-
       </AnimatePresence>
+
       <div style={{ height: 18 }} />
     </div>
   );
