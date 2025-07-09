@@ -772,7 +772,7 @@ const App = () => {
                   <div style={{ fontWeight: 700, fontSize: isMobile ? 13 : 17, textAlign: "right", marginTop: 9, marginBottom: 5 }}>
                     Итого: {total} ₽
                   </div>
-                  <button
+<button
   style={{
     width: "100%",
     marginTop: 10,
@@ -786,27 +786,30 @@ const App = () => {
     cursor: "pointer",
   }}
   onClick={() => {
-    const message =
-      "Ваш заказ:\n" +
-      cart
-        .map((item) => {
-          const p = getProduct(item.id);
-          return p
-            ? `${p.brand} ${p.name} x${item.qty} — ${Number(p.price) * item.qty}₽`
-            : "";
-        })
-        .join("\n") +
-      `\n\nИтого: ${total} ₽`;
+    const messageLines = [
+      "Здравствуйте! Я хочу заказать в вашем магазине:",
+      "",
+      ...cart.map((item) => {
+        const p = getProduct(item.id);
+        return p
+          ? `${p.brand} ${p.name} x${item.qty} — ${Number(p.price) * item.qty} ₽`
+          : "";
+      }),
+      "",
+      `Итого: ${total} ₽`
+    ];
 
+    const message = messageLines.join("\n");
     const encodedMessage = encodeURIComponent(message);
-    const telegramUsername = "frsr4fs"
-    ; 
+    const telegramUsername = "frsr4fs"; // замените на ник менеджера без @
+
     const telegramLink = `https://t.me/${telegramUsername}?text=${encodedMessage}`;
     window.open(telegramLink, "_blank");
   }}
 >
   Оформить заказ
 </button>
+
 
                 </>
               )}
