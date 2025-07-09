@@ -1,9 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Tabletop from "tabletop";
-import Shop from "./Shop";
-import AdminPanel from "./adminpanel";
+import Shop from "./Shop";            // твой магазин
+import AdminPanel from "./adminpanel"; // твоя админка
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Shop />} />
+        <Route path="/admin" element={<AdminPanel />} />
+      </Routes>
+    </Router>
+  );
+}
 
 // ====== Анимированный фон с particles ======
 function AnimatedBg() {
@@ -52,6 +62,7 @@ function AnimatedBg() {
     }
 
     function draw() {
+      // Заливаем фон как у сайта:
       ctx.clearRect(0, 0, w, h);
       ctx.fillStyle = "#181e28";
       ctx.fillRect(0, 0, w, h);
@@ -111,6 +122,7 @@ function AnimatedBg() {
   );
 }
 
+
 // ====== Данные ======
 const ACCENT = "#3ca4ff";
 const BG = "#181e28";
@@ -133,6 +145,44 @@ const CATEGORIES = [
   { name: "Игрушки", emoji: "🧸", brands: ["Игрушки Labubu"] },
   { name: "Электроника", emoji: "🔌", brands: ["Apple TV", "GoPro", "Dyson", "Пылесос"] },
 ];
+
+const PRODUCTS = {
+  "Смартфоны": [
+    { id: 1, name: "iPhone 15 Pro 128GB Серый", brand: "Apple", price: 115000, img: PHONE_PLACEHOLDER },
+    { id: 2, name: "Galaxy S24 Ultra 256GB", brand: "Samsung S24/S25", price: 98000, img: PHONE_PLACEHOLDER },
+    { id: 3, name: "Xiaomi Redmi Note 13 Pro", brand: "Xiaomi", price: 34000, img: PHONE_PLACEHOLDER },
+  ],
+  "Часы": [
+    { id: 4, name: "Apple Watch Series 9", brand: "Apple Watch", price: 37000, img: PHONE_PLACEHOLDER },
+    { id: 5, name: "Casio G-SHOCK", brand: "Casio G-SHOCK", price: 8900, img: PHONE_PLACEHOLDER },
+    { id: 6, name: "Garmin Forerunner", brand: "Garmin", price: 28500, img: PHONE_PLACEHOLDER }
+  ],
+  "Компьютеры и планшеты": [
+    { id: 7, name: "MacBook Air 15 2024", brand: "MacBook", price: 127000, img: PHONE_PLACEHOLDER },
+    { id: 8, name: "iMac 24\" 2024", brand: "iMac", price: 159000, img: PHONE_PLACEHOLDER },
+    { id: 9, name: "iPad Pro 11\" 2024", brand: "iPad", price: 99000, img: PHONE_PLACEHOLDER }
+  ],
+  "Аудио": [
+    { id: 10, name: "AirPods Pro 2", brand: "AirPods", price: 25900, img: PHONE_PLACEHOLDER },
+    { id: 11, name: "Marshall Emberton II", brand: "Marshall", price: 18500, img: PHONE_PLACEHOLDER },
+    { id: 12, name: "Sony WH-1000XM5", brand: "Аксессуары", price: 29900, img: PHONE_PLACEHOLDER }
+  ],
+  "Телевизоры": [
+    { id: 13, name: "Xiaomi TV A32", brand: "Телевизоры", price: 16000, img: TV_PLACEHOLDER },
+    { id: 14, name: "Samsung 4K Crystal", brand: "Телевизоры", price: 37000, img: TV_PLACEHOLDER }
+  ],
+  "Игровые приставки": [
+    { id: 15, name: "PlayStation 5", brand: "Sony Ps5", price: 68900, img: PHONE_PLACEHOLDER },
+    { id: 16, name: "Xbox Series X", brand: "Xbox", price: 64800, img: PHONE_PLACEHOLDER }
+  ],
+  "Игрушки": [
+    { id: 17, name: "Labubu Pirate", brand: "Игрушки Labubu", price: 3300, img: PHONE_PLACEHOLDER }
+  ],
+  "Электроника": [
+    { id: 18, name: "Apple TV 4K", brand: "Apple TV", price: 25900, img: PHONE_PLACEHOLDER },
+    { id: 19, name: "GoPro Hero", brand: "GoPro", price: 38500, img: PHONE_PLACEHOLDER }
+  ]
+};
 
 const mainBlockWidth = 430;
 
@@ -198,7 +248,7 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
         marginBottom: 12, boxShadow: "0 2px 16px #1e2b4730"
       }}>
         <img
-          src={product.img || PHONE_PLACEHOLDER}
+          src={product.img}
           alt={product.name}
           style={{
             width: 120, height: 120, objectFit: "contain", borderRadius: 16
@@ -231,7 +281,7 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
         textAlign: "center",
         letterSpacing: "0.01em",
       }}>
-        {Number(product.price).toLocaleString()} <span style={{
+        {product.price.toLocaleString()} <span style={{
           fontWeight: 600, fontSize: 15, color: "#a9cfff"
         }}>₽</span>
       </div>
@@ -287,7 +337,6 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
 
 // ====== Основной компонент ======
 const App = () => {
-  const [products, setProducts] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null);
   const [activeBrand, setActiveBrand] = useState(null);
   const [search, setSearch] = useState("");
@@ -306,39 +355,35 @@ const App = () => {
     window.scrollTo(0, 0);
   }, [activeCategory, showCart]);
 
-  // Google Sheets Load
-  useEffect(() => {
-    Tabletop.init({
-      key: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSRtT-9yQsf2f0mY01Hkcg_711efC99-ZBqzhO_j8nUJWcP3HCZFzXTGCkEKXtqL8FF4IHmFUM_34TM/pubhtml",
-      simpleSheet: true,
-      callback: (data) => setProducts(data),
-    });
-  }, []);
-
   const cartTotalCount = cart.reduce((a, b) => a + b.qty, 0);
-  const getQtyInCart = (id) => cart.find(i => String(i.id) === String(id))?.qty || 0;
+  const getQtyInCart = (id) => cart.find(i => i.id === id)?.qty || 0;
   const addToCart = (id) => setCart(prev => {
-    const found = prev.find(i => String(i.id) === String(id));
-    if (found) return prev.map(i => String(i.id) === String(id) ? { ...i, qty: i.qty + 1 } : i);
+    const found = prev.find(i => i.id === id);
+    if (found) return prev.map(i => i.id === id ? { ...i, qty: i.qty + 1 } : i);
     return [...prev, { id, qty: 1 }];
   });
   const removeOneFromCart = (id) => setCart(prev => {
-    const found = prev.find(i => String(i.id) === String(id));
+    const found = prev.find(i => i.id === id);
     if (!found) return prev;
-    if (found.qty === 1) return prev.filter(i => String(i.id) !== String(id));
-    return prev.map(i => String(i.id) === String(id) ? { ...i, qty: i.qty - 1 } : i);
+    if (found.qty === 1) return prev.filter(i => i.id !== id);
+    return prev.map(i => i.id === id ? { ...i, qty: i.qty - 1 } : i);
   });
-  const getProduct = (id) => products.find(p => String(p.id) === String(id));
-  const total = cart.reduce((sum, item) => (Number(getProduct(item.id)?.price) || 0) * item.qty + sum, 0);
+  const getProduct = (id) => {
+    for (let cat in PRODUCTS) {
+      const found = PRODUCTS[cat].find(p => p.id === id);
+      if (found) return found;
+    }
+    return null;
+  };
+  const total = cart.reduce((sum, item) => (getProduct(item.id)?.price || 0) * item.qty + sum, 0);
 
   let shownProducts = [];
   if (activeCategory) {
-    shownProducts = products.filter(p => p.category === activeCategory);
+    shownProducts = PRODUCTS[activeCategory] || [];
     if (activeBrand) shownProducts = shownProducts.filter(p => p.brand === activeBrand);
     if (search.trim()) {
       shownProducts = shownProducts.filter(
-        p => (p.name && p.name.toLowerCase().includes(search.toLowerCase())) ||
-          (p.brand && p.brand.toLowerCase().includes(search.toLowerCase()))
+        p => p.name.toLowerCase().includes(search.toLowerCase()) || p.brand.toLowerCase().includes(search.toLowerCase())
       );
     }
   }
@@ -348,6 +393,7 @@ const App = () => {
       style={{
         minHeight: "100vh",
         width: "100vw",
+        // background: BG, // НЕ НУЖНО! particles canvas сам отрисует фон
         color: "#fff",
         margin: 0,
         padding: 0,
@@ -359,6 +405,7 @@ const App = () => {
     >
       <AnimatedBg />
 
+      {/* -------- Хедер -------- */}
       <header style={{
         textAlign: "center",
         padding: `${isMobile ? 32 : 48}px 0 0 0`,
@@ -438,6 +485,7 @@ const App = () => {
         }}></div>
       </header>
 
+      {/* -------- Плавные fade-переходы между страницами -------- */}
       <AnimatePresence>
         {!activeCategory && !showCart && (
           <motion.div
@@ -447,6 +495,7 @@ const App = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.13, type: "tween", ease: "easeInOut" }}
           >
+            {/* -------- Главная (категории) -------- */}
             <div
               style={{
                 maxWidth: "480px",
@@ -465,6 +514,7 @@ const App = () => {
                 zIndex: 2,
                 position: "relative"
               }}>
+                {/* Инфо-блок */}
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -515,6 +565,7 @@ const App = () => {
                   fontWeight: 800, fontSize: 20, textAlign: "center", marginBottom: 18, letterSpacing: "0.01em", color: "#e5eeff"
                 }}>Категории</div>
               </div>
+              {/* Список категорий */}
               <div style={{
                 display: "flex",
                 flexDirection: "column",
@@ -558,6 +609,7 @@ const App = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.13, type: "tween", ease: "easeInOut" }}
           >
+            {/* -------- Страница категории -------- */}
             <div
               style={{
                 maxWidth: "480px",
@@ -574,6 +626,7 @@ const App = () => {
                 margin: "0 auto",
                 marginTop: isMobile ? 15 : 22
               }}>
+                {/* Кнопка назад */}
                 <button
                   onClick={() => { setActiveCategory(null); setActiveBrand(null); setSearch(""); }}
                   style={{
@@ -591,6 +644,8 @@ const App = () => {
                     boxShadow: "0 1.5px 10px #3ca4ff0b",
                     transition: ".16s"
                   }}>← К категориям</button>
+
+                {/* Подкатегории брендов */}
                 <div style={{
                   display: "flex",
                   overflowX: "auto",
@@ -609,6 +664,8 @@ const App = () => {
                     />
                   )}
                 </div>
+
+                {/* Поиск */}
                 <input
                   placeholder="Поиск товаров"
                   value={search}
@@ -628,6 +685,8 @@ const App = () => {
                   }}
                 />
               </div>
+
+              {/* Товары */}
               {shownProducts.length === 0 && (
                 <div style={{ color: "#bcc5db", fontSize: 16, textAlign: "center", margin: "32px 0 55px 0", fontWeight: 700 }}>
                   Нет товаров в этой категории.
@@ -707,7 +766,7 @@ const App = () => {
                           <div style={{ color: "#999", fontSize: isMobile ? 10 : 13, marginBottom: 2 }}>Кол-во: <b>{item.qty}</b></div>
                         </div>
                         <div style={{ textAlign: "right", minWidth: 58 }}>
-                          <span style={{ fontWeight: 800, fontSize: isMobile ? 11 : 16, color: "#fff" }}>{Number(product.price) * item.qty} ₽</span>
+                          <span style={{ fontWeight: 800, fontSize: isMobile ? 11 : 16, color: "#fff" }}>{product.price * item.qty} ₽</span>
                           <button
                             style={{
                               display: "block",
@@ -720,7 +779,7 @@ const App = () => {
                               padding: 0,
                               fontWeight: 700,
                             }}
-                            onClick={() => setCart(prev => prev.filter(i => String(i.id) !== String(item.id)))}
+                            onClick={() => setCart(prev => prev.filter(i => i.id !== item.id))}
                           >
                             Удалить
                           </button>
@@ -751,7 +810,7 @@ const App = () => {
                             .map((item) => {
                               const p = getProduct(item.id);
                               return p
-                                ? `${p.brand} ${p.name} x${item.qty} — ${Number(p.price) * item.qty}₽`
+                                ? `${p.brand} ${p.name} x${item.qty} — ${p.price * item.qty}₽`
                                 : "";
                             })
                             .join("\n") +
@@ -767,6 +826,7 @@ const App = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
       <div style={{ height: 18 }} />
     </div>
   );
