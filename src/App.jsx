@@ -276,6 +276,141 @@ function AnimatedBg() {
 
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSRtT-9yQsf2f0mY01Hkcg_711efC99-ZBqzhO_j8nUJWcP3HCZFzXTGCkEKXtqL8FF4IHmFUM_34TM/pub?output=csv";
 
+function AdminPanel({ onClose, onAddProduct }) {
+  const [formData, setFormData] = useState({
+    id: "",
+    name: "",
+    brand: "",
+    category: "",
+    price: "",
+    img: ""
+  });
+
+  const handleChange = (e) => {
+    setFormData({...formData, [e.target.name]: e.target.value});
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!formData.name || !formData.price || !formData.category || !formData.brand) {
+      alert("Пожалуйста, заполните обязательные поля: имя, категория, бренд, цена");
+      return;
+    }
+
+    try {
+      const res = await fetch("https://script.google.com/macros/s/AKfycbwz9fl88XhyPt-WOm05vqTDtsaLyCEyxXsR_LxUNrs_842FhtyqL5CNniY5Godi1GZ53A/exec", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await res.json();
+      if (result.success) {
+        alert("Товар добавлен успешно!");
+        onAddProduct();
+        onClose();
+      } else {
+        alert("Ошибка при добавлении товара");
+      }
+    } catch (err) {
+      alert("Ошибка сети или сервера");
+    }
+  };
+
+  return (
+    <motion.div
+      initial={{opacity: 0, scale: 0.95}}
+      animate={{opacity: 1, scale: 1}}
+      exit={{opacity: 0, scale: 0.95}}
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(0,0,0,0.7)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 9999,
+        padding: 20,
+      }}
+      onClick={onClose}
+    >
+      <form
+        onClick={e => e.stopPropagation()}
+        onSubmit={handleSubmit}
+        style={{
+          background: CARD,
+          borderRadius: 12,
+          padding: 24,
+          maxWidth: 400,
+          width: "100%",
+          color: "#fff",
+          display: "flex",
+          flexDirection: "column",
+          gap: 12
+        }}
+      >
+        <h2 style={{marginBottom: 12, color: ACCENT}}>Админка: Добавить товар</h2>
+
+        <input
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          placeholder="Название"
+          style={inputStyle}
+          required
+        />
+        <input
+          name="brand"
+          value={formData.brand}
+          onChange={handleChange}
+          placeholder="Бренд"
+          style={inputStyle}
+          required
+        />
+        <input
+          name="category"
+          value={formData.category}
+          onChange={handleChange}
+          placeholder="Категория"
+          style={inputStyle}
+          required
+        />
+        <input
+          name="price"
+          value={formData.price}
+          onChange={handleChange}
+          placeholder="Цена"
+          type="number"
+          style={inputStyle}
+          required
+        />
+        <input
+          name="img"
+          value={formData.img}
+          onChange={handleChange}
+          placeholder="Ссылка на картинку"
+          style={inputStyle}
+        />
+        <button type="submit" style={{background: ACCENT, color: "#fff", border: "none", padding: "12px", borderRadius: 8, cursor: "pointer"}}>
+          Добавить товар
+        </button>
+        <button type="button" onClick={onClose} style={{background: "#555", color: "#ccc", border: "none", padding: "8px", borderRadius: 8, cursor: "pointer"}}>
+          Закрыть
+        </button>
+      </form>
+    </motion.div>
+  );
+}
+
+const inputStyle = {
+  padding: "10px",
+  borderRadius: "8px",
+  border: "none",
+  outline: "none",
+  fontSize: "15px",
+};
+
 const App = () => {
   const [products, setProducts] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null);
@@ -284,6 +419,24 @@ const App = () => {
   const [cart, setCart] = useState([]);
   const [showCart, setShowCart] = useState(false);
   const [vw, setVw] = useState(window.innerWidth);
+  const [adminMode, setAdminMode] = useState(false);
+  const [logoClickCount, setLogoClickCount] = useState(0);
+
+  // Вынесем fetch для повторного вызова после добавления товара
+  const fetchProducts = async () => {
+    const res = await fetch(CSV_URL);
+    const text = await res.text();
+    const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
+    setProducts(parsed.data.map(prod => ({
+      ...prod,
+      price: Number(prod.price || 0),
+      id: prod.id?.toString() || Math.random().toString(36).slice(2)
+    })));
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   useEffect(() => {
     const handleResize = () => setVw(window.innerWidth);
@@ -296,20 +449,17 @@ const App = () => {
     window.scrollTo(0, 0);
   }, [activeCategory, showCart]);
 
-  // Загрузка товаров из Google Sheets (CSV)
-  useEffect(() => {
-    async function fetchProducts() {
-      const res = await fetch(CSV_URL);
-      const text = await res.text();
-      const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
-      setProducts(parsed.data.map(prod => ({
-        ...prod,
-        price: Number(prod.price || 0),
-        id: prod.id?.toString() || Math.random().toString(36).slice(2)
-      })));
-    }
-    fetchProducts();
-  }, []);
+  // Логика кликов по логотипу для открытия админки
+  const handleLogoClick = () => {
+    setLogoClickCount(count => {
+      const newCount = count + 1;
+      if (newCount >= 10) {
+        setAdminMode(true);
+        return 0;
+      }
+      return newCount;
+    });
+  };
 
   const cartTotalCount = cart.reduce((a, b) => a + b.qty, 0);
   const getQtyInCart = (id) => cart.find(i => String(i.id) === String(id))?.qty || 0;
@@ -354,7 +504,6 @@ const App = () => {
       }}
     >
 
-
       <AnimatedBg />
 
       {/* ----- Хедер ----- */}
@@ -381,8 +530,10 @@ const App = () => {
               background: "#fff",
               margin: "0 auto",
               display: "block",
-              boxShadow: "0 0 16px #0006"
+              boxShadow: "0 0 16px #0006",
+              cursor: "pointer"
             }}
+            onClick={handleLogoClick}
           />
           <motion.button
             animate={cartTotalCount > 0 ? { scale: [1, 1.13, 0.95, 1] } : { scale: 1 }}
@@ -600,14 +751,13 @@ const App = () => {
                   scrollbarWidth: "thin"
                 }}>
                   {(CATEGORIES.find(c => c.name === activeCategory)?.brands || []).map(brand =>
-                  <BrandButton
-    key={brand}
-    name={brand}
-    active={brand === activeBrand}
-    onClick={() => setActiveBrand(brand === activeBrand ? null : brand)}
-  />
-)}
-
+                    <BrandButton
+                      key={brand}
+                      name={brand}
+                      active={brand === activeBrand}
+                      onClick={() => setActiveBrand(brand === activeBrand ? null : brand)}
+                    />
+                  )}
                 </div>
                 <input
                   placeholder="Поиск товаров"
@@ -766,6 +916,17 @@ const App = () => {
             </div>
           </motion.div>
         )}
+
+        {/* Админка */}
+        <AnimatePresence>
+          {adminMode && (
+            <AdminPanel
+              onClose={() => setAdminMode(false)}
+              onAddProduct={() => fetchProducts()}
+            />
+          )}
+        </AnimatePresence>
+
       </AnimatePresence>
       <div style={{ height: 18 }} />
     </div>
