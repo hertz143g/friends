@@ -15,7 +15,7 @@ const PHONE_PLACEHOLDER = "https://raw.githubusercontent.com/hdpngworld/HPW/main
 const mainBlockWidth = 430;
 
 const CATEGORIES = [
-  { name: "Смартфоны", emoji: "📱", brands: ["Apple", "Samsung S22/23", "Samsung S24/S25", "Samsung A / наушники / часы", "Xiaomi", "Redmi", "Poco", "OnePlus", "Google Pixel"] },
+  { name: "Смартфоны", emoji: "📱", brands: ["Apple", "Samsung", "Xiaomi", "Redmi", "Poco", "OnePlus", "Google Pixel"] },
   { name: "Часы", emoji: "⌚", brands: ["Apple Watch", "Casio G-SHOCK", "Garmin"] },
   { name: "Компьютеры и планшеты", emoji: "💻", brands: ["MacBook", "iMac", "iPad"] },
   { name: "Аудио", emoji: "🎧", brands: ["AirPods", "AirPods в разборе", "Аксессуары", "Колонки", "Marshall"] },
@@ -24,6 +24,7 @@ const CATEGORIES = [
   { name: "Игрушки", emoji: "🧸", brands: ["Игрушки Labubu"] },
   { name: "Электроника", emoji: "🔌", brands: ["Apple TV", "GoPro", "Dyson", "Пылесос"] },
 ];
+
 
 function parseCSV(text) {
   const [headerLine, ...lines] = text.split("\n");
