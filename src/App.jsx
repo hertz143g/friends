@@ -299,7 +299,7 @@ function AdminPanel({ onClose, onAddProduct }) {
     }
 
     try {
-      const res = await fetch("https://script.google.com/macros/s/AKfycbwz9fl88XhyPt-WOm05vqTDtsaLyCEyxXsR_LxUNrs_842FhtyqL5CNniY5Godi1GZ53A/exec", {
+      const res = await fetch("https://script.google.com/macros/s/AKfycbxqSo2iM2z7sK7eQZRKmRFcNmlxXfGJmnb21x9tAOtvnFlk-Jb_ntNG0usJLczDJUi_Fw/exec", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
