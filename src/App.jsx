@@ -764,3 +764,8 @@ const App = () => {
 };
 
 export default App;
+
+console.log("ВСЕ ТОВАРЫ:", products);
+console.log("Выбрана категория:", activeCategory);
+console.log("Выбран бренд:", activeBrand);
+console.log("SHOWN:", shownProducts);
