@@ -109,17 +109,24 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
         lineHeight: 1.18
       }}>{product.brand}</div>
       <div style={{
-        fontWeight: 800,
-        fontSize: 19,
-        color: ACCENT,
-        marginBottom: 14,
-        textAlign: "center",
-        letterSpacing: "0.01em",
-      }}>
-        {Number(product.price).toLocaleString()} <span style={{
-          fontWeight: 600, fontSize: 15, color: "#a9cfff"
-        }}>₽</span>
-      </div>
+  fontWeight: 800,
+  fontSize: 19,
+  color: ACCENT,
+  marginBottom: 14,
+  textAlign: "center",
+  letterSpacing: "0.01em",
+}}>
+  {product.price > 0 ? (
+    <>
+      {Number(product.price).toLocaleString()} <span style={{
+        fontWeight: 600, fontSize: 15, color: "#a9cfff"
+      }}>₽</span>
+    </>
+  ) : (
+    <span style={{ color: "#ccc", fontWeight: 600, fontSize: 15 }}>Запрос</span>
+  )}
+</div>
+
       {qty === 0 ? (
         <motion.button
           onClick={handlePlus}
@@ -312,6 +319,7 @@ const App = () => {
       setProducts(parsed.data.map(prod => ({
         ...prod,
         price: Number((prod.price || "").replace(/[^\d]/g, "")) || 0,
+        rawPrice: prod.price || "",
         id: prod.id?.toString() || Math.random().toString(36).slice(2)
       })));
     } catch (e) {
