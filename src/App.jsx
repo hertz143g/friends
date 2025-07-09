@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { db } from "./firebase";
-import { collection, getDocs } from "firebase/firestore";
+import Papa from "papaparse";
 
 const ACCENT = "#3ca4ff";
 const CARD = "#23293b";
@@ -15,7 +14,7 @@ const mainBlockWidth = 430;
 
 const CATEGORIES = [
   { name: "Смартфоны", emoji: "📱", brands: ["Apple", "Samsung", "Xiaomi", "Redmi", "Poco", "OnePlus", "Google Pixel"] },
-  { name: "Часы", emoji: "⌚", brands: ["Apple Watch", "Casio G-SHOCK", "Garmin"] },
+  { name: "Часы", emoji: "⌚", brands: ["Apple Watch", "Casio G-SHOCK", "Garmin", "Samsung"] },
   { name: "Компьютеры и планшеты", emoji: "💻", brands: ["MacBook", "iMac", "iPad"] },
   { name: "Аудио", emoji: "🎧", brands: ["AirPods", "AirPods в разборе", "Аксессуары", "Колонки", "Marshall"] },
   { name: "Телевизоры", emoji: "📺", brands: ["Телевизоры", "Электросамокаты"] },
@@ -23,8 +22,6 @@ const CATEGORIES = [
   { name: "Игрушки", emoji: "🧸", brands: ["Игрушки Labubu"] },
   { name: "Электроника", emoji: "🔌", brands: ["Apple TV", "GoPro", "Dyson", "Пылесос"] },
 ];
-
-
 
 function BrandButton({ name, active, onClick }) {
   return (
@@ -277,6 +274,8 @@ function AnimatedBg() {
   );
 }
 
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSRtT-9yQsf2f0mY01Hkcg_711efC99-ZBqzhO_j8nUJWcP3HCZFzXTGCkEKXtqL8FF4IHmFUM_34TM/pub?output=csv";
+
 const App = () => {
   const [products, setProducts] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null);
@@ -297,12 +296,17 @@ const App = () => {
     window.scrollTo(0, 0);
   }, [activeCategory, showCart]);
 
-  // ====== ГЛАВНОЕ: Загружаем товары из Firestore ======
+  // Загрузка товаров из Google Sheets (CSV)
   useEffect(() => {
     async function fetchProducts() {
-      const col = collection(db, "products");
-      const snapshot = await getDocs(col);
-      setProducts(snapshot.docs.map(doc => doc.data()));
+      const res = await fetch(CSV_URL);
+      const text = await res.text();
+      const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
+      setProducts(parsed.data.map(prod => ({
+        ...prod,
+        price: Number(prod.price || 0),
+        id: prod.id?.toString() || Math.random().toString(36).slice(2)
+      })));
     }
     fetchProducts();
   }, []);
@@ -349,6 +353,8 @@ const App = () => {
         position: "relative"
       }}
     >
+
+
       <AnimatedBg />
 
       {/* ----- Хедер ----- */}
