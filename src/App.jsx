@@ -20,7 +20,7 @@ const CATEGORIES = [
   { name: "Телевизоры и самокаты", emoji: "📺", brands: ["Телевизоры", "Электросамокаты"] },
   { name: "Игровые приставки", emoji: "🎮", brands: ["Xbox", "Sony Ps5"] },
   { name: "Игрушки", emoji: "🧸", brands: ["Игрушки Labubu"] },
-  { name: "Электроника", emoji: "🔌", brands: ["Аксессуары", "Apple TV", "GoPro", "Dyson", "Пылесос"] },
+  { name: "Электроника", emoji: "🔌", brands: ["Аксессуары", "Apple TV", "GoPro", "Dyson"] },
 ];
 
 function BrandButton({ name, active, onClick }) {
