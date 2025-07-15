@@ -555,7 +555,7 @@ const App = () => {
                     fontSize: isMobile ? 12 : 13.5,
                     color: "#b3c7df"
                   }}>
-                    <b style={{ color: "#63aaff" }}>Контакты:</b> Телефон: <span style={{ color: "#fff" }}>{PHONE}</span><br />
+                    <b style={{ color: "#63aaff" }}>Контакты:</b> <span style={{ color: "#fff" }}>{PHONE}</span><br />
                     <b style={{ color: "#9ed6fc" }}>Адрес:</b> <span style={{ color: "#fff" }}>{ADDRESS}</span>
                   </div>
                 </motion.div>
