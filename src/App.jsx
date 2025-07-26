@@ -794,26 +794,24 @@ const App = () => {
     cursor: "pointer",
   }}
   onClick={() => {
-    const messageLines = [
-      "Здравствуйте! Я хочу заказать в вашем магазине:",
-      "",
-      ...cart.map((item) => {
-        const p = getProduct(item.id);
-        return p
-          ? `${p.brand} ${p.name} x${item.qty}`
-          : "";
-      }),
-      "",
-      `Итого товаров: ${cart.reduce((sum, item) => sum + item.qty, 0)}`
-    ];
+  const lines = [
+    "Здравствуйте! Я хочу заказать в вашем магазине:",
+    "",
+    ...cart.map((item) => {
+      const p = getProduct(item.id);
+      return p ? `• ${p.brand} ${p.name} x${item.qty}` : "";
+    }),
+    "",
+    `Итого товаров: ${cart.reduce((sum, item) => sum + item.qty, 0)}`
+  ];
 
-    const message = messageLines.join("\n");
-    const encodedMessage = encodeURIComponent(message);
-    const telegramUsername = "avangard_dobronravov"; // поменяй на ник менеджера без @
+  const message = lines.join('\n');
+  const encodedMessage = encodeURIComponent(message.trim());
+  const telegramUsername = "avangard_dobronravov"; // ник без @
 
-    const telegramLink = `https://t.me/${telegramUsername}?text=${encodedMessage}`;
-    window.open(telegramLink, "_blank");
-  }}
+  const telegramLink = `https://t.me/${telegramUsername}?text=${encodedMessage}`;
+  window.open(telegramLink, "_blank");
+}}
 >
   Оформить заказ
 </button>
