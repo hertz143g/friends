@@ -809,7 +809,7 @@ const App = () => {
 
     const message = messageLines.join("\n");
     const encodedMessage = encodeURIComponent(message);
-    const telegramUsername = "frsr4fs"; // поменяй на ник менеджера без @
+    const telegramUsername = "avangard_dobronravov"; // поменяй на ник менеджера без @
 
     const telegramLink = `https://t.me/${telegramUsername}?text=${encodedMessage}`;
     window.open(telegramLink, "_blank");
