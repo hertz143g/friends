@@ -794,7 +794,7 @@ const App = () => {
     cursor: "pointer",
   }}
 onClick={() => {
-  const lines = [
+  const messageLines = [
     "Здравствуйте! Я хочу заказать в вашем магазине:",
     "",
     ...cart.map((item) => {
@@ -805,9 +805,12 @@ onClick={() => {
     `Итого товаров: ${cart.reduce((sum, item) => sum + item.qty, 0)}`
   ];
 
-  const message = lines.join("\n").trim();
+  const message = messageLines.join("\n").trim();
   const encodedMessage = encodeURIComponent(message);
-  const telegramLink = `https://t.me/share/url?url=&text=${encodedMessage}`;
+
+  const telegramUsername = "avangard_dobronravov"; // 👈 твой username менеджера
+  const telegramLink = `https://t.me/${telegramUsername}?text=${encodedMessage}`;
+
   window.open(telegramLink, "_blank");
 }}
 >
