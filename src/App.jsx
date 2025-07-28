@@ -794,23 +794,27 @@ const App = () => {
     cursor: "pointer",
   }}
 onClick={() => {
-  const messageLines = [
+  const lines = [
     "Здравствуйте! Я хочу заказать в вашем магазине:",
-    "",
-    ...cart.map((item) => {
-      const p = getProduct(item.id);
-      return p ? `• ${p.brand} ${p.name} x${item.qty}` : "";
-    }),
-    "",
-    `Итого товаров: ${cart.reduce((sum, item) => sum + item.qty, 0)}`
+    ""
   ];
 
-  const message = messageLines.join("\n").trim();
+  cart.forEach((item) => {
+    const p = getProduct(item.id);
+    if (p) {
+      const itemTotal = Number(p.price) * item.qty;
+      lines.push(`• ${p.brand} ${p.name} x${item.qty} — ${Number(p.price).toLocaleString()}₽ = ${itemTotal.toLocaleString()}₽`);
+    }
+  });
+
+  lines.push("");
+  lines.push(`Итого: ${total.toLocaleString()}₽`);
+
+  const message = lines.join("\n");
   const encodedMessage = encodeURIComponent(message);
+  const telegramUsername = "avangard_dobronravov"; // Заменить на ник менеджера без @
 
-  const telegramUsername = "avangard_dobronravov"; // 👈 твой username менеджера
-  const telegramLink = `https://t.me/${telegramUsername}?text=${encodedMessage}`;
-
+  const telegramLink = `https://t.me/${telegramUsername}?start&text=${encodedMessage}`;
   window.open(telegramLink, "_blank");
 }}
 >
