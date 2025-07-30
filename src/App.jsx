@@ -11,8 +11,6 @@ const PHONE = "+7(965)226-96-02 / +7(925)444-11-18";
 const ADDRESS = "Клин, ул. Победы, д. 9, «Ок’ей»";
 const PHONE_PLACEHOLDER = "https://raw.githubusercontent.com/hdpngworld/HPW/main/uploads/65038654434d0-iPhone%2015%20Pro%20Natural%20titanium%20png.png";
 const mainBlockWidth = 430;
-const [showFAQ, setShowFAQ] = useState(false);
-const [showCredit, setShowCredit] = useState(false);
 
 const CATEGORIES = [
   { name: "Смартфоны", emoji: "📱", brands: ["Apple", "Samsung", "Xiaomi", "Redmi", "Poco", "OnePlus", "Google Pixel"] },
@@ -597,40 +595,6 @@ const App = () => {
                   </motion.button>
                 )}
               </div>
-              <div style={{
-  display: "flex",
-  flexDirection: "column",
-  gap: 12,
-  marginTop: 24
-}}>
-  <button
-    onClick={() => setShowFAQ(true)}
-    style={{
-      background: "#283a60",
-      color: "#fff",
-      border: "none",
-      borderRadius: 12,
-      padding: "13px 18px",
-      fontWeight: 700,
-      fontSize: 15,
-      cursor: "pointer"
-    }}
-  >📋 Частые вопросы (FAQ)</button>
-
-  <button
-    onClick={() => setShowCredit(true)}
-    style={{
-      background: "#283a60",
-      color: "#fff",
-      border: "none",
-      borderRadius: 12,
-      padding: "13px 18px",
-      fontWeight: 700,
-      fontSize: 15,
-      cursor: "pointer"
-    }}
-  >💳 Кредит и рассрочка</button>
-</div>
             </div>
           </motion.div>
         )}
@@ -862,123 +826,11 @@ onClick={() => {
                 </>
               )}
             </div>
-            {showFAQ && (
-  <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    onClick={() => setShowFAQ(false)}
-    style={{
-      position: "fixed",
-      top: 0, left: 0, right: 0, bottom: 0,
-      background: "#000000cc",
-      zIndex: 999,
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      padding: 20
-    }}
-  >
-    <div
-      onClick={(e) => e.stopPropagation()}
-      style={{
-        maxWidth: 500,
-        width: "100%",
-        background: "#1f2a3c",
-        borderRadius: 16,
-        padding: 20,
-        color: "#fff",
-        maxHeight: "85vh",
-        overflowY: "auto"
-      }}
-    >
-      <h2 style={{ fontSize: 20, marginBottom: 12, color: ACCENT }}>📋 Частые вопросы (FAQ)</h2>
-      <p style={{ fontSize: 14, lineHeight: 1.5, whiteSpace: "pre-line" }}>
-        {/* Сюда вставь текст FAQ, который ты присылал */}
-        Много вопросов про регионы, гарантию и всё такое… сделали для вас описание👍
-
-        Маркировка у айфонов:
-        ... (и так далее — можешь вставить весь длинный текст)
-      </p>
-      <button
-        onClick={() => setShowFAQ(false)}
-        style={{
-          marginTop: 16,
-          background: ACCENT,
-          color: "#fff",
-          border: "none",
-          borderRadius: 8,
-          padding: "10px 18px",
-          fontWeight: 700,
-          cursor: "pointer"
-        }}
-      >Закрыть</button>
-    </div>
-  </motion.div>
-)}
-
           </motion.div>
         )}
       </AnimatePresence>
 
       <div style={{ height: 18 }} />
-
-{showCredit && (
-  <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    onClick={() => setShowCredit(false)}
-    style={{
-      position: "fixed",
-      top: 0, left: 0, right: 0, bottom: 0,
-      background: "#000000cc",
-      zIndex: 999,
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      padding: 20
-    }}
-  >
-    <div
-      onClick={(e) => e.stopPropagation()}
-      style={{
-        maxWidth: 500,
-        width: "100%",
-        background: "#1f2a3c",
-        borderRadius: 16,
-        padding: 20,
-        color: "#fff",
-        maxHeight: "85vh",
-        overflowY: "auto"
-      }}
-    >
-      <h2 style={{ fontSize: 20, marginBottom: 12, color: ACCENT }}>💳 Кредит и рассрочка</h2>
-      <p style={{ fontSize: 14, lineHeight: 1.5, whiteSpace: "pre-line" }}>
-        🔴Про КРЕДИТ И РАССРОЧКУ🔴
-
-        В связи с тем, что у нас в стоимость не заложен процент на вывод средств по безналу...
-        ...
-        6 месяцев (+19% к цене)
-        12 месяцев (+25% к цене) 
-        24 месяца (+42% к цене)
-      </p>
-      <button
-        onClick={() => setShowCredit(false)}
-        style={{
-          marginTop: 16,
-          background: ACCENT,
-          color: "#fff",
-          border: "none",
-          borderRadius: 8,
-          padding: "10px 18px",
-          fontWeight: 700,
-          cursor: "pointer"
-        }}
-      >Закрыть</button>
-    </div>
-  </motion.div>
-)}
     </div>
   );
 };
