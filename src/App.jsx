@@ -917,6 +917,12 @@ onClick={() => {
   </motion.div>
 )}
 
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div style={{ height: 18 }} />
+
 {showCredit && (
   <motion.div
     initial={{ opacity: 0 }}
@@ -973,11 +979,6 @@ onClick={() => {
     </div>
   </motion.div>
 )}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <div style={{ height: 18 }} />
     </div>
   );
 };
