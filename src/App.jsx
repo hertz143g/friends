@@ -13,14 +13,16 @@ const PHONE_PLACEHOLDER = "https://raw.githubusercontent.com/hdpngworld/HPW/main
 const mainBlockWidth = 430;
 
 const CATEGORIES = [
-  { name: "Смартфоны", emoji: "📱", brands: ["Apple", "Samsung", "Xiaomi", "Redmi", "Poco", "OnePlus", "Google Pixel"] },
+  { name: "iPhone", emoji: "📱", brands: ["Apple"] },
+  { name: "Android", emoji: "🤖", brands: ["Samsung", "Xiaomi", "Redmi", "Poco", "OnePlus", "Google Pixel"] },
   { name: "Часы", emoji: "⌚", brands: ["Apple", "Casio", "Garmin", "Samsung"] },
   { name: "Компьютеры и планшеты", emoji: "💻", brands: ["MacBook", "iMac", "iPad"] },
-  { name: "Аудио", emoji: "🎧", brands: ["Apple", "Колонки", "Marshall"] },
-  { name: "Телевизоры и самокаты", emoji: "📺", brands: ["Телевизоры", "Электросамокаты"] },
+  { name: "ТВ и Аудио", emoji: "📺", brands: ["Телевизоры", "Колонки", "Marshall"] },
+  { name: "Самокаты", emoji: "🛴", brands: ["Электросамокаты"] },
   { name: "Игровые приставки", emoji: "🎮", brands: ["Xbox", "Sony Ps5"] },
   { name: "Игрушки", emoji: "🧸", brands: ["Игрушки Labubu"] },
-  { name: "Электроника", emoji: "🔌", brands: ["Аксессуары", "Apple TV", "GoPro", "Dyson"] },
+  { name: "Аксессуары", emoji: "🔌", brands: ["Аксессуары", "Apple TV", "GoPro"] },
+  { name: "Dyson", emoji: "🌀", brands: ["Dyson"] },
 ];
 
 function BrandButton({ name, active, onClick }) {
