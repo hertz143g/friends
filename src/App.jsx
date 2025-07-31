@@ -600,6 +600,42 @@ const App = () => {
                 )}
 
               </div>
+
+<div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 12 }}>
+  <button
+    onClick={() => setShowFAQ(true)}
+    style={{
+      background: ACCENT,
+      color: '#fff',
+      fontWeight: 700,
+      fontSize: 15,
+      border: 'none',
+      borderRadius: 12,
+      padding: '12px',
+      cursor: 'pointer'
+    }}
+  >
+    ❓ Часто задаваемые вопросы
+  </button>
+  <button
+    onClick={() => setShowCredit(true)}
+    style={{
+      background: ACCENT,
+      color: '#fff',
+      fontWeight: 700,
+      fontSize: 15,
+      border: 'none',
+      borderRadius: 12,
+      padding: '12px',
+      cursor: 'pointer'
+    }}
+  >
+    💳 Кредит и рассрочка
+  </button>
+</div>
+
+
+
             </div>
           </motion.div>
         )}
