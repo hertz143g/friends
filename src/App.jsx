@@ -549,7 +549,7 @@ useEffect(() => {
                     border: `1.3px solid ${BORDER}`
                   }}>
                   <div style={{ fontWeight: 800, fontSize: isMobile ? 15 : 17, marginBottom: 8 }}>
-                    Добро пожаловать в <span style={{ color: ACCENT }}>4friendsStore!</span>
+                    Добро пожаловать в <span style={{ color: ACCENT }}>4FriendsStore!</span>
                   </div>
                   <div style={{ fontWeight: 400, color: "#b8d7ff", fontSize: isMobile ? 13 : 14, marginBottom: 10 }}>
                     Только новые товары по лучшим ценам.<br />Прокрутите вниз и выберите свой!
@@ -899,28 +899,53 @@ onClick={() => {
       exit={{ opacity: 0, y: 20 }}
       transition={{ duration: 0.3 }}
       style={{
+        padding: 20,
+        maxWidth: 480,
+        margin: "40px auto",
         background: "#1c2333",
         borderRadius: 16,
-        padding: isMobile ? "17px 10px 13px 10px" : "26px 22px",
-        boxShadow: "0 3px 22px #12192b14",
-        border: `1.3px solid ${BORDER}`,
-        maxWidth: mainBlockWidth,
-        margin: "32px auto 0 auto",
+        color: "#fff",
+        textAlign: "left",
+        lineHeight: 1.6,
+        fontSize: 14,
       }}
     >
       <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 16 }}>❓ Часто задаваемые вопросы</h2>
-      <div style={{ fontSize: 14, lineHeight: 1.6, textAlign: "left" }}>
-        <p><b>🇺🇸 США:</b> только eSIM, до 5 штук, одновременно 2.</p>
-        <p><b>🇯🇵 Япония:</b> звук камеры не отключается в авиарежиме.</p>
-        <p><b>🇨🇳 Китай:</b> только 2 физические SIM, eSIM не работает.</p>
-        <p><b>🇪🇺 Европа:</b> ограничена громкость в проводных наушниках.</p>
-        <p><b>🛠 Гарантия:</b> 1 год, через BroBroLab. Быстрый обмен — 10 000 ₽.</p>
-        <p><b>♻️ Трейд-ин:</b> Напишите модель, цвет, состояние, фото и желаемый товар.</p>
-      </div>
+
+      <p style={{ fontWeight: 700, marginBottom: 8 }}>Много вопросов про регионы, гарантию и всё такое… сделали для вас описание 👍</p>
+
+      <p><b>Маркировка у айфонов:</b></p>
+      <ul style={{ paddingLeft: 16, marginBottom: 10 }}>
+        <li><b>iPhone 14 Pro Max:</b> A2651 (🇺🇸), A2893 (🇨🇦🇯🇵🇲🇽🇸🇦), A2896 (🇨🇳🇭🇰🇲🇴), A2895 (🇦🇲🇧🇾🇰🇿🇰🇬🇷🇺), A2894 (другие регионы)</li>
+        <li><b>iPhone 14 Pro:</b> A2659 (🇺🇸), A2889 (🇨🇦🇯🇵🇲🇽🇸🇦), A2892 (🇨🇳🇭🇰🇲🇴), A2891 (🇦🇲🇧🇾🇰🇿🇰🇬🇷🇺), A2890 (другие регионы)</li>
+        <li><b>iPhone 14 Plus:</b> A2632 (🇺🇸), A2885 (🇨🇦🇯🇵🇲🇽🇸🇦), A2888 (🇨🇳🇭🇰🇲🇴), A2887 (🇦🇲🇧🇾🇰🇿🇰🇬🇷🇺), A2886 (другие регионы)</li>
+        <li><b>iPhone 14:</b> A2649 (🇺🇸), A2881 (🇨🇦🇯🇵🇲🇽🇸🇦), A2884 (🇨🇳🇭🇰🇲🇴), A2883 (🇦🇲🇧🇾🇰🇿🇰🇬🇷🇺), A2882 (другие регионы)</li>
+      </ul>
+
+      <p><b>🇺🇸 Америка:</b> только eSIM (до 5, одновременно 2)</p>
+      <p><b>🇯🇵 Япония:</b> звук камеры остаётся в авиарежиме</p>
+      <p><b>🇦🇪 Эмираты:</b> FaceTime работает за пределами страны</p>
+      <p><b>🇪🇺 Европа:</b> ограничение громкости только на проводные наушники</p>
+      <p><b>🇨🇳 Китай:</b> 2 SIM, eSIM не работает, FaceTime без аудио</p>
+      <p><b>🇭🇰 Гонконг:</b> 2 SIM, FaceTime с аудио</p>
+      <p><b>🇰🇷 Корея:</b> не работает Локатор</p>
+      <p><b>🇮🇳🇨🇦🇧🇷 Индия, Канада, Бразилия:</b> нет ограничений</p>
+
+      <h3 style={{ fontSize: 16, fontWeight: 700, marginTop: 20 }}>🛠️ Гарантия</h3>
+      <p>
+        Гарантия от магазина — 1 год. Работаем через СЦ BroBroLab. Если брак — диагностика бесплатна, обмен через ЗСЦ (60–90 дней).<br />
+        Быстрый обмен — 7–9 дней, +10 000 ₽. Если вина клиента — ремонт за счёт клиента.
+      </p>
+
+      <h3 style={{ fontSize: 16, fontWeight: 700, marginTop: 20 }}>♻️ Трейд-ин</h3>
+      <p>
+        Напишите: модель, цвет, память, комплектация, состояние батареи, был ли в ремонте, есть ли повреждения (фото), и что хотите взамен.
+      </p>
+
       <button
         onClick={() => setShowFAQ(false)}
         style={{
-          marginTop: 20,
+          marginTop: 24,
           background: ACCENT,
           color: "#fff",
           border: "none",
@@ -929,6 +954,7 @@ onClick={() => {
           fontWeight: 700,
           fontSize: 14,
           cursor: "pointer",
+          width: "100%"
         }}
       >
         ← Назад
@@ -947,30 +973,43 @@ onClick={() => {
       exit={{ opacity: 0, y: 20 }}
       transition={{ duration: 0.3 }}
       style={{
+        padding: 20,
+        maxWidth: 480,
+        margin: "40px auto",
         background: "#1c2333",
         borderRadius: 16,
-        padding: isMobile ? "17px 10px 13px 10px" : "26px 22px",
-        boxShadow: "0 3px 22px #12192b14",
-        border: `1.3px solid ${BORDER}`,
-        maxWidth: mainBlockWidth,
-        margin: "32px auto 0 auto",
+        color: "#fff",
+        textAlign: "left",
+        lineHeight: 1.6,
+        fontSize: 14,
       }}
     >
-      <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 16 }}>💳 Кредит и рассрочка</h2>
-      <div style={{ fontSize: 14, lineHeight: 1.6, textAlign: "left" }}>
-        <p><b>💸 Безнал:</b> +9% при оплате через терминал/счёт.</p>
-        <p><b>📱 По QR-коду:</b> +7%.</p>
-        <p><b>Рассрочка:</b></p>
-        <ul style={{ paddingLeft: 18, marginTop: 6 }}>
-          <li>6 мес — +19%</li>
-          <li>12 мес — +25%</li>
-          <li>24 мес — +42%</li>
-        </ul>
-      </div>
+      <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 16 }}>💳 Про кредит и рассрочку</h2>
+
+      <p style={{ marginBottom: 12 }}>
+        В связи с тем, что у нас в стоимость не заложен процент на вывод средств по безналу:
+      </p>
+
+      <ul style={{ paddingLeft: 18, marginBottom: 14 }}>
+        <li><b>Безнал через терминал / счёт на юр. лицо:</b> +9%</li>
+        <li><b>Оплата по QR-коду:</b> +7%</li>
+      </ul>
+
+      <p style={{ marginBottom: 12 }}>
+        Поэтому наши цены <b>ниже</b>, чем в М.Видео, МТС, Эльдорадо и других сетях.
+      </p>
+
+      <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>📆 Рассрочка</h3>
+      <ul style={{ paddingLeft: 18 }}>
+        <li>6 месяцев — <b>+19%</b> к стоимости</li>
+        <li>12 месяцев — <b>+25%</b></li>
+        <li>24 месяца — <b>+42%</b></li>
+      </ul>
+
       <button
         onClick={() => setShowCredit(false)}
         style={{
-          marginTop: 20,
+          marginTop: 24,
           background: ACCENT,
           color: "#fff",
           border: "none",
@@ -979,6 +1018,7 @@ onClick={() => {
           fontWeight: 700,
           fontSize: 14,
           cursor: "pointer",
+          width: "100%"
         }}
       >
         ← Назад
