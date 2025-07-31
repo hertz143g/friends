@@ -549,7 +549,7 @@ useEffect(() => {
                     border: `1.3px solid ${BORDER}`
                   }}>
                   <div style={{ fontWeight: 800, fontSize: isMobile ? 15 : 17, marginBottom: 8 }}>
-                    Добро пожаловать в <span style={{ color: ACCENT }}>4FriendsStore!</span>
+                    Добро пожаловать в <span style={{ color: ACCENT }}>4friendsStore!</span>
                   </div>
                   <div style={{ fontWeight: 400, color: "#b8d7ff", fontSize: isMobile ? 13 : 14, marginBottom: 10 }}>
                     Только новые товары по лучшим ценам.<br />Прокрутите вниз и выберите свой!
