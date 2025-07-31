@@ -889,7 +889,6 @@ onClick={() => {
           </motion.div>
         )}
 
-
 <AnimatePresence>
   {showFAQ && (
     <motion.div
@@ -900,12 +899,13 @@ onClick={() => {
       exit={{ opacity: 0, y: 20 }}
       transition={{ duration: 0.3 }}
       style={{
-        padding: 20,
-        maxWidth: 480,
-        margin: "40px auto",
         background: "#1c2333",
         borderRadius: 16,
-        color: "#fff",
+        padding: isMobile ? "17px 10px 13px 10px" : "26px 22px",
+        boxShadow: "0 3px 22px #12192b14",
+        border: `1.3px solid ${BORDER}`,
+        maxWidth: mainBlockWidth,
+        margin: "32px auto 0 auto",
       }}
     >
       <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 16 }}>❓ Часто задаваемые вопросы</h2>
@@ -947,12 +947,13 @@ onClick={() => {
       exit={{ opacity: 0, y: 20 }}
       transition={{ duration: 0.3 }}
       style={{
-        padding: 20,
-        maxWidth: 480,
-        margin: "40px auto",
         background: "#1c2333",
         borderRadius: 16,
-        color: "#fff",
+        padding: isMobile ? "17px 10px 13px 10px" : "26px 22px",
+        boxShadow: "0 3px 22px #12192b14",
+        border: `1.3px solid ${BORDER}`,
+        maxWidth: mainBlockWidth,
+        margin: "32px auto 0 auto",
       }}
     >
       <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 16 }}>💳 Кредит и рассрочка</h2>
@@ -960,7 +961,7 @@ onClick={() => {
         <p><b>💸 Безнал:</b> +9% при оплате через терминал/счёт.</p>
         <p><b>📱 По QR-коду:</b> +7%.</p>
         <p><b>Рассрочка:</b></p>
-        <ul style={{ paddingLeft: 18 }}>
+        <ul style={{ paddingLeft: 18, marginTop: 6 }}>
           <li>6 мес — +19%</li>
           <li>12 мес — +25%</li>
           <li>24 мес — +42%</li>
@@ -985,7 +986,6 @@ onClick={() => {
     </motion.div>
   )}
 </AnimatePresence>
-
 
       </AnimatePresence>
 
