@@ -294,8 +294,14 @@ const App = () => {
   const [showCart, setShowCart] = useState(false);
   const [vw, setVw] = useState(window.innerWidth);
 
+
   const [showFAQ, setShowFAQ] = useState(false);
   const [showCredit, setShowCredit] = useState(false);
+
+
+  const faqRef = useRef(null);
+  const creditRef = useRef(null);
+
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -331,6 +337,19 @@ const App = () => {
       setLoading(false);
     }
   };
+
+useEffect(() => {
+  if (showFAQ && faqRef.current) {
+    faqRef.current.scrollIntoView({ behavior: "smooth" });
+  }
+}, [showFAQ]);
+
+useEffect(() => {
+  if (showCredit && creditRef.current) {
+    creditRef.current.scrollIntoView({ behavior: "smooth" });
+  }
+}, [showCredit]);
+
 
   useEffect(() => {
     fetchProducts();
@@ -873,6 +892,7 @@ onClick={() => {
 
         {showFAQ && (
   <motion.div
+    ref={faqRef}
     key="faq"
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
@@ -917,6 +937,7 @@ onClick={() => {
 
 {showCredit && (
   <motion.div
+    ref={faqRef}
     key="credit"
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
