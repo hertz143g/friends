@@ -890,97 +890,101 @@ onClick={() => {
         )}
 
 
-        {showFAQ && (
-  <motion.div
-    ref={faqRef}
-    key="faq"
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    transition={{ duration: 0.2 }}
-    style={{
-      padding: 20,
-      maxWidth: 480,
-      margin: "40px auto",
-      background: "#1c2333",
-      borderRadius: 16,
-      color: "#fff"
-    }}
-  >
-    <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 16 }}>❓ Часто задаваемые вопросы</h2>
-    <div style={{ fontSize: 14, lineHeight: 1.6 }}>
-      <p><b>🇺🇸 США:</b> только eSIM, до 5 штук, одновременно 2.</p>
-      <p><b>🇯🇵 Япония:</b> звук камеры не отключается в авиарежиме.</p>
-      <p><b>🇨🇳 Китай:</b> только 2 физические SIM, eSIM не работает.</p>
-      <p><b>🇪🇺 Европа:</b> ограничена громкость в проводных наушниках.</p>
-      <p><b>🛠 Гарантия:</b> 1 год, через BroBroLab. Быстрый обмен — 10 000 ₽.</p>
-      <p><b>♻️ Трейд-ин:</b> Напишите модель, цвет, состояние, фото и желаемый товар.</p>
-    </div>
-    <button
-      onClick={() => setShowFAQ(false)}
+<AnimatePresence>
+  {showFAQ && (
+    <motion.div
+      ref={faqRef}
+      key="faq"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 20 }}
+      transition={{ duration: 0.3 }}
       style={{
-        marginTop: 20,
-        background: ACCENT,
+        padding: 20,
+        maxWidth: 480,
+        margin: "40px auto",
+        background: "#1c2333",
+        borderRadius: 16,
         color: "#fff",
-        border: "none",
-        borderRadius: 9,
-        padding: "10px 16px",
-        fontWeight: 700,
-        fontSize: 14,
-        cursor: "pointer"
       }}
     >
-      ← Назад
-    </button>
-  </motion.div>
-)}
+      <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 16 }}>❓ Часто задаваемые вопросы</h2>
+      <div style={{ fontSize: 14, lineHeight: 1.6, textAlign: "left" }}>
+        <p><b>🇺🇸 США:</b> только eSIM, до 5 штук, одновременно 2.</p>
+        <p><b>🇯🇵 Япония:</b> звук камеры не отключается в авиарежиме.</p>
+        <p><b>🇨🇳 Китай:</b> только 2 физические SIM, eSIM не работает.</p>
+        <p><b>🇪🇺 Европа:</b> ограничена громкость в проводных наушниках.</p>
+        <p><b>🛠 Гарантия:</b> 1 год, через BroBroLab. Быстрый обмен — 10 000 ₽.</p>
+        <p><b>♻️ Трейд-ин:</b> Напишите модель, цвет, состояние, фото и желаемый товар.</p>
+      </div>
+      <button
+        onClick={() => setShowFAQ(false)}
+        style={{
+          marginTop: 20,
+          background: ACCENT,
+          color: "#fff",
+          border: "none",
+          borderRadius: 9,
+          padding: "10px 16px",
+          fontWeight: 700,
+          fontSize: 14,
+          cursor: "pointer",
+        }}
+      >
+        ← Назад
+      </button>
+    </motion.div>
+  )}
+</AnimatePresence>
 
-{showCredit && (
-  <motion.div
-    ref={faqRef}
-    key="credit"
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    transition={{ duration: 0.2 }}
-    style={{
-      padding: 20,
-      maxWidth: 480,
-      margin: "40px auto",
-      background: "#1c2333",
-      borderRadius: 16,
-      color: "#fff"
-    }}
-  >
-    <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 16 }}>💳 Кредит и рассрочка</h2>
-    <div style={{ fontSize: 14, lineHeight: 1.6 }}>
-      <p><b>💸 Безнал:</b> +9% при оплате через терминал/счёт.</p>
-      <p><b>📱 По QR-коду:</b> +7%.</p>
-      <p><b>Рассрочка:</b></p>
-      <ul>
-        <li>6 мес — +19%</li>
-        <li>12 мес — +25%</li>
-        <li>24 мес — +42%</li>
-      </ul>
-    </div>
-    <button
-      onClick={() => setShowCredit(false)}
+<AnimatePresence>
+  {showCredit && (
+    <motion.div
+      ref={creditRef}
+      key="credit"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 20 }}
+      transition={{ duration: 0.3 }}
       style={{
-        marginTop: 20,
-        background: ACCENT,
+        padding: 20,
+        maxWidth: 480,
+        margin: "40px auto",
+        background: "#1c2333",
+        borderRadius: 16,
         color: "#fff",
-        border: "none",
-        borderRadius: 9,
-        padding: "10px 16px",
-        fontWeight: 700,
-        fontSize: 14,
-        cursor: "pointer"
       }}
     >
-      ← Назад
-    </button>
-  </motion.div>
-)}
+      <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 16 }}>💳 Кредит и рассрочка</h2>
+      <div style={{ fontSize: 14, lineHeight: 1.6, textAlign: "left" }}>
+        <p><b>💸 Безнал:</b> +9% при оплате через терминал/счёт.</p>
+        <p><b>📱 По QR-коду:</b> +7%.</p>
+        <p><b>Рассрочка:</b></p>
+        <ul style={{ paddingLeft: 18 }}>
+          <li>6 мес — +19%</li>
+          <li>12 мес — +25%</li>
+          <li>24 мес — +42%</li>
+        </ul>
+      </div>
+      <button
+        onClick={() => setShowCredit(false)}
+        style={{
+          marginTop: 20,
+          background: ACCENT,
+          color: "#fff",
+          border: "none",
+          borderRadius: 9,
+          padding: "10px 16px",
+          fontWeight: 700,
+          fontSize: 14,
+          cursor: "pointer",
+        }}
+      >
+        ← Назад
+      </button>
+    </motion.div>
+  )}
+</AnimatePresence>
 
 
       </AnimatePresence>
