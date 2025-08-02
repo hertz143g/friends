@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Papa from "papaparse";
 
@@ -367,10 +367,14 @@ useEffect(() => {
 
 
 const brandsForActiveCategory = useMemo(() => {
-  const filtered = products.filter(p => p.category === activeCategory);
-  return [...new Set(filtered.map(p => p.brand).filter(Boolean))];
-}, [products, activeCategory]);
+  if (!activeCategory) return [];
 
+  const filtered = products.filter(p =>
+    String(p.category || "").trim().toLowerCase() === activeCategory.trim().toLowerCase()
+  );
+
+  return [...new Set(filtered.map(p => String(p.brand || "").trim()).filter(Boolean))].sort();
+}, [products, activeCategory]);
 
 
 
