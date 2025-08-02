@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Papa from "papaparse";
 
@@ -22,7 +22,7 @@ const CATEGORIES = [
   { name: "Игровые приставки", emoji: "🎮", brands: ["Xbox", "Sony Ps5"] },
   { name: "Игрушки", emoji: "🧸", brands: ["Игрушки Labubu"] },
   { name: "Аксессуары", emoji: "🔌", brands: ["Аксессуары", "Apple TV", "GoPro"] },
-  { name: "Dyson", emoji: "🌀", brands: ["Dyson"] }, 
+  { name: "Dyson", emoji: "🌀", brands: ["Dyson"] },
 ];
 
 function BrandButton({ name, active, onClick }) {
@@ -315,15 +315,6 @@ const App = () => {
   }, []);
   const isMobile = vw < 600;
 
-
-
-
-
-
-
-
-  
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [activeCategory, showCart]);
@@ -365,6 +356,26 @@ useEffect(() => {
   useEffect(() => {
     fetchProducts();
   }, []);
+
+
+
+
+
+
+
+
+
+
+const brandsForActiveCategory = useMemo(() => {
+  const filtered = products.filter(p => p.category === activeCategory);
+  return [...new Set(filtered.map(p => p.brand).filter(Boolean))];
+}, [products, activeCategory]);
+
+
+
+
+
+
 
   const cartTotalCount = cart.reduce((a, b) => a + b.qty, 0);
   const getQtyInCart = (id) => cart.find(i => String(i.id) === String(id))?.qty || 0;
@@ -720,14 +731,14 @@ useEffect(() => {
                   paddingLeft: 1,
                   scrollbarWidth: "thin"
                 }}>
-                  {(CATEGORIES.find(c => c.name === activeCategory)?.brands || []).map(brand =>
-                    <BrandButton
-                      key={brand}
-                      name={brand}
-                      active={brand === activeBrand}
-                      onClick={() => setActiveBrand(brand === activeBrand ? null : brand)}
-                    />
-                  )}
+                  {brandsForActiveCategory.map(brand =>
+  <BrandButton
+    key={brand}
+    name={brand}
+    active={brand === activeBrand}
+    onClick={() => setActiveBrand(brand === activeBrand ? null : brand)}
+  />
+)}
                 </div>
                 <input
                   placeholder="Поиск товаров"
