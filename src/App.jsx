@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Papa from "papaparse";
+
 
 const ACCENT = "#3ca4ff";
 const CARD = "#23293b";
