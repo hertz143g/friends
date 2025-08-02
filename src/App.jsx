@@ -315,6 +315,15 @@ const App = () => {
   }, []);
   const isMobile = vw < 600;
 
+
+
+
+
+
+
+
+  
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [activeCategory, showCart]);
