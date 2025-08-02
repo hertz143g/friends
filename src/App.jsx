@@ -10,7 +10,7 @@ const TELEGRAM_LINK = "https://t.me/forfriendsstore";
 const PHONE = "+7(965)226-96-02 / +7(925)444-11-18";
 const ADDRESS = "Клин, ул. Победы, д. 9, «Ок’ей»";
 const PHONE_PLACEHOLDER = "https://raw.githubusercontent.com/hdpngworld/HPW/main/uploads/65038654434d0-iPhone%2015%20Pro%20Natural%20titanium%20png.png";
-const mainBlockWidth = 430;
+const mainBlockWidth = "100%";
 
 const CATEGORIES = [
   { name: "iPhone", emoji: "📱", brands: ["Apple"] },
@@ -71,7 +71,7 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
         boxShadow: "0 8px 32px #20293a33",
         padding: "28px 18px 22px 18px",
         margin: "0 auto 26px auto",
-        maxWidth: 390,
+        maxWidth: "100%",
         minWidth: 230,
         display: "flex",
         flexDirection: "column",
@@ -487,8 +487,11 @@ if (activeCategory) {
     position: "relative",
     zIndex: 2,
     paddingTop: isMobile ? 32 : 48,
-    width: mainBlockWidth,
+    width: "100%",
+    maxWidth: "100%",
     margin: "0 auto",
+padding: "0 16px",
+boxSizing: "border-box",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
@@ -722,7 +725,7 @@ if (activeCategory) {
           >
             <div
               style={{
-                maxWidth: "480px",
+                maxWidth: "100%",
                 margin: "32px auto 0 auto",
                 padding: "15px",
                 borderRadius: "16px",
