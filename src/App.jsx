@@ -397,17 +397,44 @@ const brandsForActiveCategory = useMemo(() => {
   const getProduct = (id) => products.find(p => String(p.id) === String(id));
   const total = cart.reduce((sum, item) => (Number(getProduct(item.id)?.price) || 0) * item.qty + sum, 0);
 
-  let shownProducts = [];
-  if (activeCategory) {
-    shownProducts = products.filter(p => p.category === activeCategory);
-    if (activeBrand) shownProducts = shownProducts.filter(p => p.brand === activeBrand);
-    if (search.trim()) {
-      shownProducts = shownProducts.filter(
-        p => (p.name && p.name.toLowerCase().includes(search.toLowerCase())) ||
-          (p.brand && p.brand.toLowerCase().includes(search.toLowerCase()))
-      );
-    }
+
+  
+
+
+
+
+
+let shownProducts = [];
+
+if (activeCategory) {
+  shownProducts = products.filter(
+    p => String(p.category || "").trim().toLowerCase() === activeCategory.trim().toLowerCase()
+  );
+
+  if (activeBrand) {
+    shownProducts = shownProducts.filter(
+      p => String(p.brand || "").trim().toLowerCase() === activeBrand.trim().toLowerCase()
+    );
   }
+
+  if (search.trim()) {
+    const searchLower = search.trim().toLowerCase();
+    shownProducts = shownProducts.filter(
+      p => (p.name && p.name.toLowerCase().includes(searchLower)) ||
+           (p.brand && p.brand.toLowerCase().includes(searchLower))
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
 
   // Отправка заказа в Telegram через Apps Script
   const sendOrderToTelegram = async () => {
