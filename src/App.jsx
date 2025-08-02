@@ -12,30 +12,6 @@ const ADDRESS = "Клин, ул. Победы, д. 9, «Ок’ей»";
 const PHONE_PLACEHOLDER = "https://raw.githubusercontent.com/hdpngworld/HPW/main/uploads/65038654434d0-iPhone%2015%20Pro%20Natural%20titanium%20png.png";
 const mainBlockWidth = 430;
 
-const CATEGORIES = useMemo(() => {
-  const map = new Map();
-
-  for (const p of products) {
-    const category = (p.category || "").trim();
-    const brand = (p.brand || "").trim();
-    if (!category || !brand) continue;
-
-    if (!map.has(category)) {
-      map.set(category, {
-        name: category,
-        emoji: "📦", // можно позже заменить иконки вручную по имени
-        brands: new Set()
-      });
-    }
-    map.get(category).brands.add(brand);
-  }
-
-  return Array.from(map.values()).map(c => ({
-    name: c.name,
-    emoji: c.emoji,
-    brands: Array.from(c.brands)
-  }));
-}, [products]);
 
 function BrandButton({ name, active, onClick }) {
   return (
@@ -319,6 +295,61 @@ const App = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+
+
+
+
+
+
+
+
+
+
+const CATEGORIES = useMemo(() => {
+  const map = new Map();
+
+  for (const p of products) {
+    const category = (p.category || "").trim();
+    const brand = (p.brand || "").trim();
+    if (!category || !brand) continue;
+
+    if (!map.has(category)) {
+      map.set(category, {
+        name: category,
+        emoji: "📦", // можно позже заменить иконки вручную по имени
+        brands: new Set()
+      });
+    }
+    map.get(category).brands.add(brand);
+  }
+
+  return Array.from(map.values()).map(c => ({
+    name: c.name,
+    emoji: c.emoji,
+    brands: Array.from(c.brands)
+  }));
+}, [products]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
 
   useEffect(() => {
     const handleResize = () => setVw(window.innerWidth);
