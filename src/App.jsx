@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Papa from "papaparse";
 
-
 const ACCENT = "#3ca4ff";
 const CARD = "#23293b";
 const BORDER = "#27395a";
@@ -13,6 +12,18 @@ const ADDRESS = "Клин, ул. Победы, д. 9, «Ок’ей»";
 const PHONE_PLACEHOLDER = "https://raw.githubusercontent.com/hdpngworld/HPW/main/uploads/65038654434d0-iPhone%2015%20Pro%20Natural%20titanium%20png.png";
 const mainBlockWidth = 430;
 
+const CATEGORIES = [
+  { name: "iPhone", emoji: "📱", brands: ["Apple"] },
+  { name: "Android", emoji: "🤖", brands: ["Samsung", "Xiaomi", "Redmi", "Poco", "OnePlus", "Google Pixel"] },
+  { name: "Часы", emoji: "⌚", brands: ["Apple", "Casio", "Garmin", "Samsung"] },
+  { name: "Компьютеры и планшеты", emoji: "💻", brands: ["MacBook", "iMac", "iPad"] },
+  { name: "ТВ и Аудио", emoji: "📺", brands: ["Телевизоры", "Колонки", "Marshall"] },
+  { name: "Самокаты", emoji: "🛴", brands: ["Электросамокаты"] },
+  { name: "Игровые приставки", emoji: "🎮", brands: ["Xbox", "Sony Ps5"] },
+  { name: "Игрушки", emoji: "🧸", brands: ["Игрушки Labubu"] },
+  { name: "Аксессуары", emoji: "🔌", brands: ["Аксессуары", "Apple TV", "GoPro"] },
+  { name: "Dyson", emoji: "🌀", brands: ["Dyson"] }, 
+];
 
 function BrandButton({ name, active, onClick }) {
   return (
@@ -296,61 +307,6 @@ const App = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-
-
-
-
-
-
-
-
-
-
-const CATEGORIES = useMemo(() => {
-  const map = new Map();
-
-  for (const p of products) {
-    const category = (p.category || "").trim();
-    const brand = (p.brand || "").trim();
-    if (!category || !brand) continue;
-
-    if (!map.has(category)) {
-      map.set(category, {
-        name: category,
-        emoji: "📦", // можно позже заменить иконки вручную по имени
-        brands: new Set()
-      });
-    }
-    map.get(category).brands.add(brand);
-  }
-
-  return Array.from(map.values()).map(c => ({
-    name: c.name,
-    emoji: c.emoji,
-    brands: Array.from(c.brands)
-  }));
-}, [products]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
 
   useEffect(() => {
     const handleResize = () => setVw(window.innerWidth);
