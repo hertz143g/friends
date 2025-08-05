@@ -63,16 +63,15 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
   }, [addAnim]);
 
   return (
-    <motion.div
+<motion.div
   whileHover={{ scale: 1.022 }}
   style={{
     background: CARD,
     borderRadius: 28,
     boxShadow: "0 8px 32px #20293a33",
     padding: "28px 18px 22px 18px",
-    margin: "0 auto 26px auto",
-    width: "100%",           // ✅ добавлено
-    maxWidth: 360,           // ✅ ограничили ширину
+    width: "100%",
+    marginBottom: 26,
     display: "flex",
     flexDirection: "column",
     alignItems: "center"
@@ -806,9 +805,11 @@ boxSizing: "border-box",
 <div
   style={{
     display: "grid",
-    gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+    gridTemplateColumns: "repeat(2, 1fr)",
     gap: 16,
-    justifyItems: "center"
+    padding: 4,
+    width: "100%",
+    boxSizing: "border-box"
   }}
 >
   {shownProducts.map(product => (
