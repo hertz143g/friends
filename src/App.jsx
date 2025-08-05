@@ -71,7 +71,7 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
     boxShadow: "0 8px 32px #20293a33",
     padding: "28px 18px 22px 18px",
     width: "100%",
-    marginBottom: 26,
+    margin: "0 6px 26px",
     display: "flex",
     flexDirection: "column",
     alignItems: "center"
@@ -726,7 +726,7 @@ boxSizing: "border-box",
               style={{
                 maxWidth: "100%",
                 margin: "32px auto 0 auto",
-                padding: "15px",
+                padding: "15px 15px 50px 15px",
                 borderRadius: "16px",
                 background: "#1c2333",
                 boxShadow: "0 2px 12px rgba(0,0,0,0.06)"
@@ -805,10 +805,10 @@ boxSizing: "border-box",
 <div
   style={{
     display: "grid",
-    gridTemplateColumns: "repeat(2, 1fr)",
-    gap: 16,
-    padding: 4,
-    width: "100%",
+    gridTemplateColumns: "1fr 1fr",
+    gap: 14,
+    padding: "0 10px",
+    justifyContent: "center",
     boxSizing: "border-box"
   }}
 >
