@@ -798,15 +798,38 @@ boxSizing: "border-box",
                   Нет товаров в этой категории.
                 </div>
               )}
-              {shownProducts.map(product =>
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  qty={getQtyInCart(product.id)}
-                  onPlus={() => addToCart(product.id)}
-                  onMinus={() => removeOneFromCart(product.id)}
-                />
-              )}
+              
+              
+
+
+
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: 16,
+    justifyItems: "center"
+  }}
+>
+  {shownProducts.map(product => (
+    <ProductCard
+      key={product.id}
+      product={product}
+      qty={getQtyInCart(product.id)}
+      onPlus={() => addToCart(product.id)}
+      onMinus={() => removeOneFromCart(product.id)}
+    />
+  ))}
+</div>
+
+
+
+
+
+
+
+
+
               <div style={{ height: 22 }} />
             </div>
           </motion.div>
