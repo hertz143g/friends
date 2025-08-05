@@ -64,20 +64,20 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
 
   return (
     <motion.div
-      whileHover={{ scale: 1.022 }}
-      style={{
-        background: CARD,
-        borderRadius: 28,
-        boxShadow: "0 8px 32px #20293a33",
-        padding: "28px 18px 22px 18px",
-        margin: "0 auto 26px auto",
-        maxWidth: "100%",
-        minWidth: 230,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center"
-      }}
-    >
+  whileHover={{ scale: 1.022 }}
+  style={{
+    background: CARD,
+    borderRadius: 28,
+    boxShadow: "0 8px 32px #20293a33",
+    padding: "28px 18px 22px 18px",
+    margin: "0 auto 26px auto",
+    width: "100%",           // ✅ добавлено
+    maxWidth: 360,           // ✅ ограничили ширину
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
+  }}
+>
       <div style={{
         width: 140, height: 140, background: "#222b3d",
         borderRadius: 25, display: "flex",
@@ -806,7 +806,7 @@ boxSizing: "border-box",
 <div
   style={{
     display: "grid",
-    gridTemplateColumns: "1fr 1fr",
+    gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
     gap: 16,
     justifyItems: "center"
   }}
