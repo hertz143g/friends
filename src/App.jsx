@@ -71,6 +71,8 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
     boxShadow: "0 8px 32px #20293a33",
     padding: "28px 18px 22px 18px",
     width: "100%",
+    maxWidth: 270,
+    boxSizing: "border-box",
     display: "flex",
     flexDirection: "column",
     alignItems: "center"
