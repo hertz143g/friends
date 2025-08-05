@@ -71,7 +71,6 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
     boxShadow: "0 8px 32px #20293a33",
     padding: "28px 18px 22px 18px",
     width: "100%",
-    margin: "0 6px 26px",
     display: "flex",
     flexDirection: "column",
     alignItems: "center"
@@ -806,12 +805,17 @@ boxSizing: "border-box",
   style={{
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
-    gap: 14,
-    padding: "0 10px",
-    justifyContent: "center",
-    boxSizing: "border-box"
+    gap: 16,
+    justifyItems: "center",
+    maxWidth: 600,
+    margin: "0 auto",
+    padding: 8,
   }}
 >
+
+
+
+
   {shownProducts.map(product => (
     <ProductCard
       key={product.id}
