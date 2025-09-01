@@ -324,21 +324,48 @@ const App = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(CSV_URL);
+      const res = await fetch(CSV_URL + "&t=" + Date.now());
+      
       const text = await res.text();
       const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
-      setProducts(parsed.data.map(prod => ({
-        ...prod,
-        price: Number((prod.price || "").replace(/[^\d]/g, "")) || 0,
-        rawPrice: prod.price || "",
-        id: prod.id?.toString() || Math.random().toString(36).slice(2)
-      })));
-    } catch (e) {
-      setError("Ошибка загрузки товаров");
-    } finally {
-      setLoading(false);
-    }
+
+
+
+      const norm = (s) =>
+        String(s || "")
+          .replace(/\u00A0|\u202F/g, " ") // NBSP/NNBSP -> обычный пробел
+          .replace(/\s+/g, " ")           // схлопываем кратные пробелы
+          .trim()
+          .toLowerCase();
+
+
+
+
+
+      
+        setProducts(parsed.data.map(prod => {
+  const brand = String(prod.brand || "");
+  const category = String(prod.category || "");
+  const name = String(prod.name || "");
+  const priceNum = Number((prod.price || "").replace(/[^\d]/g, "")) || 0;
+
+  return {
+    ...prod,
+    brand,
+    category,
+    name,
+    price: priceNum,
+    rawPrice: prod.price || "",
+    id: prod.id?.toString() || Math.random().toString(36).slice(2),
+    _brand: norm(brand),
+    _category: norm(category),
+    _name: norm(name),
   };
+
+
+
+
+      
 
 useEffect(() => {
   if (showFAQ && faqRef.current) {
