@@ -12,6 +12,7 @@ const ADDRESS = "Клин, ул. Победы, д. 9, «Ок’ей»";
 const PHONE_PLACEHOLDER = "https://raw.githubusercontent.com/hdpngworld/HPW/main/uploads/65038654434d0-iPhone%2015%20Pro%20Natural%20titanium%20png.png";
 const mainBlockWidth = "100%";
 
+
 const CATEGORIES = [
   { name: "iPhone", emoji: "📱", brands: ["Apple"] },
   { name: "Android", emoji: "🤖", brands: ["Samsung", "Xiaomi", "Redmi", "Poco", "OnePlus", "Google Pixel"] },
