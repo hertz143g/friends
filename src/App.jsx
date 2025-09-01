@@ -12,7 +12,6 @@ const ADDRESS = "Клин, ул. Победы, д. 9, «Ок’ей»";
 const PHONE_PLACEHOLDER = "https://raw.githubusercontent.com/hdpngworld/HPW/main/uploads/65038654434d0-iPhone%2015%20Pro%20Natural%20titanium%20png.png";
 const mainBlockWidth = "100%";
 
-
 const CATEGORIES = [
   { name: "iPhone", emoji: "📱", brands: ["Apple"] },
   { name: "Android", emoji: "🤖", brands: ["Samsung", "Xiaomi", "Redmi", "Poco", "OnePlus", "Google Pixel"] },
@@ -26,11 +25,11 @@ const CATEGORIES = [
   { name: "Dyson", emoji: "🌀", brands: ["Dyson"] }
 ];
 
-// 🔧 НОРМАЛИЗАТОР (новое — вынесен наверх и используется везде для сравнений)
+// ----- НОРМАЛИЗАТОР -----
 const norm = (s) =>
   String(s || "")
-    .replace(/\u00A0|\u202F/g, " ") // NBSP/NNBSP -> пробел
-    .replace(/\s+/g, " ")           // схлопываем кратные пробелы
+    .replace(/\u00A0|\u202F/g, " ") // NBSP/NNBSP → обычный пробел
+    .replace(/\s+/g, " ")
     .trim()
     .toLowerCase();
 
@@ -324,12 +323,12 @@ const App = () => {
     window.scrollTo(0, 0);
   }, [activeCategory, showCart]);
 
-  // Загрузка товаров (исправлены скобки и добавлена нормализация)
+  // ----- Загрузка товаров + нормализация -----
   const fetchProducts = async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(CSV_URL + "&t=" + Date.now());
+      const res = await fetch(CSV_URL + "&t=" + Date.now()); // анти-кэш
       const text = await res.text();
       const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
 
@@ -377,7 +376,7 @@ const App = () => {
     fetchProducts();
   }, []);
 
-  // 👉 Список брендов в активной категории — через нормализованные ключи
+  // ----- Список брендов в активной категории (через нормализованные ключи) -----
   const brandsForActiveCategory = useMemo(() => {
     if (!activeCategory) return [];
     const cat = norm(activeCategory);
@@ -407,7 +406,7 @@ const App = () => {
   const getProduct = (id) => products.find(p => String(p.id) === String(id));
   const total = cart.reduce((sum, item) => (Number(getProduct(item.id)?.price) || 0) * item.qty + sum, 0);
 
-  // 👉 Фильтрация — по нормализованным полям
+  // ----- Фильтрация (по нормализованным полям) -----
   let shownProducts = [];
   if (activeCategory) {
     const cat = norm(activeCategory);
@@ -426,7 +425,7 @@ const App = () => {
     }
   }
 
-  // Отправка заказа в Telegram через Apps Script (без изменений)
+  // ----- Отправка заказа (без изменений UI/логики) -----
   const sendOrderToTelegram = async () => {
     if (cart.length === 0) {
       alert("Корзина пуста");
@@ -526,7 +525,7 @@ const App = () => {
           aria-label="Открыть корзину"
         >
           <svg width={isMobile ? 27 : 31} height={isMobile ? 27 : 31} viewBox="0 0 24 24" fill={ACCENT}>
-            <path d="M7 18c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm10 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm2-3H7.42l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H6.21l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H5.42l-.94-2H2V4h2l3.6 7.59-1.35 2.44C5.16 14.37 5.92 16 7.22 16H19c.553 0 1-.447 1-1s-.447-1-1-1z" />
+            <path d="M7 18c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm10 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm2-3H7.42l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H6.21l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H5.42l-.94-2H2V4h2л3.6 7.59-1.35 2.44C5.16 14.37 5.92 16 7.22 16H19c.553 0 1-.447 1-1s-.447-1-1-1z" />
           </svg>
           {cartTotalCount > 0 && (
             <motion.span
@@ -927,8 +926,7 @@ const App = () => {
 
                       const message = lines.join("\n");
                       const encodedMessage = encodeURIComponent(message);
-                      const telegramUsername = "avangard_dobronravov"; // Заменить на ник менеджера без @
-
+                      const telegramUsername = "avangard_dobronravov";
                       const telegramLink = `https://t.me/${telegramUsername}?start&text=${encodedMessage}`;
                       window.open(telegramLink, "_blank");
                     }}
