@@ -25,6 +25,14 @@ const CATEGORIES = [
   { name: "Dyson", emoji: "🌀", brands: ["Dyson"] }
 ];
 
+// 🔧 НОРМАЛИЗАТОР (новое — вынесен наверх и используется везде для сравнений)
+const norm = (s) =>
+  String(s || "")
+    .replace(/\u00A0|\u202F/g, " ") // NBSP/NNBSP -> пробел
+    .replace(/\s+/g, " ")           // схлопываем кратные пробелы
+    .trim()
+    .toLowerCase();
+
 function BrandButton({ name, active, onClick }) {
   return (
     <button
@@ -63,21 +71,21 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
   }, [addAnim]);
 
   return (
-<motion.div
-  whileHover={{ scale: 1.022 }}
-  style={{
-    background: CARD,
-    borderRadius: 28,
-    boxShadow: "0 8px 32px #20293a33",
-    padding: "28px 18px 22px 18px",
-    width: "100%",
-    maxWidth: 270,
-    boxSizing: "border-box",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center"
-  }}
->
+    <motion.div
+      whileHover={{ scale: 1.022 }}
+      style={{
+        background: CARD,
+        borderRadius: 28,
+        boxShadow: "0 8px 32px #20293a33",
+        padding: "28px 18px 22px 18px",
+        width: "100%",
+        maxWidth: 270,
+        boxSizing: "border-box",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center"
+      }}
+    >
       <div style={{
         width: 140, height: 140, background: "#222b3d",
         borderRadius: 25, display: "flex",
@@ -111,23 +119,23 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
         lineHeight: 1.18
       }}>{product.brand}</div>
       <div style={{
-  fontWeight: 800,
-  fontSize: 19,
-  color: ACCENT,
-  marginBottom: 14,
-  textAlign: "center",
-  letterSpacing: "0.01em",
-}}>
-  {product.price > 0 ? (
-    <>
-      {Number(product.price).toLocaleString()} <span style={{
-        fontWeight: 600, fontSize: 15, color: "#a9cfff"
-      }}>₽</span>
-    </>
-  ) : (
-    <span style={{ color: "#ccc", fontWeight: 600, fontSize: 15 }}>Запрос</span>
-  )}
-</div>
+        fontWeight: 800,
+        fontSize: 19,
+        color: ACCENT,
+        marginBottom: 14,
+        textAlign: "center",
+        letterSpacing: "0.01em",
+      }}>
+        {product.price > 0 ? (
+          <>
+            {Number(product.price).toLocaleString()} <span style={{
+              fontWeight: 600, fontSize: 15, color: "#a9cfff"
+            }}>₽</span>
+          </>
+        ) : (
+          <span style={{ color: "#ccc", fontWeight: 600, fontSize: 15 }}>Запрос</span>
+        )}
+      </div>
 
       {qty === 0 ? (
         <motion.button
@@ -283,8 +291,7 @@ function AnimatedBg() {
   );
 }
 
-const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSRtT-9yQsf2f0mY01Hkcg_711efC99-ZBqzhO_j8nUJWcP3HCZFzXTGCkEKXtqL8FF4IHmFUM_34TM/pub?output=csv";
-
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSRtT-9yQsf2f0mY01Hkcg_711efC99-ZBqzhO_j8nUJWcP3HCZFzXTGCkEKXtqL8FF4IHмFUM_34TM/pub?output=csv";
 const TELEGRAM_BOT_API = "https://script.google.com/macros/s/ВАШ_АППС_СКРИПТ_ID/exec";
 
 const App = () => {
@@ -296,14 +303,11 @@ const App = () => {
   const [showCart, setShowCart] = useState(false);
   const [vw, setVw] = useState(window.innerWidth);
 
-
   const [showFAQ, setShowFAQ] = useState(false);
   const [showCredit, setShowCredit] = useState(false);
 
-
   const faqRef = useRef(null);
   const creditRef = useRef(null);
-
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -319,94 +323,72 @@ const App = () => {
     window.scrollTo(0, 0);
   }, [activeCategory, showCart]);
 
-  // Загрузка товаров
+  // Загрузка товаров (исправлены скобки и добавлена нормализация)
   const fetchProducts = async () => {
     setLoading(true);
     setError(null);
     try {
       const res = await fetch(CSV_URL + "&t=" + Date.now());
-      
       const text = await res.text();
       const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
 
+      setProducts(
+        parsed.data.map((prod) => {
+          const brand = String(prod.brand || "");
+          const category = String(prod.category || "");
+          const name = String(prod.name || "");
+          const priceNum = Number((prod.price || "").replace(/[^\d]/g, "")) || 0;
 
-
-      const norm = (s) =>
-        String(s || "")
-          .replace(/\u00A0|\u202F/g, " ") // NBSP/NNBSP -> обычный пробел
-          .replace(/\s+/g, " ")           // схлопываем кратные пробелы
-          .trim()
-          .toLowerCase();
-
-
-
-
-
-      
-        setProducts(parsed.data.map(prod => {
-  const brand = String(prod.brand || "");
-  const category = String(prod.category || "");
-  const name = String(prod.name || "");
-  const priceNum = Number((prod.price || "").replace(/[^\d]/g, "")) || 0;
-
-  return {
-    ...prod,
-    brand,
-    category,
-    name,
-    price: priceNum,
-    rawPrice: prod.price || "",
-    id: prod.id?.toString() || Math.random().toString(36).slice(2),
-    _brand: norm(brand),
-    _category: norm(category),
-    _name: norm(name),
+          return {
+            ...prod,
+            brand,
+            category,
+            name,
+            price: priceNum,
+            rawPrice: prod.price || "",
+            id: prod.id?.toString() || Math.random().toString(36).slice(2),
+            _brand: norm(brand),
+            _category: norm(category),
+            _name: norm(name),
+          };
+        })
+      );
+    } catch (e) {
+      setError("Ошибка загрузки товаров");
+    } finally {
+      setLoading(false);
+    }
   };
 
+  useEffect(() => {
+    if (showFAQ && faqRef.current) {
+      faqRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [showFAQ]);
 
-
-
-      
-
-useEffect(() => {
-  if (showFAQ && faqRef.current) {
-    faqRef.current.scrollIntoView({ behavior: "smooth" });
-  }
-}, [showFAQ]);
-
-useEffect(() => {
-  if (showCredit && creditRef.current) {
-    creditRef.current.scrollIntoView({ behavior: "smooth" });
-  }
-}, [showCredit]);
-
+  useEffect(() => {
+    if (showCredit && creditRef.current) {
+      creditRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [showCredit]);
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
+  // 👉 Список брендов в активной категории — через нормализованные ключи
+  const brandsForActiveCategory = useMemo(() => {
+    if (!activeCategory) return [];
+    const cat = norm(activeCategory);
 
-
-
-
-
-
-
-
-
-const brandsForActiveCategory = useMemo(() => {
-  if (!activeCategory) return [];
-
-  const filtered = products.filter(p =>
-    String(p.category || "").trim().toLowerCase() === activeCategory.trim().toLowerCase()
-  );
-
-  return [...new Set(filtered.map(p => String(p.brand || "").trim()).filter(Boolean))].sort();
-}, [products, activeCategory]);
-
-
-
-
-
+    const map = new Map(); // key: _brand, value: оригинальная строка brand
+    for (const p of products) {
+      if (p._category === cat && p._brand) {
+        if (!map.has(p._brand)) map.set(p._brand, (p.brand || "").trim());
+      }
+    }
+    return [...map.values()].sort((a, b) => a.localeCompare(b, "ru"));
+  }, [products, activeCategory]);
 
   const cartTotalCount = cart.reduce((a, b) => a + b.qty, 0);
   const getQtyInCart = (id) => cart.find(i => String(i.id) === String(id))?.qty || 0;
@@ -424,46 +406,26 @@ const brandsForActiveCategory = useMemo(() => {
   const getProduct = (id) => products.find(p => String(p.id) === String(id));
   const total = cart.reduce((sum, item) => (Number(getProduct(item.id)?.price) || 0) * item.qty + sum, 0);
 
+  // 👉 Фильтрация — по нормализованным полям
+  let shownProducts = [];
+  if (activeCategory) {
+    const cat = norm(activeCategory);
+    shownProducts = products.filter((p) => p._category === cat);
 
-  
+    if (activeBrand) {
+      const br = norm(activeBrand);
+      shownProducts = shownProducts.filter((p) => p._brand === br);
+    }
 
-
-
-
-
-let shownProducts = [];
-
-if (activeCategory) {
-  shownProducts = products.filter(
-    p => String(p.category || "").trim().toLowerCase() === activeCategory.trim().toLowerCase()
-  );
-
-  if (activeBrand) {
-    shownProducts = shownProducts.filter(
-      p => String(p.brand || "").trim().toLowerCase() === activeBrand.trim().toLowerCase()
-    );
+    if (search.trim()) {
+      const q = norm(search);
+      shownProducts = shownProducts.filter(
+        (p) => p._name.includes(q) || p._brand.includes(q)
+      );
+    }
   }
 
-  if (search.trim()) {
-    const searchLower = search.trim().toLowerCase();
-    shownProducts = shownProducts.filter(
-      p => (p.name && p.name.toLowerCase().includes(searchLower)) ||
-           (p.brand && p.brand.toLowerCase().includes(searchLower))
-    );
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-  // Отправка заказа в Telegram через Apps Script
+  // Отправка заказа в Telegram через Apps Script (без изменений)
   const sendOrderToTelegram = async () => {
     if (cart.length === 0) {
       alert("Корзина пуста");
@@ -509,89 +471,86 @@ if (activeCategory) {
       <AnimatedBg />
 
       {/* ----- Хедер ----- */}
-<header
-  style={{
-    position: "relative",
-    zIndex: 2,
-    paddingTop: isMobile ? 32 : 48,
-    width: "100%",
-    maxWidth: "100%",
-    margin: "0 auto",
-padding: "0 16px",
-boxSizing: "border-box",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    boxSizing: "border-box",
-  }}
->
-  {/* Левая пустая область для центрирования */}
-  <div style={{ width: isMobile ? 58 : 72 }}></div>
+      <header
+        style={{
+          position: "relative",
+          zIndex: 2,
+          paddingTop: isMobile ? 32 : 48,
+          width: "100%",
+          maxWidth: "100%",
+          margin: "0 auto",
+          padding: "0 16px",
+          boxSizing: "border-box",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          boxSizing: "border-box",
+        }}
+      >
+        {/* Левая пустая область для центрирования */}
+        <div style={{ width: isMobile ? 58 : 72 }}></div>
 
-  {/* Лого по центру */}
-  <img
-    src={logoUrl}
-    alt="logo"
-    style={{
-      width: isMobile ? 58 : 72,
-      height: isMobile ? 58 : 72,
-      objectFit: "cover",
-      borderRadius: "50%",
-      border: `2.5px solid ${ACCENT}`,
-      background: "#fff",
-      display: "block",
-      boxShadow: "0 0 16px #0006",
-    }}
-  />
+        {/* Лого по центру */}
+        <img
+          src={logoUrl}
+          alt="logo"
+          style={{
+            width: isMobile ? 58 : 72,
+            height: isMobile ? 58 : 72,
+            objectFit: "cover",
+            borderRadius: "50%",
+            border: `2.5px solid ${ACCENT}`,
+            background: "#fff",
+            display: "block",
+            boxShadow: "0 0 16px #0006",
+          }}
+        />
 
-  {/* Кнопка корзины справа */}
-<motion.button
-  animate={cartTotalCount > 0 ? { scale: [1, 1.13, 0.95, 1] } : { scale: 1 }}
-  transition={{ duration: 0.23, type: "spring" }}
-  onClick={() => setShowCart(true)}
-  style={{
-    background: "transparent",
-    border: "none",
-    cursor: "pointer",
-    outline: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    position: "relative",
-    padding: isMobile ? "10px" : "12px", // добавь немного padding для удобства клика
-  }}
-  aria-label="Открыть корзину"
->
-  <svg width={isMobile ? 27 : 31} height={isMobile ? 27 : 31} viewBox="0 0 24 24" fill={ACCENT}>
-    <path d="M7 18c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm10 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm2-3H7.42l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H6.21l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H5.42l-.94-2H2V4h2l3.6 7.59-1.35 2.44C5.16 14.37 5.92 16 7.22 16H19c.553 0 1-.447 1-1s-.447-1-1-1z" />
-  </svg>
-  {cartTotalCount > 0 && (
-    <motion.span
-      key={cartTotalCount}
-      initial={{ scale: 0.5, opacity: 0, y: -12 }}
-      animate={{ scale: 1, opacity: 1, y: 0 }}
-      transition={{ type: "spring", stiffness: 350, damping: 12 }}
-      style={{
-        position: "absolute",
-        top: 6,
-        right: 6,
-        background: ACCENT,
-        color: "#fff",
-        borderRadius: "50%",
-        padding: "2.5px 8px",
-        fontSize: 13,
-        fontWeight: 700,
-        boxShadow: "0 2px 8px #1d7ad5c0",
-      }}
-    >
-      {cartTotalCount}
-    </motion.span>
-  )}
-</motion.button>
-
-</header>
-
-
+        {/* Кнопка корзины справа */}
+        <motion.button
+          animate={cartTotalCount > 0 ? { scale: [1, 1.13, 0.95, 1] } : { scale: 1 }}
+          transition={{ duration: 0.23, type: "spring" }}
+          onClick={() => setShowCart(true)}
+          style={{
+            background: "transparent",
+            border: "none",
+            cursor: "pointer",
+            outline: "none",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "relative",
+            padding: isMobile ? "10px" : "12px",
+          }}
+          aria-label="Открыть корзину"
+        >
+          <svg width={isMobile ? 27 : 31} height={isMobile ? 27 : 31} viewBox="0 0 24 24" fill={ACCENT}>
+            <path d="M7 18c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm10 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm2-3H7.42l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H6.21l-.94-2H20c.553 0 1-.447 1-1s-.447-1-1-1H5.42l-.94-2H2V4h2l3.6 7.59-1.35 2.44C5.16 14.37 5.92 16 7.22 16H19c.553 0 1-.447 1-1s-.447-1-1-1z" />
+          </svg>
+          {cartTotalCount > 0 && (
+            <motion.span
+              key={cartTotalCount}
+              initial={{ scale: 0.5, opacity: 0, y: -12 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              transition={{ type: "spring", stiffness: 350, damping: 12 }}
+              style={{
+                position: "absolute",
+                top: 6,
+                right: 6,
+                background: ACCENT,
+                color: "#fff",
+                borderRadius: "50%",
+                padding: "2.5px 8px",
+                fontSize: 13,
+                fontWeight: 700,
+                boxShadow: "0 2px 8px #1d7ad5c0",
+              }}
+            >
+              {cartTotalCount}
+            </motion.span>
+          )}
+        </motion.button>
+      </header>
 
       <AnimatePresence>
         {!activeCategory && !showCart && (
@@ -698,46 +657,41 @@ boxSizing: "border-box",
                     <span style={{ fontSize: isMobile ? 22 : 26, marginRight: 8 }}>{cat.emoji}</span>
                     <span>{cat.name}</span>
                   </motion.button>
-                  
                 )}
-
               </div>
 
-<div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 12 }}>
-  <button
-    onClick={() => setShowFAQ(true)}
-    style={{
-      background: ACCENT,
-      color: '#fff',
-      fontWeight: 700,
-      fontSize: 15,
-      border: 'none',
-      borderRadius: 12,
-      padding: '12px',
-      cursor: 'pointer'
-    }}
-  >
-    ❓ Часто задаваемые вопросы
-  </button>
-  <button
-    onClick={() => setShowCredit(true)}
-    style={{
-      background: ACCENT,
-      color: '#fff',
-      fontWeight: 700,
-      fontSize: 15,
-      border: 'none',
-      borderRadius: 12,
-      padding: '12px',
-      cursor: 'pointer'
-    }}
-  >
-    💳 Кредит и рассрочка
-  </button>
-</div>
-
-
-
+              <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <button
+                  onClick={() => setShowFAQ(true)}
+                  style={{
+                    background: ACCENT,
+                    color: '#fff',
+                    fontWeight: 700,
+                    fontSize: 15,
+                    border: 'none',
+                    borderRadius: 12,
+                    padding: '12px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  ❓ Часто задаваемые вопросы
+                </button>
+                <button
+                  onClick={() => setShowCredit(true)}
+                  style={{
+                    background: ACCENT,
+                    color: '#fff',
+                    fontWeight: 700,
+                    fontSize: 15,
+                    border: 'none',
+                    borderRadius: 12,
+                    padding: '12px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  💳 Кредит и рассрочка
+                </button>
+              </div>
             </div>
           </motion.div>
         )}
@@ -783,6 +737,7 @@ boxSizing: "border-box",
                     boxShadow: "0 1.5px 10px #3ca4ff0b",
                     transition: ".16s"
                   }}>← К категориям</button>
+
                 <div style={{
                   display: "flex",
                   overflowX: "auto",
@@ -793,14 +748,15 @@ boxSizing: "border-box",
                   scrollbarWidth: "thin"
                 }}>
                   {brandsForActiveCategory.map(brand =>
-  <BrandButton
-    key={brand}
-    name={brand}
-    active={brand === activeBrand}
-    onClick={() => setActiveBrand(brand === activeBrand ? null : brand)}
-  />
-)}
+                    <BrandButton
+                      key={brand}
+                      name={brand}
+                      active={brand === activeBrand}
+                      onClick={() => setActiveBrand(brand === activeBrand ? null : brand)}
+                    />
+                  )}
                 </div>
+
                 <input
                   placeholder="Поиск товаров"
                   value={search}
@@ -820,49 +776,34 @@ boxSizing: "border-box",
                   }}
                 />
               </div>
+
               {shownProducts.length === 0 && (
                 <div style={{ color: "#bcc5db", fontSize: 16, textAlign: "center", margin: "32px 0 55px 0", fontWeight: 700 }}>
                   Нет товаров в этой категории.
                 </div>
               )}
-              
-              
 
-
-
-<div
-  style={{
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: 16,
-    justifyItems: "center",
-    maxWidth: 600,
-    margin: "0 auto",
-    padding: 8,
-  }}
->
-
-
-
-
-  {shownProducts.map(product => (
-    <ProductCard
-      key={product.id}
-      product={product}
-      qty={getQtyInCart(product.id)}
-      onPlus={() => addToCart(product.id)}
-      onMinus={() => removeOneFromCart(product.id)}
-    />
-  ))}
-</div>
-
-
-
-
-
-
-
-
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: 16,
+                  justifyItems: "center",
+                  maxWidth: 600,
+                  margin: "0 auto",
+                  padding: 8,
+                }}
+              >
+                {shownProducts.map(product => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    qty={getQtyInCart(product.id)}
+                    onPlus={() => addToCart(product.id)}
+                    onMinus={() => removeOneFromCart(product.id)}
+                  />
+                ))}
+              </div>
 
               <div style={{ height: 22 }} />
             </div>
@@ -953,193 +894,189 @@ boxSizing: "border-box",
                   <div style={{ fontWeight: 700, fontSize: isMobile ? 13 : 17, textAlign: "right", marginTop: 9, marginBottom: 5 }}>
                     Итого: {total} ₽
                   </div>
-<button
-  style={{
-    width: "100%",
-    marginTop: 10,
-    background: ACCENT,
-    color: "#fff",
-    padding: isMobile ? "9px 0" : "13px 0",
-    borderRadius: 8,
-    border: "none",
-    fontWeight: 800,
-    fontSize: isMobile ? 12.5 : 15.5,
-    cursor: "pointer",
-  }}
-onClick={() => {
-  const lines = [
-    "Здравствуйте! Я хочу заказать в вашем магазине:",
-    ""
-  ];
+                  <button
+                    style={{
+                      width: "100%",
+                      marginTop: 10,
+                      background: ACCENT,
+                      color: "#fff",
+                      padding: isMobile ? "9px 0" : "13px 0",
+                      borderRadius: 8,
+                      border: "none",
+                      fontWeight: 800,
+                      fontSize: isMobile ? 12.5 : 15.5,
+                      cursor: "pointer",
+                    }}
+                    onClick={() => {
+                      const lines = [
+                        "Здравствуйте! Я хочу заказать в вашем магазине:",
+                        ""
+                      ];
 
-  cart.forEach((item) => {
-    const p = getProduct(item.id);
-    if (p) {
-      const itemTotal = Number(p.price) * item.qty;
-      lines.push(`• ${p.brand} ${p.name} x${item.qty} — ${Number(p.price).toLocaleString()}₽ = ${itemTotal.toLocaleString()}₽`);
-    }
-  });
+                      cart.forEach((item) => {
+                        const p = getProduct(item.id);
+                        if (p) {
+                          const itemTotal = Number(p.price) * item.qty;
+                          lines.push(`• ${p.brand} ${p.name} x${item.qty} — ${Number(p.price).toLocaleString()}₽ = ${itemTotal.toLocaleString()}₽`);
+                        }
+                      });
 
-  lines.push("");
-  lines.push(`Итого: ${total.toLocaleString()}₽`);
+                      lines.push("");
+                      lines.push(`Итого: ${total.toLocaleString()}₽`);
 
-  const message = lines.join("\n");
-  const encodedMessage = encodeURIComponent(message);
-  const telegramUsername = "avangard_dobronravov"; // Заменить на ник менеджера без @
+                      const message = lines.join("\n");
+                      const encodedMessage = encodeURIComponent(message);
+                      const telegramUsername = "avangard_dobronravov"; // Заменить на ник менеджера без @
 
-  const telegramLink = `https://t.me/${telegramUsername}?start&text=${encodedMessage}`;
-  window.open(telegramLink, "_blank");
-}}
->
-  Оформить заказ
-</button>
-
-
-
+                      const telegramLink = `https://t.me/${telegramUsername}?start&text=${encodedMessage}`;
+                      window.open(telegramLink, "_blank");
+                    }}
+                  >
+                    Оформить заказ
+                  </button>
                 </>
               )}
             </div>
           </motion.div>
         )}
 
-<AnimatePresence>
-  {showFAQ && (
-    <motion.div
-      ref={faqRef}
-      key="faq"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 20 }}
-      transition={{ duration: 0.3 }}
-      style={{
-        padding: 20,
-        maxWidth: 480,
-        margin: "40px auto",
-        background: "#1c2333",
-        borderRadius: 16,
-        color: "#fff",
-        textAlign: "left",
-        lineHeight: 1.6,
-        fontSize: 14,
-      }}
-    >
-      <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 16 }}>❓ Часто задаваемые вопросы</h2>
+        <AnimatePresence>
+          {showFAQ && (
+            <motion.div
+              ref={faqRef}
+              key="faq"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.3 }}
+              style={{
+                padding: 20,
+                maxWidth: 480,
+                margin: "40px auto",
+                background: "#1c2333",
+                borderRadius: 16,
+                color: "#fff",
+                textAlign: "left",
+                lineHeight: 1.6,
+                fontSize: 14,
+              }}
+            >
+              <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 16 }}>❓ Часто задаваемые вопросы</h2>
 
-      <p style={{ fontWeight: 700, marginBottom: 8 }}>Много вопросов про регионы, гарантию и всё такое… сделали для вас описание 👍</p>
+              <p style={{ fontWeight: 700, marginBottom: 8 }}>Много вопросов про регионы, гарантию и всё такое… сделали для вас описание 👍</p>
 
-      <p><b>Маркировка у айфонов:</b></p>
-      <ul style={{ paddingLeft: 16, marginBottom: 10 }}>
-        <li><b>iPhone 14 Pro Max:</b> A2651 (🇺🇸), A2893 (🇨🇦🇯🇵🇲🇽🇸🇦), A2896 (🇨🇳🇭🇰🇲🇴), A2895 (🇦🇲🇧🇾🇰🇿🇰🇬🇷🇺), A2894 (другие регионы)</li>
-        <li><b>iPhone 14 Pro:</b> A2659 (🇺🇸), A2889 (🇨🇦🇯🇵🇲🇽🇸🇦), A2892 (🇨🇳🇭🇰🇲🇴), A2891 (🇦🇲🇧🇾🇰🇿🇰🇬🇷🇺), A2890 (другие регионы)</li>
-        <li><b>iPhone 14 Plus:</b> A2632 (🇺🇸), A2885 (🇨🇦🇯🇵🇲🇽🇸🇦), A2888 (🇨🇳🇭🇰🇲🇴), A2887 (🇦🇲🇧🇾🇰🇿🇰🇬🇷🇺), A2886 (другие регионы)</li>
-        <li><b>iPhone 14:</b> A2649 (🇺🇸), A2881 (🇨🇦🇯🇵🇲🇽🇸🇦), A2884 (🇨🇳🇭🇰🇲🇴), A2883 (🇦🇲🇧🇾🇰🇿🇰🇬🇷🇺), A2882 (другие регионы)</li>
-      </ul>
+              <p><b>Маркировка у айфонов:</b></p>
+              <ul style={{ paddingLeft: 16, marginBottom: 10 }}>
+                <li><b>iPhone 14 Pro Max:</b> A2651 (🇺🇸), A2893 (🇨🇦🇯🇵🇲🇽🇸🇦), A2896 (🇨🇳🇭🇰🇲🇴), A2895 (🇦🇲🇧🇾🇰🇿🇰🇬🇷🇺), A2894 (другие регионы)</li>
+                <li><b>iPhone 14 Pro:</b> A2659 (🇺🇸), A2889 (🇨🇦🇯🇵🇲🇽🇸🇦), A2892 (🇨🇳🇭🇰🇲🇴), A2891 (🇦🇲🇧🇾🇰🇿🇰🇬🇷🇺), A2890 (другие регионы)</li>
+                <li><b>iPhone 14 Plus:</b> A2632 (🇺🇸), A2885 (🇨🇦🇯🇵🇲🇽🇸🇦), A2888 (🇨🇳🇭🇰🇲🇴), A2887 (🇦🇲🇧🇾🇰🇿🇰🇬🇷🇺), A2886 (другие регионы)</li>
+                <li><b>iPhone 14:</b> A2649 (🇺🇸), A2881 (🇨🇦🇯🇵🇲🇽🇸🇦), A2884 (🇨🇳🇭🇰🇲🇴), A2883 (🇦🇲🇧🇾🇰🇿🇰🇬🇷🇺), A2882 (другие регионы)</li>
+              </ul>
 
-      <p><b>🇺🇸 Америка:</b> только eSIM (до 5, одновременно 2)</p>
-      <p><b>🇯🇵 Япония:</b> звук камеры остаётся в авиарежиме</p>
-      <p><b>🇦🇪 Эмираты:</b> FaceTime работает за пределами страны</p>
-      <p><b>🇪🇺 Европа:</b> ограничение громкости только на проводные наушники</p>
-      <p><b>🇨🇳 Китай:</b> 2 SIM, eSIM не работает, FaceTime без аудио</p>
-      <p><b>🇭🇰 Гонконг:</b> 2 SIM, FaceTime с аудио</p>
-      <p><b>🇰🇷 Корея:</b> не работает Локатор</p>
-      <p><b>🇮🇳🇨🇦🇧🇷 Индия, Канада, Бразилия:</b> нет ограничений</p>
+              <p><b>🇺🇸 Америка:</b> только eSIM (до 5, одновременно 2)</p>
+              <p><b>🇯🇵 Япония:</b> звук камеры остаётся в авиарежиме</p>
+              <p><b>🇦🇪 Эмираты:</b> FaceTime работает за пределами страны</p>
+              <p><b>🇪🇺 Европа:</b> ограничение громкости только на проводные наушники</p>
+              <p><b>🇨🇳 Китай:</b> 2 SIM, eSIM не работает, FaceTime без аудио</p>
+              <p><b>🇭🇰 Гонконг:</b> 2 SIM, FaceTime с аудио</p>
+              <p><b>🇰🇷 Корея:</b> не работает Локатор</p>
+              <p><b>🇮🇳🇨🇦🇧🇷 Индия, Канада, Бразилия:</b> нет ограничений</p>
 
-      <h3 style={{ fontSize: 16, fontWeight: 700, marginTop: 20 }}>🛠️ Гарантия</h3>
-      <p>
-        Гарантия от магазина — 1 год. Работаем через СЦ BroBroLab. Если брак — диагностика бесплатна, обмен через ЗСЦ (60–90 дней).<br />
-        Быстрый обмен — 7–9 дней, +10 000 ₽. Если вина клиента — ремонт за счёт клиента.
-      </p>
+              <h3 style={{ fontSize: 16, fontWeight: 700, marginTop: 20 }}>🛠️ Гарантия</h3>
+              <p>
+                Гарантия от магазина — 1 год. Работаем через СЦ BroBroLab. Если брак — диагностика бесплатна, обмен через ЗСЦ (60–90 дней).<br />
+                Быстрый обмен — 7–9 дней, +10 000 ₽. Если вина клиента — ремонт за счёт клиента.
+              </p>
 
-      <h3 style={{ fontSize: 16, fontWeight: 700, marginTop: 20 }}>♻️ Трейд-ин</h3>
-      <p>
-        Напишите: модель, цвет, память, комплектация, состояние батареи, был ли в ремонте, есть ли повреждения (фото), и что хотите взамен.
-      </p>
+              <h3 style={{ fontSize: 16, fontWeight: 700, marginTop: 20 }}>♻️ Трейд-ин</h3>
+              <p>
+                Напишите: модель, цвет, память, комплектация, состояние батареи, был ли в ремонте, есть ли повреждения (фото), и что хотите взамен.
+              </p>
 
-      <button
-        onClick={() => setShowFAQ(false)}
-        style={{
-          marginTop: 24,
-          background: ACCENT,
-          color: "#fff",
-          border: "none",
-          borderRadius: 9,
-          padding: "10px 16px",
-          fontWeight: 700,
-          fontSize: 14,
-          cursor: "pointer",
-          width: "100%"
-        }}
-      >
-        ← Назад
-      </button>
-    </motion.div>
-  )}
-</AnimatePresence>
+              <button
+                onClick={() => setShowFAQ(false)}
+                style={{
+                  marginTop: 24,
+                  background: ACCENT,
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: 9,
+                  padding: "10px 16px",
+                  fontWeight: 700,
+                  fontSize: 14,
+                  cursor: "pointer",
+                  width: "100%"
+                }}
+              >
+                ← Назад
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-<AnimatePresence>
-  {showCredit && (
-    <motion.div
-      ref={creditRef}
-      key="credit"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 20 }}
-      transition={{ duration: 0.3 }}
-      style={{
-        padding: 20,
-        maxWidth: 480,
-        margin: "40px auto",
-        background: "#1c2333",
-        borderRadius: 16,
-        color: "#fff",
-        textAlign: "left",
-        lineHeight: 1.6,
-        fontSize: 14,
-      }}
-    >
-      <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 16 }}>💳 Про кредит и рассрочку</h2>
+        <AnimatePresence>
+          {showCredit && (
+            <motion.div
+              ref={creditRef}
+              key="credit"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.3 }}
+              style={{
+                padding: 20,
+                maxWidth: 480,
+                margin: "40px auto",
+                background: "#1c2333",
+                borderRadius: 16,
+                color: "#fff",
+                textAlign: "left",
+                lineHeight: 1.6,
+                fontSize: 14,
+              }}
+            >
+              <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 16 }}>💳 Про кредит и рассрочку</h2>
 
-      <p style={{ marginBottom: 12 }}>
-        В связи с тем, что у нас в стоимость не заложен процент на вывод средств по безналу:
-      </p>
+              <p style={{ marginBottom: 12 }}>
+                В связи с тем, что у нас в стоимость не заложен процент на вывод средств по безналу:
+              </p>
 
-      <ul style={{ paddingLeft: 18, marginBottom: 14 }}>
-        <li><b>Безнал через терминал / счёт на юр. лицо:</b> +9%</li>
-        <li><b>Оплата по QR-коду:</b> +7%</li>
-      </ul>
+              <ul style={{ paddingLeft: 18, marginBottom: 14 }}>
+                <li><b>Безнал через терминал / счёт на юр. лицо:</b> +9%</li>
+                <li><b>Оплата по QR-коду:</b> +7%</li>
+              </ul>
 
-      <p style={{ marginBottom: 12 }}>
-        Поэтому наши цены <b>ниже</b>, чем в М.Видео, МТС, Эльдорадо и других сетях.
-      </p>
+              <p style={{ marginBottom: 12 }}>
+                Поэтому наши цены <b>ниже</b>, чем в М.Видео, МТС, Эльдорадо и других сетях.
+              </p>
 
-      <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>📆 Рассрочка</h3>
-      <ul style={{ paddingLeft: 18 }}>
-        <li>6 месяцев — <b>+19%</b> к стоимости</li>
-        <li>12 месяцев — <b>+25%</b></li>
-        <li>24 месяца — <b>+42%</b></li>
-      </ul>
+              <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>📆 Рассрочка</h3>
+              <ul style={{ paddingLeft: 18 }}>
+                <li>6 месяцев — <b>+19%</b> к стоимости</li>
+                <li>12 месяцев — <b>+25%</b></li>
+                <li>24 месяца — <b>+42%</b></li>
+              </ul>
 
-      <button
-        onClick={() => setShowCredit(false)}
-        style={{
-          marginTop: 24,
-          background: ACCENT,
-          color: "#fff",
-          border: "none",
-          borderRadius: 9,
-          padding: "10px 16px",
-          fontWeight: 700,
-          fontSize: 14,
-          cursor: "pointer",
-          width: "100%"
-        }}
-      >
-        ← Назад
-      </button>
-    </motion.div>
-  )}
-</AnimatePresence>
-
+              <button
+                onClick={() => setShowCredit(false)}
+                style={{
+                  marginTop: 24,
+                  background: ACCENT,
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: 9,
+                  padding: "10px 16px",
+                  fontWeight: 700,
+                  fontSize: 14,
+                  cursor: "pointer",
+                  width: "100%"
+                }}
+              >
+                ← Назад
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </AnimatePresence>
 
       <div style={{ height: 18 }} />
