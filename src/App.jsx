@@ -291,7 +291,7 @@ function AnimatedBg() {
   );
 }
 
-const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSRtT-9yQsf2f0mY01Hkcg_711efC99-ZBqzhO_j8nUJWcP3HCZFzXTGCkEKXtqL8FF4IHмFUM_34TM/pub?output=csv";
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSRtT-9yQsf2f0mY01Hkcg_711efC99-ZBqzhO_j8nUJWcP3HCZFzXTGCkEKXtqL8FF4IHmFUM_34TM/pub?output=csv";
 const TELEGRAM_BOT_API = "https://script.google.com/macros/s/ВАШ_АППС_СКРИПТ_ID/exec";
 
 const App = () => {
