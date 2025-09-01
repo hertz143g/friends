@@ -22,7 +22,7 @@ const CATEGORIES = [
   { name: "Игровые приставки", emoji: "🎮", brands: ["Xbox", "Sony Ps5"] },
   { name: "Игрушки", emoji: "🧸", brands: ["Игрушки Labubu"] },
   { name: "Аксессуары", emoji: "🔌", brands: ["Аксессуары", "Apple TV", "GoPro"] },
-  { name: "Dyson", emoji: "🌀", brands: ["Dyson", "Dyson Фен", "Dyson Выпрямитель", "Dyson Стайлер"] },
+  { name: "Dyson", emoji: "🌀", brands: ["Dyson", "Фен", "Выпрямитель", "Стайлер"] },
 ];
 
 function BrandButton({ name, active, onClick }) {
