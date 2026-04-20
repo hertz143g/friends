@@ -905,58 +905,51 @@ const App = () => {
                       </div>
                     );
                   })}
-                  <div style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "flex-end",
-                    gap: 8,
-                    marginTop: 9,
-                    marginBottom: 5
-                  }}>
-                    <div style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-start",
-                      gap: 5
-                    }}>
-                      <div style={{
-                        color: "#9fb2c8",
-                        fontSize: isMobile ? 10 : 12,
-                        fontWeight: 700,
-                        lineHeight: 1
-                      }}>
-                        Филиал
-                      </div>
-                      <div style={{ display: "flex", gap: 6 }}>
-                        {BRANCHES.map(branch => {
-                          const isActive = branch.name === selectedBranch.name;
-                          return (
-                            <button
-                              key={branch.name}
-                              onClick={() => setSelectedBranch(branch)}
-                              style={{
-                                background: isActive ? ACCENT : "#283762",
-                                color: isActive ? "#fff" : "#bcd7ff",
-                                border: isActive ? "none" : `1px solid ${BORDER}`,
-                                borderRadius: 8,
-                                padding: isMobile ? "5px 8px" : "6px 10px",
-                                fontWeight: 800,
-                                fontSize: isMobile ? 10.5 : 12,
-                                cursor: "pointer",
-                                boxShadow: isActive ? "0 2px 10px #3ca4ff28" : "none",
-                                lineHeight: 1.1
-                              }}
-                            >
-                              {branch.name}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                    <div style={{ fontWeight: 700, fontSize: isMobile ? 13 : 17, textAlign: "right" }}>
-                      Итого: {total} ₽
-                    </div>
-                  </div>
+	                  <div style={{ fontWeight: 700, fontSize: isMobile ? 13 : 17, textAlign: "right", marginTop: 9, marginBottom: 10 }}>
+	                    Итого: {total} ₽
+	                  </div>
+	                  <div style={{
+	                    display: "flex",
+	                    flexDirection: "column",
+	                    alignItems: "stretch",
+	                    gap: 8,
+	                    marginBottom: 8
+	                  }}>
+	                    <div style={{
+	                      color: "#b7c6d8",
+	                      fontSize: isMobile ? 11.5 : 13,
+	                      fontWeight: 700,
+	                      lineHeight: 1.25,
+	                      textAlign: "left"
+	                    }}>
+	                      Выберите город, из которого будете забирать заказ
+	                    </div>
+	                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+	                      {BRANCHES.map(branch => {
+	                        const isActive = branch.name === selectedBranch.name;
+	                        return (
+	                          <button
+	                            key={branch.name}
+	                            onClick={() => setSelectedBranch(branch)}
+	                            style={{
+	                              background: isActive ? ACCENT : "#283762",
+	                              color: isActive ? "#fff" : "#bcd7ff",
+	                              border: isActive ? "none" : `1px solid ${BORDER}`,
+	                              borderRadius: 8,
+	                              padding: isMobile ? "8px 11px" : "9px 13px",
+	                              fontWeight: 800,
+	                              fontSize: isMobile ? 12.5 : 13.5,
+	                              cursor: "pointer",
+	                              boxShadow: isActive ? "0 2px 12px #3ca4ff34" : "none",
+	                              lineHeight: 1.1
+	                            }}
+	                          >
+	                            {branch.name}
+	                          </button>
+	                        );
+	                      })}
+	                    </div>
+	                  </div>
                   <button
                     style={{
                       width: "100%",
