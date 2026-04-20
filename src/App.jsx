@@ -11,6 +11,10 @@ const PHONE = "+7(965)226-96-02 / +7(925)444-11-18";
 const ADDRESS = "Клин, ул. Победы, д. 9, «Ок’ей»";
 const PHONE_PLACEHOLDER = "https://raw.githubusercontent.com/hdpngworld/HPW/main/uploads/65038654434d0-iPhone%2015%20Pro%20Natural%20titanium%20png.png";
 const mainBlockWidth = "100%";
+const BRANCHES = [
+  { name: "Клин", username: "avangard_dobronravov" },
+  { name: "Дмитров", username: "magazinumnoytehniki" }
+];
 
 const CATEGORIES = [
   { name: "iPhone", emoji: "📱", brands: ["Apple"] },
@@ -301,6 +305,7 @@ const App = () => {
   const [search, setSearch] = useState("");
   const [cart, setCart] = useState([]);
   const [showCart, setShowCart] = useState(false);
+  const [selectedBranch, setSelectedBranch] = useState(BRANCHES[0]);
   const [vw, setVw] = useState(window.innerWidth);
 
   const [showFAQ, setShowFAQ] = useState(false);
@@ -891,8 +896,57 @@ const App = () => {
                       </div>
                     );
                   })}
-                  <div style={{ fontWeight: 700, fontSize: isMobile ? 13 : 17, textAlign: "right", marginTop: 9, marginBottom: 5 }}>
-                    Итого: {total} ₽
+                  <div style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "flex-end",
+                    gap: 8,
+                    marginTop: 9,
+                    marginBottom: 5
+                  }}>
+                    <div style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      gap: 5
+                    }}>
+                      <div style={{
+                        color: "#9fb2c8",
+                        fontSize: isMobile ? 10 : 12,
+                        fontWeight: 700,
+                        lineHeight: 1
+                      }}>
+                        Филиал
+                      </div>
+                      <div style={{ display: "flex", gap: 6 }}>
+                        {BRANCHES.map(branch => {
+                          const isActive = branch.name === selectedBranch.name;
+                          return (
+                            <button
+                              key={branch.name}
+                              onClick={() => setSelectedBranch(branch)}
+                              style={{
+                                background: isActive ? ACCENT : "#283762",
+                                color: isActive ? "#fff" : "#bcd7ff",
+                                border: isActive ? "none" : `1px solid ${BORDER}`,
+                                borderRadius: 8,
+                                padding: isMobile ? "5px 8px" : "6px 10px",
+                                fontWeight: 800,
+                                fontSize: isMobile ? 10.5 : 12,
+                                cursor: "pointer",
+                                boxShadow: isActive ? "0 2px 10px #3ca4ff28" : "none",
+                                lineHeight: 1.1
+                              }}
+                            >
+                              {branch.name}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    <div style={{ fontWeight: 700, fontSize: isMobile ? 13 : 17, textAlign: "right" }}>
+                      Итого: {total} ₽
+                    </div>
                   </div>
                   <button
                     style={{
@@ -922,11 +976,12 @@ const App = () => {
                       });
 
                       lines.push("");
+                      lines.push(`Филиал: ${selectedBranch.name}`);
                       lines.push(`Итого: ${total.toLocaleString()}₽`);
 
                       const message = lines.join("\n");
                       const encodedMessage = encodeURIComponent(message);
-                      const telegramUsername = "avangard_dobronravov";
+                      const telegramUsername = selectedBranch.username;
                       const telegramLink = `https://t.me/${telegramUsername}?start&text=${encodedMessage}`;
                       window.open(telegramLink, "_blank");
                     }}
