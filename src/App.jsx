@@ -7,13 +7,21 @@ const CARD = "#23293b";
 const BORDER = "#27395a";
 const logoUrl = "https://i.ibb.co/5xhhdpQR/2025-06-30-17-13-29.jpg";
 const TELEGRAM_LINK = "https://t.me/forfriendsstore";
-const PHONE = "+7(965)226-96-02 / +7(925)444-11-18";
-const ADDRESS = "Клин, ул. Победы, д. 9, «Ок’ей»";
 const PHONE_PLACEHOLDER = "https://raw.githubusercontent.com/hdpngworld/HPW/main/uploads/65038654434d0-iPhone%2015%20Pro%20Natural%20titanium%20png.png";
 const mainBlockWidth = "100%";
 const BRANCHES = [
-  { name: "Клин", username: "avangard_dobronravov" },
-  { name: "Дмитров", username: "magazinumnoytehniki" }
+  {
+    name: "Клин",
+    username: "avangard_dobronravov",
+    phone: "+7(965)226-96-02 / +7(925)444-11-18",
+    address: "Клин, ул. Победы, д. 9, «Ок’ей»"
+  },
+  {
+    name: "Дмитров",
+    username: "magazinumnoytehniki",
+    phone: "+7(926)664-65-95 / +7(977)799-98-99",
+    address: "Дмитров, Загорская улица, 22"
+  }
 ];
 
 const CATEGORIES = [
@@ -620,17 +628,32 @@ const App = () => {
                     }}>
                     Перейти в Telegram
                   </a>
-                  <div style={{
-                    background: "#1c2333",
-                    borderRadius: 10,
-                    padding: "8px 11px",
-                    marginTop: 11,
-                    fontSize: isMobile ? 12 : 13.5,
-                    color: "#b3c7df"
-                  }}>
-                    <b style={{ color: "#63aaff" }}>Контакты:</b> <span style={{ color: "#fff" }}>{PHONE}</span><br />
-                    <b style={{ color: "#9ed6fc" }}>Адрес:</b> <span style={{ color: "#fff" }}>{ADDRESS}</span>
-                  </div>
+	                  <div style={{
+	                    background: "#1c2333",
+	                    borderRadius: 10,
+	                    padding: "8px 11px",
+	                    marginTop: 11,
+	                    fontSize: isMobile ? 12 : 13.5,
+	                    color: "#b3c7df",
+	                    display: "flex",
+	                    flexDirection: "column",
+	                    gap: 9,
+	                    textAlign: "left"
+	                  }}>
+	                    {BRANCHES.map(branch => (
+	                      <div key={branch.name}>
+	                        <div style={{ color: "#63aaff", fontWeight: 800, marginBottom: 2 }}>
+	                          {branch.name}
+	                        </div>
+	                        <div>
+	                          <b style={{ color: "#63aaff" }}>Контакты:</b> <span style={{ color: "#fff" }}>{branch.phone}</span>
+	                        </div>
+	                        <div>
+	                          <b style={{ color: "#9ed6fc" }}>Адрес:</b> <span style={{ color: "#fff" }}>{branch.address}</span>
+	                        </div>
+	                      </div>
+	                    ))}
+	                  </div>
                 </motion.div>
 
                 <div style={{
