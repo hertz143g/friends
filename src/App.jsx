@@ -81,9 +81,10 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
         background: CARD,
         borderRadius: 28,
         boxShadow: "0 8px 32px #20293a33",
-        padding: "28px 18px 22px 18px",
+        padding: "24px 12px 20px 12px",
         width: "100%",
         maxWidth: 270,
+        minWidth: 0,
         boxSizing: "border-box",
         display: "flex",
         flexDirection: "column",
@@ -91,7 +92,7 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
       }}
     >
       <div style={{
-        width: 140, height: 140, background: "#222b3d",
+        width: "min(120px, 76%)", height: "auto", aspectRatio: "1 / 1", background: "#222b3d",
         borderRadius: 25, display: "flex",
         alignItems: "center", justifyContent: "center",
         marginBottom: 12, boxShadow: "0 2px 16px #1e2b4730"
@@ -100,7 +101,7 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
           src={product.img || PHONE_PLACEHOLDER}
           alt={product.name}
           style={{
-            width: 120, height: 120, objectFit: "contain", borderRadius: 16
+            width: "86%", height: "86%", objectFit: "contain", borderRadius: 16
           }}
           onError={e => { e.target.src = PHONE_PLACEHOLDER; }}
         />
@@ -112,7 +113,9 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
         marginBottom: 2,
         textAlign: "center",
         letterSpacing: "0.01em",
-        lineHeight: 1.18
+        lineHeight: 1.18,
+        width: "100%",
+        overflowWrap: "anywhere"
       }}>{product.name}</div>
       <div style={{
         fontWeight: 400,
@@ -120,7 +123,9 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
         color: "#a9b8ce",
         marginBottom: 9,
         textAlign: "center",
-        lineHeight: 1.18
+        lineHeight: 1.18,
+        width: "100%",
+        overflowWrap: "anywhere"
       }}>{product.brand}</div>
       <div style={{
         fontWeight: 800,
@@ -489,7 +494,6 @@ const App = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          boxSizing: "border-box",
         }}
       >
         {/* Левая пустая область для центрирования */}
@@ -708,15 +712,18 @@ const App = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.13, type: "tween", ease: "easeInOut" }}
+            style={{ width: "100%", maxWidth: "100vw", boxSizing: "border-box" }}
           >
             <div
               style={{
+                width: "100%",
                 maxWidth: "100%",
                 margin: "32px auto 0 auto",
                 padding: "15px 15px 50px 15px",
                 borderRadius: "16px",
                 background: "#1c2333",
-                boxShadow: "0 2px 12px rgba(0,0,0,0.06)"
+                boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+                boxSizing: "border-box"
               }}
             >
               <div style={{
@@ -791,12 +798,14 @@ const App = () => {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: 16,
+                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                  gap: isMobile ? 14 : 16,
                   justifyItems: "center",
+                  width: "100%",
                   maxWidth: 600,
                   margin: "0 auto",
-                  padding: 8,
+                  padding: isMobile ? 0 : 8,
+                  boxSizing: "border-box",
                 }}
               >
                 {shownProducts.map(product => (
