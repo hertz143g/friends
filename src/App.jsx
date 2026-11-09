@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Papa from "papaparse";
+import "./App.css";
 
 const ACCENT = "#3ca4ff";
 const CARD = "#23293b";
@@ -67,7 +68,9 @@ function BrandButton({ name, active, onClick }) {
   );
 }
 
-function ProductCard({ product, qty, onPlus, onMinus }) {
+function ProductCard({ product, qty, onPlus, onMinus, onOpen }) {
+  const isDetail = !onOpen;
+  const ProductHeading = isDetail ? "div" : "button";
   const [addAnim, setAddAnim] = useState(false);
 
   const handlePlus = () => {
@@ -84,14 +87,14 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
 
   return (
     <motion.div
-      whileHover={{ scale: 1.022 }}
+      whileHover={isDetail ? undefined : { scale: 1.022 }}
       style={{
         background: CARD,
         borderRadius: 28,
         boxShadow: "0 8px 32px #20293a33",
         padding: "24px 12px 20px 12px",
         width: "100%",
-        maxWidth: 270,
+        maxWidth: isDetail ? "none" : 270,
         minWidth: 0,
         boxSizing: "border-box",
         display: "flex",
@@ -99,32 +102,37 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
         alignItems: "center"
       }}
     >
-      <div style={{
-        width: "min(120px, 76%)", height: "auto", aspectRatio: "1 / 1", background: "#222b3d",
-        borderRadius: 25, display: "flex",
-        alignItems: "center", justifyContent: "center",
-        marginBottom: 12, boxShadow: "0 2px 16px #1e2b4730"
-      }}>
-        <img
-          src={product.img || PHONE_PLACEHOLDER}
-          alt={product.name}
-          style={{
-            width: "86%", height: "86%", objectFit: "contain", borderRadius: 16
-          }}
-          onError={e => { e.target.src = PHONE_PLACEHOLDER; }}
-        />
-      </div>
-      <div style={{
-        fontWeight: 700,
-        fontSize: 15,
-        color: "#fff",
-        marginBottom: 2,
-        textAlign: "center",
-        letterSpacing: "0.01em",
-        lineHeight: 1.18,
-        width: "100%",
-        overflowWrap: "anywhere"
-      }}>{product.name}</div>
+      <ProductHeading
+        className="product-heading"
+        {...(onOpen && { type: "button", onClick: onOpen, "aria-haspopup": "dialog" })}
+      >
+        <span style={{
+          width: isDetail ? "min(320px, 100%)" : "min(120px, 76%)", height: "auto", aspectRatio: "1 / 1", background: "#222b3d",
+          borderRadius: 25, display: "flex",
+          alignItems: "center", justifyContent: "center",
+          marginBottom: 12, boxShadow: "0 2px 16px #1e2b4730"
+        }}>
+          <img
+            src={product.img || PHONE_PLACEHOLDER}
+            alt=""
+            style={{
+              width: "86%", height: "86%", objectFit: "contain", borderRadius: 16
+            }}
+            onError={e => { e.target.src = PHONE_PLACEHOLDER; }}
+          />
+        </span>
+        <span style={{
+          fontWeight: 700,
+          fontSize: isDetail ? 24 : 15,
+          color: "#fff",
+          marginBottom: 2,
+          textAlign: "center",
+          letterSpacing: "0.01em",
+          lineHeight: 1.18,
+          width: "100%",
+          overflowWrap: "anywhere"
+        }}>{product.name}</span>
+      </ProductHeading>
       <div style={{
         fontWeight: 400,
         fontSize: 12,
@@ -153,6 +161,20 @@ function ProductCard({ product, qty, onPlus, onMinus }) {
           <span style={{ color: "#ccc", fontWeight: 600, fontSize: 15 }}>Запрос</span>
         )}
       </div>
+
+      {isDetail && (
+        <div className="product-notices">
+          <p className="product-notice">
+            <span aria-hidden="true">⚠️ </span>
+            Цена и наличие могут меняться. Актуальную стоимость и наличие вы узнаете
+            у менеджера в момент заказа.
+          </p>
+          <ul className="product-notice">
+            <li>Не является публичной офертой!</li>
+            <li>Все цены указаны для ознакомления!</li>
+          </ul>
+        </div>
+      )}
 
       {qty === 0 ? (
         <motion.button
@@ -312,6 +334,8 @@ const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSRtT-9yQsf2f0m
 const TELEGRAM_BOT_API = "https://script.google.com/macros/s/ВАШ_АППС_СКРИПТ_ID/exec";
 
 const App = () => {
+  const productDialog = useRef(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [products, setProducts] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null);
   const [activeBrand, setActiveBrand] = useState(null);
@@ -486,6 +510,30 @@ const App = () => {
         position: "relative"
       }}
     >
+      <dialog
+        ref={productDialog}
+        className="product-dialog"
+        aria-label={selectedProduct?.name || "Карточка товара"}
+        onClose={() => setSelectedProduct(null)}
+      >
+        <button
+          type="button"
+          className="product-dialog-close"
+          onClick={() => productDialog.current.close()}
+          aria-label="Закрыть карточку"
+        >
+          ×
+        </button>
+        {selectedProduct && (
+          <ProductCard
+            product={selectedProduct}
+            qty={getQtyInCart(selectedProduct.id)}
+            onPlus={() => addToCart(selectedProduct.id)}
+            onMinus={() => removeOneFromCart(selectedProduct.id)}
+          />
+        )}
+      </dialog>
+
       <AnimatedBg />
 
       {/* ----- Хедер ----- */}
@@ -836,6 +884,10 @@ const App = () => {
                     key={product.id}
                     product={product}
                     qty={getQtyInCart(product.id)}
+                    onOpen={() => {
+                      setSelectedProduct(product);
+                      productDialog.current.showModal();
+                    }}
                     onPlus={() => addToCart(product.id)}
                     onMinus={() => removeOneFromCart(product.id)}
                   />
